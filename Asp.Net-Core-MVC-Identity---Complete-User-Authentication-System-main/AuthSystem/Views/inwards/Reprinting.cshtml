@@ -1,0 +1,1080 @@
+﻿@model eros.Models.inward
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // var sweetAlert = @Html.Raw(Json.Serialize(ViewBag.SweetAlert));
+    string[] TableHeaders = new string[] {
+        /* Reprint */
+        " Re-Print",
+        "Pro. Code",
+        "Prd. Name.",
+        "Brand",
+        "PO Qty",
+        "Qty",
+        "UOM",
+        "Shp.Allot",
+        // "Details",
+        // "No. set/pro." ,
+        // "No. Qty/shp" ,
+        // "No. shp/Qty" ,
+        // "Ttl shp" ,
+        // "Ttl sub",
+         };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <main class="page payment-page">
+            <section class="payment-form mt-4 ">
+                <div class="card m-3">
+                    <form asp-action="Reprinting" id="reprintingForm">
+                        <div class="card-header bg-dark text-white">
+                            <div class="d-flex align-items-baseline">
+                                @* <a href="/inwards/StockMovementList" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a> *@
+                                <a asp-action="Index1" asp-controller="inwards" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                                <h5 class="mx-auto font-weight-bolder small-heading"> Re-Printing Operation - Purchase orders</h5>
+                                <a asp-action="Index1" asp-controller="inwards" class="btn btn-success text-white  btn-sm"><i class="fa fa-reply"></i> Back</a>
+                            </div>
+                        </div>
+                        <div class="container-field">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="inward_id" />
+                            <input type="hidden" asp-for="pono" />
+                            <input type="hidden" asp-for="flag" />
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="vendername" class="control-label"></label>
+                                    <input asp-for="vendername" data-uppercase autocomplete="off" readonly class="form-control" />
+                                    <span asp-validation-for="vendername" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="pono" class="control-label"></label>
+                                    <input asp-for="pono" id="pono" data-uppercase autocomplete="off" readonly class="form-control" />
+                                    <span asp-validation-for="pono" class="text-danger"></span>
+                                </div>
+                                <div style="display:none" class="form-group col-sm-6 mt-3">
+                                    <label asp-for="typeofreturn" class="control-label"></label>
+                                    <select asp-for="typeofreturn" id="typeofreturn" class="form-control">
+                                        <option value="Returned">Returned</option>
+                                        <option value="Non-Returnable">Non-Returnable</option>
+                                        <option value="Billed">Billed</option>
+                                    </select>
+                                    <span asp-validation-for="typeofreturn" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-3 mt-3" id="referencenoSection">
+                                    <label asp-for="dcno" id="referencenoLabel" class="control-label"></label>
+                                    <input asp-for="dcno" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="dcno" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-3 mt-3" id="dcdateSection">
+                                    <label asp-for="dcdate" id="dcdateLabel" class="control-label"></label>
+                                    <input asp-for="dcdate" readonly type="date" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="dcdate" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-3 mt-3" id="invoicenoSection">
+                                    <label asp-for="invoiceno" id="invoicenoLabel" class="control-label"></label>
+                                    <input asp-for="invoiceno" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="invoiceno" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-3 mt-3">
+                                    <label id="invoicedateLabel" asp-for="invoicedate" class="control-label"></label>
+                                    <input asp-for="invoicedate" readonly type="date" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="invoicedate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="partyname" class="control-label"></label>
+                                    <input asp-for="partyname" readonly type="text" data-uppercase autocomplete="off" class="form-control" />
+
+                                    @* <select class="form-control" disabled asp-for="partyname" id="partynameId1" asp-items="@ViewBag.partyname" onchange="dropdownChanged1()"></select> *@
+                                    
+
+                                    <span asp-validation-for="partyname" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="gstinno" class="control-label"></label>
+                                    <input asp-for="gstinno" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <input asp-for="ordertype" class="form-control" hidden />
+                                    <span asp-validation-for="gstinno" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="contactno" class="control-label"></label>
+                                    <input asp-for="contactno" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="contactno" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="address" class="control-label"></label>
+                                    <input asp-for="address" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="address" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mx-lg-2 mx-md-2">
+                                <table id="CodesTable" class="table table-striped table-sm p-2">
+                                    <thead>
+                                        <tr>
+                                            @foreach (var head in TableHeaders)
+                                            {
+                                                <th>
+                                                    @head
+                                                </th>
+                                            }
+                                        </tr>
+
+                                    </thead>
+                                    <tbody id="tbody">
+                                        @for (int i = 0; i < Model.inwardPacket.Count; i++)
+                                        {
+                                            <tr>
+                                                <td style="padding-left:30px;">
+                                                    @* <input asp-for="@Model.inwardPacket[i].check" type="checkbox" class="form-check-input" data-index="@i" /> *@
+                                                    <input type="checkbox" class="form-check-input" data-index="@i" checked="@Model.inwardPacket[i].check" onclick="updateCheckState(this)" />
+                                                     <input type="hidden" asp-for="@Model.inwardPacket[i].check" name="inwardPacket[@i].check" />
+                                                </td>
+                                                <td style="display:none;">
+                                                    <input asp-for="@Model.inwardPacket[i].pono" class="form-control" readonly />
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].productcode" class="form-control productcode" readonly required
+                                                           title="@Model.inwardPacket[i].productcode"
+                                                           onmouseover="showTooltip(event, '@Model.inwardPacket[i].productcode', 'tooltip-productcode')"
+                                                           onmouseout="hideTooltip('tooltip-productcode')" />
+                                                    <div id="tooltip-productcode" class="product"></div>
+                                                    <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].description" class="form-control description" readonly required
+                                                           title="@Model.inwardPacket[i].description"
+                                                           onmouseover="showTooltip(event, '@Model.inwardPacket[i].description', 'tooltip-description')"
+                                                           onmouseout="hideTooltip('tooltip-description')" />
+                                                    <div id="tooltip-description" class="product"></div>
+                                                    <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                                                </td>
+                                                @* <td>
+                                    <input asp-for="@Model.inwardPacket[i].productcode" class="form-control" readonly required />
+                                    <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                    <select class="form-control " asp-for="@Model.inwardPacket[i].description" asp-items="@ViewBag.description" onchange="handleDespChange(this)"></select>
+                                    <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                                    </td> *@
+                                                <td  style="width:120px;">
+                                                    <input asp-for="@Model.inwardPacket[i].brand" class="form-control warranty-input" readonly />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].brand" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:120px;">
+                                                    <input asp-for="@Model.inwardPacket[i].POQty"
+                                                           class="form-control quantity-POQty"
+                                                           required  readonly/>
+                                                </td>
+
+                                                <td style="width:120px;">
+                                                    <input asp-for="@Model.inwardPacket[i].quantity"
+                                                           class="form-control quantity-input"
+                                                           required />
+                                                </td>
+                                                <td style="display:none;">
+                                                    <input asp-for="@Model.inwardPacket[i].setofsub_assemb" readonly class="form-control" />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].setofsub_assemb" class="text-danger"></span>
+                                                </td>
+                                                <td  style="display:none;">
+                                                    <input asp-for="@Model.inwardPacket[i].qtyperpkt" readonly class="form-control" />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].qtyperpkt" class="text-danger"></span>
+                                                </td>
+                                                <td  style="display:none;">
+                                                    <input asp-for="@Model.inwardPacket[i].noofpackets" readonly class="form-control noofpackets-input" />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].noofpackets" class="text-danger"></span>
+                                                </td>
+                                                <td  style="display:none;">
+                                                    <input asp-for="@Model.inwardPacket[i].totalpacket" readonly class="form-control" />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].totalpacket" class="text-danger"></span>
+                                                </td>
+                                                <td  style="display:none;">
+                                                    <input asp-for="@Model.inwardPacket[i].totalsubassmbly" id="totalsubassembly" class="form-control totalsubassembly" readonly required />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].totalsubassmbly" class="text-danger"></span>
+                                                    <input type="hidden" asp-for="@Model.inwardPacket[i].IsDeleted" />
+                                                </td>
+                                                <td style="width:100px;">
+                                                    <input asp-for="@Model.inwardPacket[i].uom" class="form-control" readonly />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].uom" class="text-danger"></span>
+                                                </td>
+                                                <td style="display: none;">
+                                                    <button id="hiddenButton"></button>
+                                                </td>
+                                                <td style="width:60px;">
+                                                    <button type="button" class="btn btn-success btn-sm scaningiduuu"
+                                                            onclick="CreateShippers1111(this)"
+                                                            data-productcode="@Model.inwardPacket[i].productcode"
+                                                            data-quantity="@Model.inwardPacket[i].quantity">
+                                                        <i class="fas fa-tags"></i>
+                                                    </button>
+                                                </td>
+                                                <td style="width:150px;display:none">
+                                                    <button class="btn btn-info btn-sm" onclick="showDetails(this)">Show Details</button>
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label asp-for="remark" class="control-label"></label>
+                                    <textarea asp-for="remark" id="writeremark" data-uppercase autocomplete="off" class="form-control" rows="2"></textarea>
+                                    <span asp-validation-for="remark" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="grnno" class="control-label"></label>
+                                    <input asp-for="grnno" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="grnno" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="grndate" class="control-label"></label>
+                                    <input asp-for="grndate" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="grndate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="hdnLastIndex" value="0" />
+                            <div class="row p-2">
+                                @* mx-lg-2 mx-md-2 *@
+                                @* batchcode, remark *@
+                                <div class="form-group col-sm-6 mt-2">
+                                    <label asp-for="batchcode" class="control-label"></label>
+                                    <input asp-for="batchcode" id="batchcode" readonly data-uppercase autocomplete="off" class="form-control" required oninput="validateAlphNum(this)" />
+                                    <span asp-validation-for="batchcode" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-2">
+                                    <label asp-for="remarks" class="control-label"></label>
+                                    <input asp-for="remarks" readonly data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                    <span asp-validation-for="remarks" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mx-lg-2 mx-md-2" style="display:none;">
+                                <div class="form-group col-sm-4 mt-3 ">
+                                    <label asp-for="date" class="control-label">Date</label>
+                                    <input type="date" readonly data-uppercase autocomplete="off" id="datepicker" asp-for="date" class="form-control" />
+                                    <span asp-validation-for="date" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-4 mt-3">
+                                    <label asp-for="time" readonly class="control-label">Time</label>
+                                    <input type="time" data-uppercase autocomplete="off" id="timepicker" asp-for="time" class="form-control" />
+                                    <span asp-validation-for="time" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row p-2">
+                            <div class="form-group col-sm-12 mt-3">
+                                <input type="submit" value="Reprinting" class="btn btn-success btn-sm col-sm-12" />
+                            </div>
+
+                        </div>
+                        @* <div class="row">
+                <div class="form-group col-sm-6">
+                <div class="form-group col-sm-12 mt-2">
+                <input type="submit" value="Change Status"  class="btn btn-success col-sm-12" />
+                </div>
+                </div>
+                </div> *@
+
+                    </form>
+                </div>
+
+
+            </section>
+        </main>
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<style>
+    .product {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+
+    .form-check-input {
+        /* position: absolute; */
+        position: relative;
+        margin-left: 25px;
+    }
+</style>
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+<!-- Modal -->
+<div id="myDetailsModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Dispatched Products Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Product Code: <span id="modalProductCode"></span></p>
+                <!-- Add more details here -->
+                <table class="table table-bordered" id="storeOperationsTable">
+                    <thead>
+                        <tr>
+                            <th>Check</th>
+                            <th>Product Code</th>
+                            <th>Box No</th>
+                            <th>Location </th>
+                            <th>Batch Code</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data will be dynamically populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <!-- Add additional buttons if needed -->
+            </div>
+        </div>
+    </div>
+</div>
+@* MODEL POPUP FOR CREATE SHIPPER *@
+<div class="modal fade" id="createShippersModal" tabindex="-1" role="dialog" aria-labelledby="createShippersModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog model-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createShippersModalLabel">Create Shippers</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div id="scaningid" class="container-fluid p-2">
+                    <div class="row mb-3" style="display:none">
+                        <div class="col-12">
+                            <label for="productnamesSelect" class="form-label small">Product Name</label>
+                            <select class="form-select form-select-sm" id="productnamesSelect">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label for="createShpQty0" class="form-label small">Generate Shp.Qty</label>
+                            <input type="number" id="createShpQty0" class="form-control form-control-sm" placeholder="Create Shp.qty">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <table id="scaningidtable" class="table table-sm table-bordered">
+                                <thead class="bg-dark">
+                                    <tr>
+                                        <th class="small">Shp.Count</th>
+                                        <th class="small">Quantities In Shipper</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="width:50px;">
+                                            <input type="number" id="createShpQty" class="form-control form-control-sm" placeholder=" Shp.Count">
+                                        </td>
+                                        <td>
+                                            <input type="text" id="createShpQty1" class="form-control form-control-sm" placeholder="Quantities In Shipper">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success btn-sm" id="btncreateshp" onclick="CreateShippers(this)">Save Data <i class="fas fa-tags"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    var rquantity, rproductcode;
+    function CreateShippers1111(button) {
+      
+        event.preventDefault();
+        console.log("CreateShippers1111 call");
+
+        var row = $(button).closest('tr'); // Find the closest row relative to the button
+        selectedSono = $("#pono").val();
+        rproductcode = $(button).data('productcode');
+        rquantity = $(button).closest('tr').find('.quantity-input').val();
+        soQty = $(button).closest('tr').find('.quantity-POQty').val(); // Get SOQty value
+        qtygrn = rquantity;
+        NoOfQtyPerShp = $(button).closest('tr').find('.noofpackets-input').val(); // Get SOQty value
+        console.log("NoOfQtyPerShp : *" + NoOfQtyPerShp + "*");
+        console.log("selectedSono : " + selectedSono);
+        console.log("rproductcode : " + rproductcode);
+        console.log("rquantity : " + rquantity);
+        console.log("soQty : " + soQty);
+        console.log(parseInt(rquantity) + ">" + parseInt(soQty));
+        if (parseInt(rquantity) > parseInt(soQty)) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning',
+                text: 'Quantity should be less then the PO Quantity !',
+            });
+            $('#createShippersModal').modal('hide');
+            return;
+        }
+        console.log(rquantity + ">" + 0);
+        if (parseInt(rquantity) > 0 && NoOfQtyPerShp == 0) {
+            //console.log("0 or empty");
+            console.log("selectedSono : " + selectedSono);
+            console.log("rproductcode : " + rproductcode);
+            console.log("rquantity : " + rquantity);
+            console.log("soQty : " + soQty);
+            $.ajax({
+                url: '/inwards/callAgain',
+                method: 'POST',
+                data: { product: rproductcode, qty: rquantity, sono: selectedSono },
+                success: function (response) {
+                    console.log("Success:", response);
+                    var tableBody = $("#scaningidtable tbody");
+                    $("#createShpQty0").val("");
+                    document.getElementById("createShpQty0").focus();
+                    // Clear the table body before handling new data
+                    if (response.data && Array.isArray(response.data) && response.data.length > 0) { // Ensure data is an array and has length
+                        console.log("Data found: " + response.data.length);
+
+                        console.log("in");
+                        tableBody.empty();
+                        // Bind data to the table
+                        response.data.forEach(function (item) {
+                            var row = `
+                        <tr>
+                            <td style="width:50px;">
+                                <input type="text" readonly id="createShpQty" class="form-control form-control-sm" value="${item.noqtypershp} Box" placeholder="Shp.Count">
+                            </td>
+                            <td>
+                                <input type="text" readonly id="createShpQty1" class="form-control form-control-sm" value="${item.quantity} Quantities" onchange="updateQuantity(this)" placeholder="Quantities In Shipper">
+                            </td>
+                        </tr>`;
+                            tableBody.append(row);
+                        });
+
+
+                        $('#createShippersModal').modal('show'); // Show modal when data exists
+                    } else {
+                        console.log("out");
+                        tableBody.empty(); // Clear the table body when no data is found
+                        $('#createShippersModal').modal('show'); // Still show modal if needed
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+        else {
+            //console.log("else ");
+            Swal.fire({
+                icon: 'warning',
+                title: 'Warning',
+                text: 'Qty should be reater then 0 and no if shp per qty value should be 0  !',
+            });
+            $('#createShippersModal').modal('hide');
+            return;
+        }
+
+    }
+    $('#createShpQty0').on('keypress', function (event) {
+        if (event.which === 13) {
+            event.preventDefault();
+            console.log("createShpQty0 call");
+            var balqty = qtygrn;
+
+            var input = $(this);
+            var qty = parseInt(input.val(), 10);
+            console.log("qty : " + qty);
+            if (!qty || qty <= 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please enter a valid quantity!',
+                });
+                return;
+            }
+            $.ajax({
+                url: '/inwards/CheckQtyInList',
+                method: 'POST',
+                data: { product: rproductcode, qty: qty, qty1: rquantity },
+                success: function (response) {
+                    if (response.success) {
+                        var repeatCount = response.data;
+                        var tbody = $('#scaningid tbody');
+                        tbody.empty(); // Clear existing rows
+
+                        for (var i = 0; i < repeatCount; i++) {
+                            var newRow = $('<tr>');
+                            newRow.append('<td style="width:50px;"><input type="number" class="form-control createShpQty" readonly value="' + (i + 1) + '"></td>');
+                            newRow.append('<td><input type="number" class="form-control createShpQty1" placeholder="Quantities allot" ></td>');
+                            tbody.append(newRow);
+                        }
+                        $('#btncreateshp').show();
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Oops...',
+                            text: 'Entered valid generate shipper value!',
+                        });
+                        $('#createShpQty0').val("");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+    });
+    function CreateShippers(button) {
+        event.preventDefault();
+        console.log("CreateShippers call");
+        sono = $("#pono").val();
+        // var balqty = $('#PickQtySr11').val();
+
+        var table = document.getElementById("scaningidtable");
+        var tableData = [];
+        var totalSum = 0; // Variable to accumulate the total sum
+
+        for (var i = 1; i < table.rows.length; i++) {
+            var cells = table.rows[i].cells;
+            var productCode = cells[0].querySelector('input').value;
+            var quantity = cells[1].querySelector('input').value;
+            totalSum += parseInt(quantity, 10); // Convert quantity to integer and add to total sum
+            tableData.push({ product: productCode, qty: quantity });
+        }
+
+        console.log("Total Quantity Sum:", totalSum + " > " + rquantity + " || " + totalSum + " != " + rquantity);
+        if (totalSum > rquantity) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Please enter valid quantities ! You have enter quantities - ' + totalSum + ' and inward quantity is ' + rquantity,
+
+            });
+            return;
+        }
+        var table1 = JSON.stringify(tableData);
+
+        if (totalSum == rquantity) {
+            $.ajax({
+                url: '/inwards/CreateStickers',
+                method: 'POST',
+                data: { product: rproductcode, qty: rquantity, tableData: tableData, sono: sono },
+                success: function (response) {
+                    console.log("Success:", response);
+                    // var blob = new Blob([response.fileContent], { type: 'text/plain' });
+                    // var a = document.createElement('a');
+                    // a.href = window.URL.createObjectURL(blob);
+                    // a.download = 'example.prn';
+                    // a.click();
+                    // window.URL.revokeObjectURL(a.href);
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                        }).then(() => {
+                            $('#createShpQty').val("");
+                            $('#createShippersModal').modal('hide');
+                        });
+                        return;
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: response.message,
+                        });
+                        $('#createShpQty').val("");
+                        return;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Please enter all the quantities !',
+            });
+            $('#createShpQty').val("");
+            return;
+        }
+    }
+
+
+    function updateCheckState(checkbox) {
+    var isChecked = checkbox.checked;
+    var hiddenInput = $(checkbox).closest('tr').find('input[type="hidden"][name$=".check"]');
+    hiddenInput.val(isChecked.toString());
+}
+
+
+    function showDetails(button) {
+        event.preventDefault();
+        var pono  = $("#pono").val();
+        var batch = $("#batchcode").val();
+        var row = $(button).closest('tr');
+
+        // Get product code from the row
+        var productCode = row.find('input[name^="inwardPacket["][name$="].productcode"]').val().trim();
+
+        // Set product code in the modal
+        $('#modalProductCode').text(productCode);
+
+
+
+        // Make AJAX request to fetch details
+            $.ajax({
+                url: '/inwards/GetStoreOperations', // Replace with your controller and action method
+                type: 'GET',
+            data: { productCode: productCode, pono: pono, batch: batch }, // Pass product code as a parameter
+                dataType: 'json',
+                success: function (data) {
+                    console.log("data : " + data);
+                    $('#storeOperationsTable tbody').empty();
+                if (data.length === 0) 
+                {
+                    // Show "No Dispatch Data!" text
+                    var row = `<tr>
+                                   <td colspan="5" class="text-center py-3 px-4" style="color:red;font-weight:600px;">No Dispatch Data!</td>
+                               </tr>`;
+                    $('#storeOperationsTable tbody').append(row);
+
+                    $('#myDetailsModal').modal('show');
+                }
+                else
+                {
+                    $.each(data, function (index, item) 
+                    {
+                        var row = `<tr>
+                                            <td class="py-3 px-4">
+                                                <input type="checkbox" class="form-check-input" />
+                                            </td>
+                                            <td class="py-3 px-4">${item.productcode}</td>
+                                            <td class="py-3 px-4">${item.boxno}</td>
+                                            <td class="py-3 px-4">${item.locationcode}</td>
+                                            <td class="py-3 px-4">${item.batchcode}</td>
+
+                                        </tr>
+                                        `;
+                                  $('#storeOperationsTable tbody').append(row);
+                        });
+                    }
+                    $('#myDetailsModal').modal('show');
+                },
+                error: function (error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+    }
+
+
+    
+//     $('#reprintingForm').on('submit', function (e) {
+//     e.preventDefault(); // Prevent the default form submission
+
+//      var selectedRows1 = [];
+//      var atLeastOneChecked = false;
+//      $('#CodesTable tbody tr').each(function () {
+//         var isChecked = $(this).find('input[type="checkbox"]').prop('checked');
+        
+//         if (isChecked) {
+//             atLeastOneChecked = true;
+//             var rowData = {
+//                 productCode: $(this).find('td:eq(1)').text().trim(),
+//                 description: $(this).find('td:eq(2)').text().trim()
+//                 // Add other fields as needed
+//             };
+//             selectedRows1.push(rowData);
+//             console.log("ceck : "+selectedRows1);
+//         }
+//     });
+
+//     if ($("#writeremark").val() == "") {
+//         Swal.fire({
+//             icon: 'warning',
+//             title: 'Warning',
+//             text: "Please write the remark first to regenerate stickers !",
+//         });
+//         return;
+//     }
+
+//     var form = $('#reprintingForm');
+//     var formDataArray = form.serializeArray();
+//     var formDataObject = {};
+
+//     formDataArray.forEach(function (item) {
+//         formDataObject[item.name] = item.value;
+//     });
+
+//     var selectedRows = [];
+
+//     // Check row data
+//     $('#storeOperationsTable tbody tr').each(function () {
+//         if ($(this).find('input[type="checkbox"]').prop('checked')) {
+//             var rowData = {
+//                 productCode: $(this).find('td:eq(1)').text().trim(),
+//                 boxNo: $(this).find('td:eq(2)').text().trim(),
+//                 locationCode: $(this).find('td:eq(3)').text().trim(),
+//                 batchCode: $(this).find('td:eq(4)').text().trim()
+//             };
+//             selectedRows.push(rowData);
+//         }
+//     });
+
+//     // Convert selectedRows into key-value pairs
+//     selectedRows.forEach((row, index) => {
+//         for (const key in row) {
+//             formDataObject[`selectedRows[${index}].${key}`] = row[key];
+//         }
+//     });
+
+//     // Print form data and list data separately
+//     console.log('Form Data:', formDataArray);
+//     console.log('Selected Rows:', selectedRows);
+
+//     // //CAL AJAAX TO CHECK LIST DATA
+//     //     $.ajax({
+//     //         url: '/inwards/CheckReprintData', // Replace with your controller and action method
+//     //         type: 'GET',
+//     //         dataType: 'json',
+//     //         success: function (response) 
+//     //         { 
+//     //             if(response.success){
+//     //                 console.log("Done");
+//     //             }else {
+//     //                 Swal.fire({
+//     //                     icon: 'warning',
+//     //                     title: 'Warning',
+//     //                     text: response.message,
+//     //                 });
+//     //                 return;
+//     //             }
+//     //         }
+//     //     });
+//     // //END
+
+
+//     $.ajax({
+//         url: form.attr('action'), // Use the form's action attribute as the URL
+//         type: form.attr('method'), // Use the form's method attribute as the request type
+//         data: formDataObject, // Send formDataObject as URL-encoded key-value pairs
+//         success: function (response) {
+//             console.log('Form submitted successfully!');
+//             var blob = new Blob([response], { type: 'text/plain' });
+//             var a = document.createElement('a');
+//             a.href = window.URL.createObjectURL(blob);
+//             a.download = 'example.prn';
+//             a.click();
+//             window.URL.revokeObjectURL(a.href);
+//             Swal.fire({
+//                 icon: 'success',
+//                 title: 'Success !',
+//                 text: 'Reprinting Done successfully !',
+//                 confirmButtonColor: '#3085d6',
+//                 confirmButtonText: 'OK'
+//             }).then((result) => {
+//                 if (result.isConfirmed) {
+//                     window.location.href = '/Home/Index';
+//                 }
+//             });
+//         },
+//         error: function (error) {
+//             // Handle error - show an error message
+//             alert('An error occurred. Please try again.');
+//             console.log(error);
+//         }
+//     });
+// });
+
+
+    $(document).ready(function () {
+        $('#reprintingForm').on('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            // Prepare data from the first table (CodesTable)
+            var selectedRows1 = [];
+            var atLeastOneChecked1 = false;
+
+            // $('#CodesTable tbody tr').each(function () {
+            //     var isChecked = $(this).find('input[type="checkbox"]').prop('checked');
+
+            //     if (isChecked) {
+            //         atLeastOneChecked1 = true;
+            //         var rowData = {
+            //             productCode: $(this).find('td:eq(1)').text().trim(),
+            //             description: $(this).find('td:eq(2)').text().trim()
+            //         };
+            //         selectedRows1.push(rowData);
+            //         console.log("Checked Rows from CodesTable: ", selectedRows1);
+            //     }
+            // });
+            $('#CodesTable tbody tr').each(function () {
+    var isChecked = $(this).find('input[type="checkbox"]').prop('checked');
+    
+    if (isChecked) {
+        atLeastOneChecked = true;
+        var rowData = {
+            productCode: $(this).find('input[name^="inwardPacket"][name$=".productcode"]').val().trim(), // Changed this line
+            description: $(this).find('input[name^="inwardPacket"][name$=".description"]').val().trim() // Changed this line
+        };
+        selectedRows1.push(rowData);
+        console.log("Checked Rows: ", selectedRows1);
+    }
+});
+
+
+            // Show warning if no remark is provided
+            if ($("#writeremark").val() == "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: "Please write the remark first to regenerate stickers!",
+                });
+                return;
+            }
+
+            // Prepare form data
+            var form = $('#reprintingForm');
+            var formDataArray = form.serializeArray();
+            var formDataObject = {};
+
+            formDataArray.forEach(function (item) {
+                formDataObject[item.name] = item.value;
+            });
+
+            // Prepare data from the second table (storeOperationsTable)
+            var selectedRows2 = [];
+
+            $('#storeOperationsTable tbody tr').each(function () {
+                if ($(this).find('input[type="checkbox"]').prop('checked')) {
+                    var rowData = {
+                        productCode: $(this).find('td:eq(1)').text().trim(),
+                        boxNo: $(this).find('td:eq(2)').text().trim(),
+                        locationCode: $(this).find('td:eq(3)').text().trim(),
+                        batchCode: $(this).find('td:eq(4)').text().trim()
+                    };
+                    selectedRows2.push(rowData);
+                }
+            });
+
+            // Convert selectedRows from CodesTable into key-value pairs
+            selectedRows1.forEach((row, index) => {
+                for (const key in row) {
+                    formDataObject[`selectedCodesRows[${index}].${key}`] = row[key];
+                }
+            });
+
+            // Convert selectedRows from storeOperationsTable into key-value pairs
+            selectedRows2.forEach((row, index) => {
+                for (const key in row) {
+                    formDataObject[`selectedStoreRows[${index}].${key}`] = row[key];
+                }
+            });
+
+            // Log the data for debugging
+            console.log('Form Data:', formDataObject);
+            console.log('Selected Rows from CodesTable:', selectedRows1);
+            console.log('Selected Rows from StoreOperationsTable:', selectedRows2);
+
+            // Send AJAX request to submit the form
+            $.ajax({
+                url: form.attr('action'), // Use the form's action attribute as the URL
+                type: form.attr('method'), // Use the form's method attribute as the request type
+                data: formDataObject, // Send formDataObject as URL-encoded key-value pairs
+                success: function (response) {
+                    console.log('Form submitted successfully!');
+                    var blob = new Blob([response], { type: 'text/plain' });
+                    var a = document.createElement('a');
+                    a.href = window.URL.createObjectURL(blob);
+                    a.download = 'example.prn';
+                    a.click();
+                    window.URL.revokeObjectURL(a.href);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Reprinting done successfully!',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/Home/Index';
+                        }
+                    });
+                },
+                error: function (error) {
+                    // Handle error - show an error message
+                    alert('An error occurred. Please try again.');
+                    console.log(error);
+                }
+            });
+        });
+    });
+
+
+
+    function showTooltip(event, value, tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.innerText = value;
+            tooltip.style.top = (event.clientY + 10) + 'px';
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.display = 'block';
+        }
+    }
+
+    function hideTooltip(tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.style.display = 'none';
+        }
+    }
+    function handleDespChange(selectElement) {
+        var product = selectElement.value;
+
+        var tid = selectElement.id;
+        var product = selectElement.value;
+        console.log(product);
+
+        var txtProductCodeId = tid.replaceAll('description', 'productcode');
+        var txtuomId = tid.replaceAll('description', 'uom');
+        var txtbrandId = tid.replaceAll('description', 'brand');
+
+        var txtProductCode = document.getElementById(txtProductCodeId);
+        var txtuom = document.getElementById(txtuomId);
+        var txtbrand = document.getElementById(txtbrandId);
+
+        txtProductCode.value = null;
+        $.ajax({
+            url: '@Url.Action("ActionName_description", "inwards")',
+            type: 'GET',
+            dataType: 'json',
+            data: { selectedvalue: product },
+            success: function (data) {
+                console.log(data);
+
+                txtProductCode.value = data.modelno;
+                txtuom.value = data.uom;
+                txtbrand.value = data.brand;
+            }
+        });
+    }
+
+
+    // $(document).ready(function () {
+    //     $('#typeofreturn').change(function () {
+    //         var selectedValue = $(this).val();
+
+    //         // Hide all sections initially
+    //         $('#radioButtonsSection').hide();
+    //         $('#referencenoSection').hide();
+    //         $('#dcdateSection').hide();
+    //         $('#invoicenoSection').hide();
+
+    //         if (selectedValue === 'Billed') {
+    //             $('#radioButtonsSection').show();
+
+    //             $('input[name="option"]').change(function () {
+    //                 var optionSelected = $('input[name="option"]:checked').val();
+
+    //                 // Hide all sections initially
+    //                 $('#referencenoSection').hide();
+    //                 $('#dcdateSection').hide();
+    //                 $('#invoicenoSection').hide();
+
+    //                 // Show the relevant sections based on the selected radio button
+    //                 if (optionSelected === 'dc') {
+    //                     $('#referencenoSection').show();
+    //                     $('#dcdateSection').show();
+    //                     $('#dcdateLabel').text('DC Date'); // Change label text for DC Date
+    //                     $('#referencenoLabel').text('DC No.'); // Change label text for DC Date
+
+    //                 } else if (optionSelected === 'invoice') {
+    //                     $('#invoicenoSection').show();
+    //                     $('#dcdateSection').show();
+    //                     $('#dcdateLabel').text('Invoice Date'); // Change label text for Invoice Date
+    //                     $('#invoicenoLabel').text('Invoice No.'); // Change label text for Invoice Date
+
+    //                 }
+    //             });
+    //         }
+    //     });
+    // });
+
+</script>

@@ -1,0 +1,759 @@
+﻿@model List<eros.Models.InStockQty>
+@{
+    ViewData["Title"] = "StockMovementList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div id="spinner" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <p class="mt-2">Generating PDF...</p>
+        </div>
+        <div class="mt-2">
+            <div class="card m-2">
+                <div class="card-header bg-dark text-white">
+                    <div class="d-flex align-items-baseline">
+                        <h5 class="mx-auto font-weight-bolder small-heading">Stock Ledger Report</h5>
+                        <button class="btn btn-danger btn-sm  mr-2" onclick="exportToPdf()">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm  mr-2" id="downloadExcel"><i class="fa fa-regular fa-file-excel"></i> Excel</button>
+                        <a asp-action="Index" asp-controller="Home" class="btn btn-success btn-sm text-white  mr-2">
+                            <i class="fa fa-reply"></i> Back
+                        </a>
+                    </div>
+                </div>
+                <div class=" mt-4">
+                    <div class="row mx-lg-2 mx-md-2">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="ProductFilter">Search Product</label>
+                                <select id="ProductFilter" class="form-control form-select-sm" onchange="filterTable()">
+                                    <option value="">All</option>
+                                    @{
+                                        var product = Model.Select(m => m.productcode).Distinct().ToList();
+                                        foreach (var pro in product)
+                                        {
+                                           <option value="@pro">@pro</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="fromDate" class="font-weight-bold">From Date:</label>
+                                <input type="date" class="form-control" id="fromDate" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="toDate" class="font-weight-bold">To Date:</label>
+                                <input type="date" class="form-control" id="toDate" />
+                            </div>
+                        </div>
+                        <div class="col-md-12" id="pendingOrdersContainer">
+                            @* @Html.Partial("StokeLedgerView", Model) *@
+                            <div class="card-body">
+                                <div class="table-responsive col-md-12 p-0">
+                                    <table class="table table-striped table-sm" id="dataTable">
+                                        <thead class="bg-gray-200 sticky top-0">
+                                            <tr class="small">
+                                                <th>Sr.No</th>
+                                                <th>Product Code</th>
+                                                <th>Product Name</th>
+                                                <th>In Qty</th>
+                                                <th>Out Qty</th>
+                                                <th> Bal Qty</th>
+                                                <th>Report</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="small">
+                                            @{
+                                                int counter = 1;
+                                            }
+                                            @foreach (var quantity in Model)
+                                            {
+                                                <tr class="data-row" data-productcode="@quantity.productcode">
+                                                    <td>@counter</td>
+                                                    <td style="width:250px; ">@quantity.productcode</td>
+                                                    <td>@quantity.productname</td>
+                                                    <td>@quantity.inqty   </td>
+                                                    <td>@quantity.outqty   </td>
+                                                    <td>@quantity.currentqty   </td>
+                                                    <td>
+                                                        <a asp-controller="Report" asp-action="StockDetails" asp-route-productcode="@quantity.productcode" asp-route-balqty="@quantity.currentqty" class="btn bg-info">
+                                                            <i style="color:white" class="fa fa-eye" aria-hidden="true"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                counter++;
+                                            }
+                                        </tbody>
+
+                                    </table>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    #spinner {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000; /* Ensure it's above other content */
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+</style>
+
+
+@* PDF *@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+@* EXCEL *@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="~/js/xlsx.full.min.js"></script>
+
+
+<script>
+    function filterTable() {
+        
+        var category = $('#ProductFilter').val();
+        var dataTable = $('#dataTable').DataTable();
+        dataTable.column(1).search(category).draw();
+
+        updateSerialNumbers();
+    }
+    function updateSerialNumbers() {
+        $('#dataTable tbody tr').each(function (index) {
+            $(this).find('td').eq(0).text(index + 1);
+        });
+    }
+</script>
+<script>
+    // $.ajax({
+    //     url: '@Url.Action("StokeLedger_FilterDataByDate", "Report")',
+    //     type: 'GET',
+    //     data: { fromDate: fromDate, toDate: toDate },
+    //     success: function (data) {
+    //         filteredData = data.map((item, index) => [
+    //             (index + 1).toString(),
+    //             item.productcode,
+    //             item.productname,
+    //             item.inqty,
+    //             item.outqty,
+    //             item.currentqty,
+    //             '<a href="/Report/StockDetails?productcode=' + item.productcode + '" class="btn bg-info"><i style="color:white" class="fa fa-eye" aria-hidden="true"></i></a>'
+    //         ]);
+
+    //         $('#dataTable tbody').empty();
+
+    //         $.each(filteredData, function (index, row) {
+    //             var rowHtml = '<tr>';
+    //             row.forEach(function (cell) {
+    //                 rowHtml += '<td>' + cell + '</td>';
+    //             });
+    //             rowHtml += '</tr>';
+    //             $('#dataTable tbody').append(rowHtml);
+    //         });
+
+    //         updateSerialNumbers();
+    //     },
+    //     error: function () {
+    //         console.log("An error occurred while executing the action.");
+    //     }
+    // });
+
+    // $.ajax({
+    //     url: '@Url.Action("StokeLedger_FilterDataByDate", "Report")',
+    //     type: 'GET',
+    //     data: { fromDate: fromDate, toDate: toDate },
+    //     success: function (data) {
+    //         filteredData = data.map((item, index) => [
+    //             (index + 1).toString(),
+    //             item.productcode || '',
+    //             item.productname || '',
+    //             item.inqty || 0,
+    //             item.outqty || 0,
+    //             item.currentqty || 0,
+    //             '<a href="/Report/StockDetails?productcode=' + item.productcode + '" class="btn bg-info"><i style="color:white" class="fa fa-eye" aria-hidden="true"></i></a>'
+    //         ]);
+
+    //         $('#dataTable tbody').empty();
+
+    //         $.each(filteredData, function (index, row) {
+    //             var rowHtml = '<tr>';
+    //             row.forEach(function (cell) {
+    //                 rowHtml += '<td>' + cell + '</td>';
+    //             });
+    //             rowHtml += '</tr>';
+    //             $('#dataTable tbody').append(rowHtml);
+    //         });
+
+    //         updateSerialNumbers();
+    //     },
+    //     error: function () {
+    //         console.log("An error occurred while executing the action.");
+    //     }
+    // });
+    $('#fromDate, #toDate').on('change', function () {
+        var fromDate = $('#fromDate').val();
+        var toDate = $('#toDate').val();
+        console.log("Selected From Date: " + fromDate);
+        console.log("Selected To Date: " + toDate);
+        $.ajax({
+            url: '@Url.Action("StokeLedger_FilterDataByDate", "Report")',
+            type: 'GET',
+            data: { fromDate: fromDate, toDate: toDate },
+            success: function (data) {
+                filteredData = data.map((item, index) => [
+                    (index + 1).toString(),
+                    item.productcode || '',
+                    item.productname || '',
+                    item.inqty || 0,
+                    item.outqty || 0,
+                    item.currentqty || 0,
+                    '<a href="/Report/StockDetails?productcode=' + item.productcode + '" class="btn bg-info"><i style="color:white" class="fa fa-eye" aria-hidden="true"></i></a>'
+                ]);
+
+                // Clear and update the DataTable with filtered data
+                $('#dataTable tbody').empty();
+                $.each(filteredData, function (index, row) {
+                    var rowHtml = '<tr>';
+                    row.forEach(function (cell) {
+                        rowHtml += '<td>' + cell + '</td>';
+                    });
+                    rowHtml += '</tr>';
+                    $('#dataTable tbody').append(rowHtml);
+                });
+
+                updateSerialNumbers(); // Ensure serial numbers are updated
+            },
+            error: function () {
+                console.log("An error occurred while executing the action.");
+            }
+        });
+
+    });
+</script>
+<script>
+    var filteredData = [];
+    // function exportToPdf() {
+    //     $('#spinner').show();
+    //     var data = [];
+    //     var heading = 'EROS GENERAL AGENCIES PVT. LTD.';
+    //     updateSerialNumbers();
+
+    //     // Define the indices of the selected columns (0-based index)
+    //     var selectedColumns = [0, 1, 2, 3, 4, 5]; // No., Pro.Code, Pro.Name, In.Qty, Out.Qty, Bal.Qty
+
+    //     // Function to extract data from the current page
+    //     function extractDataFromPage() {
+    //         var pageData = [];
+    //         $('#dataTable tbody tr').each(function () {
+    //             var rowData = [];
+    //             $(this).find('td').each(function (index) {
+    //                 if (selectedColumns.includes(index)) {
+    //                     rowData.push($(this).text().trim());
+    //                 }
+    //             });
+    //             pageData.push(rowData);
+    //         });
+    //         return pageData;
+    //     }
+
+    //     // Function to extract data from all pages
+    //     function extractDataFromAllPages() {
+    //         var allData = [];
+    //         var table = $('#dataTable').DataTable();
+    //         var totalPages = table.page.info().pages;
+
+    //         for (var pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+    //             table.page(pageIndex).draw('page');
+    //             allData = allData.concat(extractDataFromPage());
+    //         }
+
+    //         // Reset back to the first page
+    //         table.page('first').draw('page');
+    //         return allData;
+    //     }
+
+    //     // Check if filtered data is available and use it, otherwise collect all data
+    //     if (filteredData.length > 0) {
+    //         data = filteredData.map(row => selectedColumns.map(index => row[index]));
+    //     } else {
+    //         data = extractDataFromAllPages();
+    //     }
+
+    //     // Get the current date and time
+    //     const currentDate = new Date();
+    //     const formattedDate = ("0" + currentDate.getDate()).slice(-2) + "-" +
+    //         ("0" + (currentDate.getMonth() + 1)).slice(-2) + "-" +
+    //         currentDate.getFullYear();
+    //     const formattedTime = currentDate.toLocaleTimeString();
+    //     const dateTimeString = `Generated on: ${formattedDate} at ${formattedTime}`;
+
+    //     // Create subheading text
+    //     const subHeadingText = ` Orders Details (${dateTimeString})`;
+
+    //     // Create a div element to hold the PDF content
+    //     var element = document.createElement('div');
+    //     element.innerHTML = `
+    //         <h2 style="text-align: center; font-size: 12px;">${heading}</h2>
+    //         <h6 style="text-align: center; font-size: 12px;">${subHeadingText}</h6>
+    //         <table style="border-collapse: collapse; width: 100%; font-size: 10px; margin-top: 3px;">
+    //             <thead>
+    //                 <tr style="background-color: #f2f2f2;">
+    //                     ${selectedColumns.includes(0) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">Sr.No</th>' : ''}
+    //                     ${selectedColumns.includes(1) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">Product Code</th>' : ''}
+    //                     ${selectedColumns.includes(2) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">Product Name</th>' : ''}
+    //                     ${selectedColumns.includes(3) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">In Qty</th>' : ''}
+    //                     ${selectedColumns.includes(4) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">Out Qty</th>' : ''}
+    //                     ${selectedColumns.includes(5) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">Bal Qty</th>' : ''}
+    //                 </tr>
+    //             </thead>
+    //             <tbody>
+    //                 ${data.map(row => `
+    //                     <tr>
+    //                         ${row.map(cell => `<td style="border: 1px solid #ddd; text-align:center; padding: 2px;">${cell}</td>`).join('')}
+    //                     </tr>
+    //                 `).join('')}
+    //             </tbody>
+    //         </table>
+    //     `;
+
+    //     // PDF generation options
+    //     var options = {
+    //         margin: [10, 10, 10, 10],
+    //         filename: 'Stock_Ledger.pdf',
+    //         image: { type: 'jpeg', quality: 1.0 },
+    //         html2canvas: { scale: 4 },  // Increase scale for better quality
+    //         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    //     };
+
+    //     // Generate and save the PDF
+    //     // html2pdf().set(options).from(element).save();
+    //     html2pdf()
+    //         .set(options)
+    //         .from(element)
+    //         .save()
+    //         .then(() => {
+    //             // Hide spinner on success
+    //             $('#spinner').hide();
+    //         })
+    //         .catch(error => {
+    //             console.error('Error generating PDF:', error);
+    //             // Hide spinner on error (optional, depends on your error handling strategy)
+    //             $('#spinner').hide();
+    //         });
+    // }
+    function exportToPdf() {
+        $('#spinner').show();
+        var data = [];
+        var heading = 'EROS GENERAL AGENCIES PVT. LTD.';
+        updateSerialNumbers();
+
+        // Define the indices of the selected columns (0-based index)
+        var selectedColumns = [0, 1, 2, 3, 4, 5]; // No., Pro.Code, Pro.Name, In.Qty, Out.Qty, Bal.Qty
+
+        // Function to extract data from the current page
+        function extractDataFromPage() {
+            var pageData = [];
+            $('#dataTable tbody tr').each(function () {
+                var rowData = [];
+                $(this).find('td').each(function (index) {
+                    if (selectedColumns.includes(index)) {
+                        rowData.push($(this).text().trim());
+                    }
+                });
+                pageData.push(rowData);
+            });
+            return pageData;
+        }
+
+        // Function to extract data from all pages
+        function extractDataFromAllPages() {
+            var allData = [];
+            var table = $('#dataTable').DataTable();
+            var totalPages = table.page.info().pages;
+
+            for (var pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+                table.page(pageIndex).draw('page');
+                allData = allData.concat(extractDataFromPage());
+            }
+
+            // Reset back to the first page
+            table.page('first').draw('page');
+            return allData;
+        }
+
+        // Check if filtered data is available and use it, otherwise collect all data
+        if (filteredData.length > 0) {
+            data = filteredData.map(row => selectedColumns.map(index => row[index]));
+        } else {
+            data = extractDataFromAllPages();
+        }
+
+        // Get the current date and time
+        const currentDate = new Date();
+        const formattedDate = ("0" + currentDate.getDate()).slice(-2) + "-" +
+            ("0" + (currentDate.getMonth() + 1)).slice(-2) + "-" +
+            currentDate.getFullYear();
+        const formattedTime = currentDate.toLocaleTimeString();
+        const dateTimeString = `Generated on: ${formattedDate} at ${formattedTime}`;
+
+        // Create subheading text
+        const subHeadingText = ` Orders Details (${dateTimeString})`;
+
+        // Create a div element to hold the PDF content
+        var element = document.createElement('div');
+        element.innerHTML = `
+            <div style="text-align: center;">
+                <img src="/img/logo1.png" alt="Company Logo" style="width: 60px; height: auto; margin-bottom: 5px;"/>
+                <h2 style="font-size: 12px;">${heading}</h2>
+                <h6 style="font-size: 12px;">${subHeadingText}</h6>
+            </div>
+            <table style="border-collapse: collapse; width: 100%; font-size: 10px; margin-top: 3px; text-align: center;">
+                <thead>
+                    <tr style="background-color: #f2f2f2;">
+                        ${selectedColumns.includes(0) ? '<th style="border: 1px solid #ddd; padding: 2px;">Sr.No</th>' : ''}
+                        ${selectedColumns.includes(1) ? '<th style="border: 1px solid #ddd; padding: 2px;">Product Code</th>' : ''}
+                        ${selectedColumns.includes(2) ? '<th style="border: 1px solid #ddd; padding: 2px;">Product Name</th>' : ''}
+                        ${selectedColumns.includes(3) ? '<th style="border: 1px solid #ddd; padding: 2px;">In Qty</th>' : ''}
+                        ${selectedColumns.includes(4) ? '<th style="border: 1px solid #ddd; padding: 2px;">Out Qty</th>' : ''}
+                        ${selectedColumns.includes(5) ? '<th style="border: 1px solid #ddd; padding: 2px;">Bal Qty</th>' : ''}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.map(row => `
+                        <tr>
+                            ${row.map(cell => `<td style="border: 1px solid #ddd; padding: 2px;">${cell}</td>`).join('')}
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+
+        // PDF generation options
+        var options = {
+            margin: [10, 10, 10, 10],
+            filename: 'Stock_Ledger.pdf',
+            image: { type: 'jpeg', quality: 1.0 },
+            html2canvas: { scale: 4 },  // Increase scale for better quality
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        // Generate and save the PDF
+        html2pdf()
+            .set(options)
+            .from(element)
+            .save()
+            .then(() => {
+                // Hide spinner on success
+                $('#spinner').hide();
+            })
+            .catch(error => {
+                console.error('Error generating PDF:', error);
+                // Hide spinner on error (optional, depends on your error handling strategy)
+                $('#spinner').hide();
+            });
+    }
+
+    $('#downloadExcel').click(function () {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Order Sheet');
+
+        const sheetHeading = ['EROS GENERAL AGENCIES PVT. LTD.'];
+        const now = new Date();
+        const formattedDate = formatDate(now);
+        const formattedTime = now.toLocaleTimeString();
+        const SubHeading = ['Excel generated on ' + formattedDate + ' at ' + formattedTime];
+        const tableHeading = ['Sr.No.', 'Product Code', 'Product Name', 'In Qty', 'Out Qty', 'Bal Qty'];
+
+        let wsData = [sheetHeading, SubHeading, tableHeading];
+
+        console.log("filteredData : " + filteredData);
+        // Use filteredData if available, otherwise extract from DataTable
+        let dataToExport = filteredData.length > 0 ? filteredData : extractDataFromDataTable();
+        console.log("dataToExport : " + dataToExport);
+        // Populate wsData with data rows including serial number
+        let serialNumber = 1;
+        if (filteredData.length > 0) {
+            dataToExport.forEach(item => {
+                wsData.push([
+                    serialNumber,
+                    item[1],
+                    item[2],
+                    Number(item[3]), // Convert to number
+                    Number(item[4]), // Convert to number
+                    Number(item[5]) // Convert to number
+                ]);
+                console.log("wsData : " + wsData);
+                serialNumber++; // Increment serial number for each row
+            });
+        } else {
+            dataToExport.forEach(item => {
+                wsData.push([
+                    serialNumber,
+                    item.productcode,
+                    item.productname,
+                    Number(item.inqty), // Convert to number
+                    Number(item.outqty), // Convert to number
+                    Number(item.currentqty) // Convert to number
+                ]);
+                console.log("wsData : " + wsData);
+                serialNumber++; // Increment serial number for each row
+            });
+        }
+        
+        const borderStyle = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+
+        const headingRow = worksheet.addRow(sheetHeading);
+        headingRow.font = { bold: true, size: 14 };
+        worksheet.mergeCells('A1:F1');
+        headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        headingRow.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        const headingRow1 = worksheet.addRow(SubHeading);
+        worksheet.mergeCells('A2:F2');
+        headingRow1.font = { size: 10 };
+        headingRow1.alignment = { horizontal: 'center', vertical: 'center' };
+        headingRow1.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        const headerRow = worksheet.addRow(tableHeading);
+        headerRow.eachCell((cell) => {
+            cell.font = { bold: true, size: 12 };
+            cell.alignment = { horizontal: 'center', vertical: 'center' };
+            cell.border = borderStyle;
+        });
+
+        // Populate worksheet with wsData
+        wsData.slice(3).forEach(dataRow => {
+            const row = worksheet.addRow(dataRow);
+            for (let i = 0; i < 6; i++) { // Only first 6 columns will be bordered (excluding Report)
+                const cell = row.getCell(i + 1);
+                cell.alignment = { horizontal: 'center', vertical: 'center' };
+                if (i === 2) { // Wrap text in the third column if needed
+                    cell.alignment.wrapText = true;
+                }
+                cell.border = borderStyle;
+            }
+        });
+
+        // Set the column widths
+        const columnWidths = [10, 35, 45, 10, 10, 10]; // Adjust widths as needed
+        worksheet.columns.forEach((column, index) => {
+            column.width = columnWidths[index] || 10; // Default width if not specified
+        });
+
+        // Generate and save the workbook
+        workbook.xlsx.writeBuffer().then(function (buffer) {
+            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Stock_Ledger.xlsx');
+        });
+    });
+    function formatDate(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+    function extractDataFromDataTable() {
+        //alert("fatch data cal")
+        const data = [];
+        const dataTable = $('#dataTable').DataTable();
+        dataTable.rows({ search: 'applied' }).every(function (rowIdx, tableLoop, rowLoop) {
+            const rowData = this.data();
+            data.push({
+                productcode: rowData[1],
+                productname: rowData[2],
+                inqty: rowData[3],
+                outqty: rowData[4],
+                currentqty: rowData[5]
+            });
+        });
+        console.log("data : " + data);
+        return data;
+    }
+</script>
+
+    <script>
+    // $('#downloadExcel').click(function () {
+    //     const workbook = new ExcelJS.Workbook();
+    //     const worksheet = workbook.addWorksheet('Order Sheet');
+
+    //     const sheetHeading = ['EROS GENERAL AGENCIES PVT. LTD.'];
+    //     const now = new Date();
+    //     const formattedDate = formatDate(now);
+    //     const formattedTime = now.toLocaleTimeString();
+    //     const SubHeading = ['Excel generated on ' + formattedDate + ' at ' + formattedTime];
+    //     const tableHeading = ['Sr.No.', 'Product Code', 'Product Name', 'In Qty', 'Out Qty', 'Bal Qty'];
+
+    //     let wsData = [sheetHeading, SubHeading, tableHeading];
+
+    //     // Use filteredData if available, otherwise extract from DataTable
+    //     let dataToExport = filteredData.length > 0 ? filteredData : extractDataFromDataTable();
+
+    //     // Populate wsData with data rows including serial number
+    //     let serialNumber = 1;
+    //     dataToExport.forEach(item => {
+    //         wsData.push([
+    //             serialNumber,
+    //             item.productcode,
+    //             item.productname,
+    //             Number(item.inqty), // Convert to number
+    //             Number(item.outqty), // Convert to number
+    //             Number(item.currentqty) // Convert to number
+    //         ]);
+    //         serialNumber++; // Increment serial number for each row
+    //     });
+
+    //     const borderStyle = {
+    //         top: { style: 'thin' },
+    //         left: { style: 'thin' },
+    //         bottom: { style: 'thin' },
+    //         right: { style: 'thin' }
+    //     };
+
+    //     const headingRow = worksheet.addRow(sheetHeading);
+    //     headingRow.font = { bold: true, size: 14 };
+    //     worksheet.mergeCells('A1:F1');
+    //     headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     headingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     const headingRow1 = worksheet.addRow(SubHeading);
+    //     worksheet.mergeCells('A2:F2');
+    //     headingRow1.font = { size: 10 };
+    //     headingRow1.alignment = { horizontal: 'center', vertical: 'center' };
+    //     headingRow1.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     const headerRow = worksheet.addRow(tableHeading);
+    //     headerRow.eachCell((cell) => {
+    //         cell.font = { bold: true, size: 12 };
+    //         cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //         cell.border = borderStyle;
+    //     });
+
+    //     // Populate worksheet with wsData
+    //     wsData.slice(3).forEach(dataRow => {
+    //         const row = worksheet.addRow(dataRow);
+    //         for (let i = 0; i < 6; i++) { // Only first 6 columns will be bordered (excluding Report)
+    //             const cell = row.getCell(i + 1);
+    //             cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //             if (i === 2) { // Wrap text in the third column if needed
+    //                 cell.alignment.wrapText = true;
+    //             }
+    //             cell.border = borderStyle;
+    //         }
+    //     });
+
+    //     // Set the column widths
+    //     const columnWidths = [10, 35, 45, 10, 10, 10]; // Adjust widths as needed
+    //     worksheet.columns.forEach((column, index) => {
+    //         column.width = columnWidths[index] || 10; // Default width if not specified
+    //     });
+
+    //     // Generate and save the workbook
+    //     workbook.xlsx.writeBuffer().then(function (buffer) {
+    //         saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Stock_Ledger.xlsx');
+    //     });
+    // });
+
+    // function formatDate(date) {
+    //     const day = String(date.getDate()).padStart(2, '0');
+    //     const month = String(date.getMonth() + 1).padStart(2, '0');
+    //     const year = date.getFullYear();
+    //     return `${day}/${month}/${year}`;
+    // }
+
+    // function extractDataFromDataTable() {
+    //     const data = [];
+    //     const dataTable = $('#dataTable').DataTable();
+    //     dataTable.rows({ search: 'applied' }).every(function (rowIdx, tableLoop, rowLoop) {
+    //         const rowData = this.data();
+    //         data.push({
+    //             productcode: rowData[1],
+    //             productname: rowData[2],
+    //             inqty: rowData[3],
+    //             outqty: rowData[4],
+    //             currentqty: rowData[5]
+    //         });
+    //     });
+    //     return data;
+    // }
+    </script>

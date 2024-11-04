@@ -1,0 +1,216 @@
+﻿@* @page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = "~/Areas/Identity/Pages/_AuthLayout.cshtml";
+}
+
+<div class="row justify-content-center">
+    <div class="col-10">
+        <section>
+            <form id="account" method="post">
+                <h2 class="text-center">Login</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div class="form-floating mb-3">
+                    <small><label asp-for="Input.Email" class="form-label"><b>Email</b></label></small>
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <small><label asp-for="Input.Password" class="form-label"><b>Password</b></label></small>
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="checkbox mb-2">
+                    <small>
+                        <label asp-for="Input.RememberMe" class="form-label">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </small>
+                </div>
+                <div>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-info">Login Here</button>
+                </div>
+
+                <br><br>
+                
+                <p>Don't have an Account yet ?<span><a href="/Identity/Account/Register"><b>Register Here</b></a></span> </p>
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+ *@
+
+                     @page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = "~/Areas/Identity/Pages/_AuthLayout.cshtml";
+}
+
+@*<div class="row justify-content-center">
+    <div class="col-10">
+        <section>
+            <form id="account" method="post">
+                <h2 class="text-center">Login</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div class="form-floating mb-3">
+                    <small><label asp-for="Input.Email" class="form-label"><b>Email</b></label></small>
+                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <small><label asp-for="Input.Password" class="form-label"><b>Password</b></label></small>
+                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="checkbox mb-2">
+                    <small>
+                        <label asp-for="Input.RememberMe" class="form-label">
+                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </small>
+                </div>
+                <div>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-info">Login Here</button>
+                </div>
+
+                <br><br>
+
+                <p>Don't have an Account yet ?<span><a href="/Identity/Account/Register"><b>Register Here</b></a></span> </p>
+            </form>
+        </section>
+    </div>
+</div> *@
+
+
+
+
+<style>
+    body {
+        min-height: 70vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+        .login-header h2 {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .login-header .logo-icon {
+            font-size: 3rem;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+    .form-floating {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        border: 2px solid #e9ecef;
+        padding: 12px;
+        height: auto;
+        font-size: 1rem;
+    }
+
+        .form-control:focus {
+            border-color: #34495e;
+            box-shadow: 0 0 0 0.2rem rgba(52, 73, 94, 0.25);
+        }
+
+    .register-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .register-link a {
+            color: #34495e;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+            .register-link a:hover {
+                text-decoration: underline;
+            }
+</style>
+
+<div class="login-container">
+    <div class="login-header">
+        @* <i class="fas fa-couch logo-icon"></i> *@
+        <img style="width:70px;" src="~/img/logo1.png" alt="Eros Group Logo" class="company-logo">
+
+        <h4  style="font-weight:600">Warehouse Management System</h4>
+        @* <h4>EROS GENERAL AGENCIES PVT. LTD.</h4> *@
+        @* <p class="text-muted">Welcome back! Please login to your account</p> *@
+    </div>
+
+    <form id="account" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+        <div class="form-floating">
+            <input asp-for="Input.Email" class="form-control" autocomplete="username"
+                   aria-required="true" placeholder="name@example.com" />
+            <label asp-for="Input.Email">
+                <i class="fas fa-envelope me-2"></i>Email Address
+            </label>
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-floating">
+            <input asp-for="Input.Password" class="form-control" autocomplete="current-password"
+                   aria-required="true" placeholder="password" type="password" />
+            <label asp-for="Input.Password">
+                <i class="fas fa-lock me-2"></i>Password
+            </label>
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" asp-for="Input.RememberMe" id="rememberMe" />
+            <label class="form-check-label" for="rememberMe">
+                Remember me
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-login btn-lg w-100 text-white mb-3" style="background-color: #2c3e50;
+            padding: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;">
+            <i class="fas fa-sign-in-alt me-2"></i>Login
+        </button>
+
+        <div class="register-link">
+            <p class="mb-0">
+                Don't have an account?
+                <a href="/Identity/Account/Register">Register Here</a>
+            </p>
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

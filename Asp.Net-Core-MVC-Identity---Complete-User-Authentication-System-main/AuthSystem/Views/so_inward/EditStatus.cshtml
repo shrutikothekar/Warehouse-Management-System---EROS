@@ -1,0 +1,556 @@
+﻿@model eros.Models.so_inward
+
+@{
+    ViewData["Title"] = "EditStatus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+          "Product Code",
+        "Product Name" ,
+        // "Decription" ,
+        // "Warranty",
+        "Brand Name" ,
+        "Qty" ,
+        "UOM" ,
+        // "HSN Code"
+        };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <main class="page payment-page">
+            <section class="payment-form mt-4 ">
+                <div class="card m-3">
+                    <form asp-action="EditStatus" id="form">
+                        <div class="card-header text-white p-1 bg-dark">
+                            @* style="background-color:#FC2947;" *@
+                            <div class="d-flex align-items-baseline">
+                                <a href="/so_inward/SalesPendingList" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                                <h5 class="mx-auto text-white text-2xl font-semibold small-heading">Update Sales Order Entry Status</h5>
+                            </div>
+                        </div>
+                        <div class="row p-2">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="form-group col-sm-6 mt-3">
+                                <input type="hidden" asp-for="id" />
+                                <label asp-for="sono" class="control-label"></label>
+                                <input asp-for="sono" data-uppercase autocomplete="off" class="form-control" readonly oninput="validateAlphNum(this)" />
+                                <span asp-validation-for="sono" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-4 mt-2" style="display:none">
+                                <input type="hidden" asp-for="id" />
+                                <label asp-for="dono" class="control-label"></label>
+                                <input asp-for="dono" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphNum(this)" />
+                                <span asp-validation-for="dono" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-6 mt-3">
+                                <label asp-for="customername" class="control-label"></label>
+                                <input asp-for="customername" data-uppercase autocomplete="off" readonly class="form-control" oninput="validateAlphabet(this)" />
+                                <span asp-validation-for="customername" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-6 mt-3">
+                                <label asp-for="contactno" class="control-label"></label>
+                                <input asp-for="contactno" data-uppercase autocomplete="off" readonly class="form-control" oninput="validateNumber(this)" />
+                                <span asp-validation-for="contactno" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-6 mt-3">
+                                <label asp-for="emailid" class="control-label"></label>
+                                <input asp-for="emailid" data-uppercase autocomplete="off" readonly class="form-control" />
+                                <span asp-validation-for="emailid" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-6 mt-3">
+                                <label asp-for="address" class="control-label"></label>
+                                <input asp-for="address" data-uppercase autocomplete="off" readonly class="form-control" oninput="validateAlphNum(this)" />
+                                <span asp-validation-for="address" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-6 mt-3" style="display:none;">
+                                <label asp-for="city" class="control-label"></label>
+                                <input asp-for="city" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                <span asp-validation-for="city" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-6 mt-3" style="display:none;">
+                                <label asp-for="state" class="control-label"></label>
+                                <input asp-for="state" data-uppercase autocomplete="off" readonly class="form-control" oninput="validateAlphabet(this)" />
+                                <span asp-validation-for="state" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-6 mt-3" readonly style="display:none;">
+                                <label asp-for="dispatchdate" class="control-label"></label>
+                                <input asp-for="dispatchdate" data-uppercase autocomplete="off" class="form-control" />
+                                <span asp-validation-for="dispatchdate" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group col-sm-6 mt-3">
+                                <label asp-for="status" class="control-label">Update Status</label>
+                                <select asp-for="status" id="SelectVenderId1" readonly class="form-control" asp-items="@ViewBag.GetStatus">
+                                   @*  <option value=""></option>
+                                    <option style="display:none" value="Pending">Pending</option>
+                                    <option value="Return">Return</option>
+                                    <option value="Cancel">Cancel</option>
+                                    <option value="On Hold">On Hold</option>
+                                    <option value="Pending">Pending</option >*@
+                                </select>
+                                <span asp-validation-for="status" class="text-danger"></span>
+                            </div>
+                            <div class="table-responsive col-md-12" style="display:none;">
+                                <table id="CodesTable" class="table table-striped table-sm ">
+                                    <thead class="bg-gray-200 sticky top-0">
+                                        <tr>
+                                            @foreach (var head in TableHeaders)
+                                            {
+                                                <th>
+                                                    @head
+                                                </th>
+                                            }
+                                            <th style="width:100px;">
+                                                <button id='btnAddDetailRow' type="button" class="btn btn-sm btn-secondary visible" onclick="AddItem(this)">
+                                                    Add
+                                                </button>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="CsDiv">
+                                        @for (int i = 0; i < Model.soProduct_details.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <input asp-for="@Model.soProduct_details[i].productcode" class="form-control" oninput="validateAlphNum(this)" />
+                                                    <span asp-validation-for="@Model.soProduct_details[i].productcode" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.soProduct_details[i].description" class="form-control" oninput="validateAlphNum(this)">
+                                                    <span asp-validation-for="@Model.soProduct_details[i].description" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.soProduct_details[i].brand" class="form-control" oninput="validateAlphabet(this)" />
+                                                    <span asp-validation-for="@Model.soProduct_details[i].brand" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.soProduct_details[i].quantity" class="form-control" />
+                                                    <span asp-validation-for="@Model.soProduct_details[i].quantity" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.soProduct_details[i].uom" class="form-control" oninput="validateAlphNum(this)" />
+                                                    <span asp-validation-for="@Model.soProduct_details[i].uom" class="text-danger"></span>
+                                                    <input type="hidden" asp-for="@Model.soProduct_details[i].IsDeleted" />
+                                                </td>
+                                                <td style="display:none">
+                                                    <input asp-for="@Model.soProduct_details[i].hsncode" class="form-control" oninput="validateAlphNum(this)" />
+                                                    <span asp-validation-for="@Model.soProduct_details[i].hsncode" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <input type="hidden" id="hdnLastIndex" value="0" />
+                            </div>
+                        </div>
+                        <div class="row p-2">
+                            <div class="form-group col-sm-12 mt-3">
+                                '<input type="submit" value="Change Status" onclick="return ConfirmStatus(this)" class="btn btn-success col-sm-12" />
+                            </div>
+                            @* <div class="form-group col-sm-6 mt-3">
+                    <a class="btn btn-danger col-sm-12" asp-action="Index">Back to List</a>
+                    </div> *@
+                        </div>
+
+
+                    </form>
+                </div>
+            </section>
+        </main>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('#form').submit(function (event) {
+                // Prevent default form submission
+                event.preventDefault();
+
+                //condition for emprth field
+                if (!$('#SelectVenderId1').val()) {
+                    Swal.fire({
+                        title: "Warning",
+                        text: "Please select a status to change !",
+                        icon: "warning",
+                        confirmButtonText: "OK"
+                    });
+                    return;
+                }
+
+                // Call SubmitForm function
+                SubmitForm();
+            });
+        });
+
+        // Function to handle form submission
+        function SubmitForm() {
+            console.log("Called");
+            // Serialize form data
+            var formData = $('#form').serialize();
+            $.ajax({
+                type: 'POST',
+                url: '/so_inward/EditStatus', // Update the URL with your controller action URL
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        console.log("Success !");
+                        // Success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message
+                        }).then((result) => {
+                            window.location.href = '/so_inward/SalesPendingList'; // Update the URL
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function () {
+                    console.log(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while processing your request.'
+                    });
+                }
+            });
+            return false;
+        }
+
+
+        $('#SelectVenderId1').change(function () {
+            var selectedOption = $(this).val();
+            if (selectedOption == 'Return') {
+                Swal.fire({
+                    title: "Are you sure you want to change the Status ?",
+                    text: "Do you want to Sale return ?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var sonoValue = $('#sono').val(); // Get the value of the input field
+                        $.ajax({
+                            url: '/so_inward/sonoLoaded',
+                            type: 'POST',
+                            data: { sono: sonoValue }, // Pass the sono value as data
+                            success: function (response) {
+                                if (response.success) {
+                                    console.log("Status changed successfully!");
+                                } else {
+                                    Swal.fire({
+                                        title: "Warning",
+                                        text: response.message,
+                                        icon: "warning",
+                                        confirmButtonText: "OK"
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $('#SelectVenderId1').val('');
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr, textStatus, errorThrown) {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: "An error occurred while changing status!",
+                                    icon: "error",
+                                    confirmButtonText: "OK"
+                                }).then((result) => {
+                                    $('#SelectVenderId1').val('');
+                                });
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Warning",
+                            text: "Status not changed!",
+                            icon: "warning",
+                            confirmButtonText: "OK"
+                        }).then((result) => {
+                            $('#SelectVenderId1').val('');
+                        });
+                    }
+                });
+            }
+            else if (selectedOption == 'On Hold') {
+                console.log("Status On Hold Update!");
+                Swal.fire({
+                    title: "Are you sure you want to change the Status ?",
+                    text: "Do you want to hold the order ?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var sonoValue = $('#sono').val();
+                        console.log("sonoValue: " + sonoValue);
+                        $.ajax({
+                            url: '/so_inward/sonoLoadedOnHold',
+                            type: 'POST',
+                            data: { sono: sonoValue },
+                            success: function (response) {
+                                if (response.success) {
+                                    console.log("Status changed successfully!");
+                                } else {
+                                    Swal.fire({
+                                        title: "Warning",
+                                        text: response.message,
+                                        icon: "warning",
+                                        confirmButtonText: "OK"
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $('#SelectVenderId1').val('');
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr, textStatus, errorThrown) {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: "An error occurred while changing status!",
+                                    icon: "error",
+                                    confirmButtonText: "OK"
+                                }).then((result) => {
+                                    $('#SelectVenderId1').val('');
+                                });
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Warning",
+                            text: "Status not changed!",
+                            icon: "warning",
+                            confirmButtonText: "OK"
+                        }).then((result) => {
+                            $('#SelectVenderId1').val('');
+                        });
+                    }
+                });
+            }
+            else if (selectedOption == 'Cancel') {
+                console.log("Status On Cancelled Update!");
+                Swal.fire({
+                    title: "Are you sure you want to change the Status ?",
+                    text: "Do you want to Cancel the order ?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var sonoValue = $('#sono').val();
+                        console.log("sonoValue: " + sonoValue);
+                        $.ajax({
+                            url: '/so_inward/OnDeleteChangesono',
+                            type: 'POST',
+                            data: { sono: sonoValue },
+                            success: function (response) {
+                                if (response.success) {
+                                    console.log("Status changed successfully!");
+                                } else {
+                                    Swal.fire({
+                                        title: "Warning",
+                                        text: response.message,
+                                        icon: "warning",
+                                        confirmButtonText: "OK"
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $('#SelectVenderId1').val('');
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr, textStatus, errorThrown) {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: "An error occurred while changing status!",
+                                    icon: "error",
+                                    confirmButtonText: "OK"
+                                }).then((result) => {
+                                    $('#SelectVenderId1').val('');
+                                });
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Warning",
+                            text: "Status not changed!",
+                            icon: "warning",
+                            confirmButtonText: "OK"
+                        }).then((result) => {
+                            $('#SelectVenderId1').val('');
+                        });
+                    }
+                });
+            }
+            else if (selectedOption == 'Pending') {
+                console.log("Status On Pending Update!");
+                Swal.fire({
+                    title: "Are you sure you want to change the Status ?",
+                    text: "Do you want to Pending the order ?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var sonoValue = $('#sono').val();
+                        console.log("sonoValue: " + sonoValue);
+                        $.ajax({
+                            url: '/so_inward/OnPendingChangesono',
+                            type: 'POST',
+                            data: { sono: sonoValue },
+                            success: function (response) {
+                                if (response.success) {
+                                    console.log("Status changed successfully!");
+                                } else {
+                                    Swal.fire({
+                                        title: "Warning",
+                                        text: response.message,
+                                        icon: "warning",
+                                        confirmButtonText: "OK"
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $('#SelectVenderId1').val('');
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr, textStatus, errorThrown) {
+                                Swal.fire({
+                                    title: "Error",
+                                    text: "An error occurred while changing status!",
+                                    icon: "error",
+                                    confirmButtonText: "OK"
+                                }).then((result) => {
+                                    $('#SelectVenderId1').val('');
+                                });
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: "Warning",
+                            text: "Status not changed!",
+                            icon: "warning",
+                            confirmButtonText: "OK"
+                        }).then((result) => {
+                            $('#SelectVenderId1').val('');
+                        });
+                    }
+                });
+            }
+
+        });
+
+
+        // function validateAlphabet(input) {
+        //     var regex = /^[a-zA-Z\s._-\s]+$/;
+        //     var value = input.value;
+
+        //     if (!regex.test(value)) {
+        //         input.value = value.slice(0, -1);
+        //     }
+        // }
+
+        // function validateAlphNum(input) {
+        //     var regex = /^[a-zA-Z0-9]+$/;
+        //     var value = input.value;
+
+        //     if (!regex.test(value)) {
+        //         input.value = value.slice(0, -1);
+        //     }
+        // }
+        // function validateNumber(input) {
+        //     var regex = /^[0-9]+$/;
+        //     var value = input.value;
+
+        //     if (!regex.test(value)) {
+        //         input.value = value.slice(0, -1);
+        //     }
+        // }
+        // function validatePinNumber(input) {
+        //     var regex = /^[0-5]+$/;
+        //     var value = input.value;
+
+        //     if (!regex.test(value)) {
+        //         input.value = value.slice(0, -1);
+        //     }
+        // }
+
+
+
+        function validateNumber(input) {
+            var value = input.value;
+            var numericValue = value.replace(/\D/g, '');
+            if (numericValue.length > 10) {
+                numericValue = numericValue.slice(0, 10);
+            }
+            input.value = numericValue;
+        }
+
+        function validatePinNumber(input) {
+            var value = input.value;
+            var numericValue = value.replace(/\D/g, '');
+            if (numericValue.length > 6) {
+                numericValue = numericValue.slice(0, 6);
+            }
+            input.value = numericValue;
+        }
+    </script>
+
+}
+

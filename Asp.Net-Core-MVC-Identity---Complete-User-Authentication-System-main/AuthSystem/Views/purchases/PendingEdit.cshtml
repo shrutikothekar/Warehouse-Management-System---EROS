@@ -1,0 +1,212 @@
+﻿@model eros.Models.purchase
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+        "Product Code",
+        "Description",
+        "Brand Name" ,
+        "Qty" ,
+        "UOM" ,
+         };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <main class="page payment-page">
+                <section class="payment-form mt-4 ">
+                    <div class="card m-3">
+                        <form asp-action="Edit">
+                            <div class="card-header text-white bg-dark p-1">
+                                <div class="d-flex align-items-baseline">
+                                    <a href="/purchases/PurchasePendingList" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                                    <h5 class="mx-auto text-white text-2xl font-semibold small-heading">Edit Pending Order Entry</h5>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <input type="hidden" asp-for="id" />
+                                    <label asp-for="suppliername" class="control-label"></label>
+                                    <input asp-for="suppliername" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                    <span asp-validation-for="suppliername" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="pono" class="control-label"></label>
+                                    <input asp-for="pono" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphNum(this)" />
+                                    <span asp-validation-for="pono" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="podate" class="control-label"></label>
+                                    <input asp-for="podate" data-uppercase autocomplete="off" class="form-control" oninput="validateNumber(this)" />
+                                    <span asp-validation-for="podate" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="gstinno" class="control-label"></label>
+                                    <input asp-for="gstinno" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphNum(this)" />
+                                    <span asp-validation-for="gstinno" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="contactno" class="control-label"></label>
+                                    <input asp-for="contactno" data-uppercase autocomplete="off" class="form-control" oninput="validateNumber(this)" />
+                                    <span asp-validation-for="contactno" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="address" class="control-label"></label>
+                                    <input asp-for="address" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphNum(this)" />
+                                    <span asp-validation-for="address" class="text-danger"></span>
+                                </div>
+                                <div class="form-group  col-sm-6 mt-3" style="display:none;">
+                                    <label asp-for="status" class="control-label">Change Status</label>
+                                    <select asp-for="status" id="SelectVenderId1" class="form-control">
+                                        <option value="Pending">Pending</option>
+                                        <option value="Cancel">Cancel</option>
+                                        <option value="On Hold">On Hold</option>
+                                    </select>
+                                    <span asp-validation-for="status" class="text-danger"></span>
+                                </div>
+                                <div class="table">
+                                    <table id="CodesTable" class="table table-striped table-sm ">
+                                        <thead class="bg-gray-200 sticky top-0">
+                                            <tr>
+                                                @foreach (var head in TableHeaders)
+                                                {
+                                                    <th>
+                                                        @head
+                                                    </th>
+                                                }
+                                                <th style="width:100px;">
+                                                    <button id='btnAddDetailRow' type="button" class="btn btn-sm btn-secondary visible" onclick="AddItem(this)">
+                                                        Add
+                                                    </button>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="CsDiv">
+                                            @for (int i = 0; i < Model.poProduct_details.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input asp-for="@Model.poProduct_details[i].productcode" class="form-control" oninput="validateAlphNum(this)" />
+                                                        <span asp-validation-for="@Model.poProduct_details[i].productcode" class="text-danger"></span>
+                                                    </td>
+                                                    @*   <td>
+                                        <input asp-for="@Model.poProduct_details[i].productname" class="form-control" />
+                                        <span asp-validation-for="@Model.poProduct_details[i].productname" class="text-danger"></span>
+                                        </td> *@
+                                                    <td>
+                                                        <input asp-for="@Model.poProduct_details[i].description" class="form-control" oninput="validateAlphNum(this)">
+                                                        <span asp-validation-for="@Model.poProduct_details[i].description" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.poProduct_details[i].brand" class="form-control" oninput="validateAlphabet(this)" />
+                                                        <span asp-validation-for="@Model.poProduct_details[i].brand" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.poProduct_details[i].quantity" class="form-control" oninput="validateNumber(this)" />
+                                                        <span asp-validation-for="@Model.poProduct_details[i].quantity" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.poProduct_details[i].uom" class="form-control" oninput="validateAlphNum(this)" />
+                                                        <span asp-validation-for="@Model.poProduct_details[i].uom" class="text-danger"></span>
+                                                        <input type="hidden" asp-for="@Model.poProduct_details[i].IsDeleted" />
+                                                    </td>
+                                                    <td>
+                                                        <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">
+                                                            Delete
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" id="hdnLastIndex" value="0" />
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <input type="submit" value="Save" class="btn btn-success col-sm-12" />
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <a class="btn btn-danger col-sm-12" asp-action="Index">Back to List</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </main>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function validateAlphabet(input) {
+            var regex = /^[a-zA-Z\s._-\s]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+
+        function validateAlphNum(input) {
+            var regex = /^[a-zA-Z0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validateNumber(input) {
+            var regex = /^[0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validatePinNumber(input) {
+            var regex = /^[0-5]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+    </script>
+}
+

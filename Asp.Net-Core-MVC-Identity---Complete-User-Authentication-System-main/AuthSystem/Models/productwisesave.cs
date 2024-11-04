@@ -1,0 +1,15 @@
+﻿namespace eros.Models
+{
+    public class productwisesave
+    {
+        public int Id { get; set; }
+        public int maxvalue { get; set; }
+        public string productcode { get; set; }
+        public int pstcount { get; set; }
+        public int storagecount { get; set; }
+        public int stockvariance { get; set; }
+        public string remark { get; set; }
+
+        public string physicalid { get; set; }
+    }
+}

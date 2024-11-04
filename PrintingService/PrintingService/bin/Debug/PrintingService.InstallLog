@@ -1,0 +1,266 @@
+﻿Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Service PrinterUtitlity has been successfully installed.
+Creating EventLog source PrinterUtitlity in log Application...
+Committing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Creating EventLog source PrinterUtitlity in log Application...
+Rolling back assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Restoring event log to previous state for source PrinterUtitlity.
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Warning: The source PrinterUtitlity is not registered on the local machine.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Creating EventLog source PrinterUtitlity in log Application...
+Rolling back assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Restoring event log to previous state for source PrinterUtitlity.
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Warning: The source PrinterUtitlity is not registered on the local machine.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Service PrinterUtitlity has been successfully installed.
+Creating EventLog source PrinterUtitlity in log Application...
+Committing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Warning: The source PrinterUtitlity is not registered on the local machine.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Service PrinterUtitlity has been successfully installed.
+Creating EventLog source PrinterUtitlity in log Application...
+Committing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Service PrinterUtitlity has been successfully installed.
+Creating EventLog source PrinterUtitlity in log Application...
+Committing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Service PrinterUtitlity has been successfully installed.
+Creating EventLog source PrinterUtitlity in log Application...
+Committing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Service PrinterUtitlity has been successfully installed.
+Creating EventLog source PrinterUtitlity in log Application...
+Committing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Service PrinterUtitlity has been successfully installed.
+Creating EventLog source PrinterUtitlity in log Application...
+Committing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Service PrinterUtitlity has been successfully installed.
+Creating EventLog source PrinterUtitlity in log Application...
+Committing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Service PrinterUtitlity has been successfully installed.
+Creating EventLog source PrinterUtitlity in log Application...
+Committing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Uninstalling assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Removing EventLog source PrinterUtitlity.
+Service PrinterUtitlity is being removed from the system...
+Service PrinterUtitlity was successfully removed from the system.
+Attempt to stop service PrinterUtitlity.
+Installing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe
+Installing service PrinterUtitlity...
+Service PrinterUtitlity has been successfully installed.
+Creating EventLog source PrinterUtitlity in log Application...
+Committing assembly 'D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.InstallLog
+   assemblypath = D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe

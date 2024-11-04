@@ -1,0 +1,57 @@
+﻿@*@model eros.Models.picklistgeneration
+
+@{
+    Layout = null;
+    string[] TableHeaders = new string[] {
+        "Product Code",
+        "Product Name" ,
+        // "In Stock Qty" ,
+        "SO Qty" ,
+        "Picking Qty" ,
+        };
+}
+
+
+<div class="table-responsive col-md-12 p-0">
+    <table class="table divide-gray-200" id="data-table">
+        <thead class="bg-gray-200 sticky top-0">
+            <tr>
+                @foreach (var head in TableHeaders)
+                {
+                    <th>
+                        @head
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                HashSet<string> uniqueCombinations = new HashSet<string>();
+            }
+
+            @for (int i = 0; i < Model.picklistgnerateprds.Count; i++)
+            {
+                var combination = $"{Model.picklistgnerateprds[i].prdcode}_{Model.picklistgnerateprds[i].prdname}";
+                if (uniqueCombinations.Add(combination))
+                {
+                    <tr>
+                        <td>
+                            <input asp-for="picklistgnerateprds[i].prdcode" class="form-control" />
+                        </td>
+                        <td>
+                            <input asp-for="picklistgnerateprds[i].prdname" class="form-control" />
+                        </td>
+                        <td>
+                            <input asp-for="picklistgnerateprds[i].soqty" class="form-control" />
+                        </td>
+                        <td>
+                            <input asp-for="picklistgnerateprds[i].pickingqty" class="form-control" />
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+*@

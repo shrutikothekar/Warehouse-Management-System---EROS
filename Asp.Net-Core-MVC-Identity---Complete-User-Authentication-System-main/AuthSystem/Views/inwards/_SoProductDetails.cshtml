@@ -1,0 +1,1212 @@
+﻿@model eros.Models.inward
+@{
+    string[] TableHeaders = new string[] {
+        // "Sticker",
+        "Pro. Code",
+        "Pro.Description",
+        "SO Qty",
+        "SR Qty",
+        "DL Qty",
+        // "No. Set/Pro." ,
+        // "No. set/shp" ,
+        // "No. Shp/Qty" ,
+        //         "No. Qty/Shp",
+        // "Ttl Shp" ,
+        "Scan",
+         };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+     @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="row mx-lg-2 mx-md-2">
+            @* referenceno , partyname *@
+            @* <div class="form-group col-sm-6 mt-2">
+    <label asp-for="dcno" class="control-label"></label>
+    <input id="sreferencenoId" asp-for="dcno" data-uppercase autocomplete="off" class="form-control" />
+    <span asp-validation-for="dcno" class="text-danger"></span>
+    </div> *@
+            <div class="form-group col-sm-4 mt-2">
+                <label asp-for="partyname" class="control-label">Partyname</label>
+                <input id="spartynameIdinput" class="form-control" asp-for="partyname" readonly />
+                <span asp-validation-for="partyname" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-4 mt-2">
+                <label asp-for="contactno" class="control-label"></label>
+                <input asp-for="contactno" data-uppercase autocomplete="off" id="scontactnoId" class="form-control" readonly required />
+                <span asp-validation-for="contactno" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-4 mt-2">
+                <label asp-for="address" class="control-label"></label>
+                <input asp-for="address" data-uppercase autocomplete="off" id="saddressId" class="form-control" readonly required />
+                <span asp-validation-for="address" class="text-danger"></span>
+            </div>
+            <div>
+                @{
+                    var sonoValue = ViewData["SonoValue"] as string;
+                }
+                <input id="sono" class="form-control" readonly hidden value="@sonoValue" />
+
+            </div>
+        </div>
+
+        @* <div class="row mx-lg-2 mx-md-2"></div> *@
+
+
+        <div class="col-md-12 mx-lg-2 mx-md-2">
+            @* table *@
+            <table id="CodesTable" class="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        @foreach (var head in TableHeaders)
+                        {
+                            <th>
+                                @head
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.inwardPacket.Count; i++)
+                    {
+                        <tr>
+                            <td style="padding-left:30px;width:80px; display:none">
+                                <input asp-for="@Model.inwardPacket[i].check" type="checkbox" class="form-check-input" data-index="@i" />
+                            </td>
+                            <td style="display:none;">
+                                <input asp-for="@Model.inwardPacket[i].pono" class="form-control" readonly />
+                            </td>
+                            <td>
+                                <input asp-for="@Model.inwardPacket[i].productcode" class="form-control productcode" readonly  required />
+                                <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <input asp-for="@Model.inwardPacket[i].description" class="form-control"  required readonly />
+                                <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                            </td>
+                            <td style="display:none;">
+                                <input asp-for="@Model.inwardPacket[i].brand" class="form-control" />
+                                <span asp-validation-for="@Model.inwardPacket[i].brand" class="text-danger"></span>
+                            </td>
+                            <td style="width:80px;">
+                                <input asp-for="@Model.inwardPacket[i].SOQty" readonly class="form-control SOQty-input" data-quantity="@Model.inwardPacket[i].SOQty" data-product-code="@Model.inwardPacket[i].productcode" required />
+                            </td>
+                            <td style="width:80px;">
+                                <input asp-for="@Model.inwardPacket[i].quantity"   oninput="calculate(this)" class="form-control quantity-input" data-quantity="@Model.inwardPacket[i].quantity" data-product-code="@Model.inwardPacket[i].productcode" required />
+                            </td>
+                            <td style="width:80px;">
+                                <input asp-for="@Model.inwardPacket[i].DLQty" readonly class="form-control DLQty-input" data-quantity="@Model.inwardPacket[i].DLQty" data-product-code="@Model.inwardPacket[i].productcode" required />
+                            </td>
+                            <td style="width:80px;display:none">
+                                <input asp-for="@Model.inwardPacket[i].setofsub_assemb" readonly class="form-control" />
+                                <span asp-validation-for="@Model.inwardPacket[i].setofsub_assemb" class="text-danger"></span>
+                            </td>
+                            <td style="width:80px;display:none">
+                                <input asp-for="@Model.inwardPacket[i].qtyperpkt" readonly class="form-control" />
+                                <span asp-validation-for="@Model.inwardPacket[i].qtyperpkt" class="text-danger"></span>
+                            </td>
+                            <td style="width:80px;display:none">
+                                <input asp-for="@Model.inwardPacket[i].noofpackets" readonly class="form-control noofpackets-input" />
+                                <span asp-validation-for="@Model.inwardPacket[i].noofpackets" class="text-danger"></span>
+                            </td>
+                            <td style="width:80px;display:none">
+                                <input asp-for="@Model.inwardPacket[i].noqtypershp" readonly class="form-control noqtypershp-input" oninput="calculate2(this)" />
+                                <span asp-validation-for="@Model.inwardPacket[i].noqtypershp" class="text-danger"></span>
+                            </td>
+                            <td style="width:80px;display:none">
+                                <input asp-for="@Model.inwardPacket[i].totalpacket" readonly class="form-control totalpacket-input" />
+                                <span asp-validation-for="@Model.inwardPacket[i].totalpacket" class="text-danger"></span>
+                            </td>
+                            <td style="display:none; width:80px;">
+                                <input asp-for="@Model.inwardPacket[i].totalsubassmbly" id="totalsubassembly" class="form-control totalsubassembly" readonly required />
+                                <span asp-validation-for="@Model.inwardPacket[i].totalsubassmbly" class="text-danger"></span>
+                                <input type="hidden" asp-for="@Model.inwardPacket[i].IsDeleted" />
+                            </td>
+
+                            <td style="display:none;">
+                                <input asp-for="@Model.inwardPacket[i].uom" class="form-control" readonly />
+                                <span asp-validation-for="@Model.inwardPacket[i].uom" class="text-danger"></span>
+                            </td>
+                            <td style="display:none" id="scanidflag">0</td>
+                            <td>
+                                <button type="button" class="btn btn-success btn-sm scaningidd"
+                                        onclick="scaningSR(this)"
+                                        data-productcode="@Model.inwardPacket[i].productcode"
+                                        data-quantity="@Model.inwardPacket[i].quantity"
+                                >
+                                    <span class="d-none d-sm-inline">scan</span>
+                                    <span class="d-inline d-sm-none">scan</span>
+                                </button>
+                            </td>
+                           
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            
+
+        </div>
+        <div class="row mx-lg-2 mx-md-2">
+                                            <div class="form-group col-sm-3 mt-2" >
+                                                <label asp-for="dcno" class="control-label"></label>
+                                                <input asp-for="dcno" id="dreferenceno" data-uppercase autocomplete="off" class="form-control" />
+                                                <span asp-validation-for="dcno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label id="dcdateLabel" asp-for="dcdate" class="control-label"></label>
+                                                <input asp-for="dcdate" type="date" data-uppercase autocomplete="off" class="form-control"  />
+                                                <span asp-validation-for="dcdate" class="text-danger"></span>
+                                            </div>
+
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="invoiceno" class="control-label"></label>
+                                                <input asp-for="invoiceno" id="dinvoiceno" data-uppercase autocomplete="off" class="form-control"  />
+                                                <span asp-validation-for="invoiceno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label id="invoicedateLabel" asp-for="invoicedate" class="control-label"></label>
+                                                <input asp-for="invoicedate" type="date" data-uppercase autocomplete="off" class="form-control"  />
+                                                <span asp-validation-for="invoicedate" class="text-danger"></span>
+                                            </div>
+                                        </div>
+
+
+                                        <input type="hidden" id="hdnLastIndex" value="0" />
+                                        <div class="row mx-lg-2 mx-md-2">
+                                            @* batchcode, remark *@
+                                            <div class="form-group col-sm-2 mt-2">
+                                                <label asp-for="grnno" class="control-label"></label>
+                                                <input asp-for="grnno" readonly id="sgrnno" data-uppercase autocomplete="off" class="form-control" required />
+                                                <span asp-validation-for="grnno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2" style="display:none">
+                                                <label asp-for="grndate" class="control-label">GRN Date</label>
+                                                <input type="date" asp-for="grndate" class="form-control" required />
+                                                <span asp-validation-for="grndate" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-2 mt-2">
+                                                <label asp-for="batchcode" class="control-label"></label>
+                                                <input asp-for="batchcode" data-uppercase autocomplete="off" class="form-control" required readonly />
+                                                <span asp-validation-for="batchcode" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-8 mt-2">
+                                                <label asp-for="remarks" class="control-label"></label>
+                                                <input asp-for="remarks" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                                <span asp-validation-for="remarks" class="text-danger"></span>
+                                            </div>
+                                        </div>
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container-field">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container-field">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+
+}
+@* MODEL POPUP FOR SCANING *@
+<div class="modal fade" id="scaningModal" tabindex="-1" role="dialog" aria-labelledby="damageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="scaningModalLabel">Scan Sale-Returned Shippers</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="scaningForm">
+                                <small style="color:green; font-weight:550">Please Scan the sale returned product shippers sticker ...</small>
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <small><label style="color:black; font-weight:550" for="boxno">Box No</label></small>
+                                        <input type="text" class="form-control" id="sboxno">
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <small><label style="color:black; font-weight:550" for="productcode">Pro.Code:</label></small>
+                                        <input type="text" class="form-control" id="sproductcode">
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <small><label style="color:black; font-weight:550" for="batchcode">Batch Code</label></small>
+                                        <input type="text" class="form-control" id="sbatchcode">
+                                    </div>
+                                </div>
+                                <br />
+                                @* last table - small table  *@
+                                <input type="hidden" name="tableData1" id="tableData1" />
+                                <div class="table-responsive col-12 col-sm-12 mt-2" id="preInwardTable" style="max-height: 300px; overflow-y: auto;">
+                                    <table class="table table-bordered table-striped divide-gray-300 small" id="DataInsert" style="display:none;">
+                                        <thead style="background-color: #666; color: #fff;" class="sticky-top">
+                                            <tr>
+                                                <th>Location</th>
+                                                <th>Box No.</th>
+                                                <th>Batch Code</th>
+                                                <th>Pro. Code</th>
+                                                @* <th style="display:none">Damage</th> *@
+                                                <th>Clear</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button style="display:none;" type="submit" class="btn btn-success float-right" id="saveButtonSR">Save List</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+
+
+<script>
+     function scaningSR(button) {
+        console.log("call");
+        var row = $(button).closest('tr'); // Find the closest row relative to the button
+
+        if (row.find('#scanidflag').text() == '1') {
+            // Show SweetAlert indicating sale return is already complete
+            Swal.fire({
+                icon: 'warning',
+                title: 'Sale Return Already Completed',
+                text: 'Sale return for this product has already been completed.',
+            });
+        } else {
+            //console.log("Call...");
+            $("#sboxno").focus();
+
+            selectedSono = $("#sonoId").val();
+            rproductcode = $(button).data('productcode').toUpperCase();
+            rquantity = $(button).closest('tr').find('.quantity-input').val();
+            soQty = $(button).closest('tr').find('.SOQty-input').val(); // Get SOQty value
+            dlQty = $(button).closest('tr').find('.DLQty-input').val(); // Get DLQty value
+
+            // console.log("Product Code: ", rproductcode);
+            // console.log("Quantity: ", rquantity);
+            // console.log("Selected SO No.: " + selectedSono);
+
+            if (parseInt(rquantity) === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Quantity is 0',
+                    text: 'Please enter a valid quantity.',
+                });
+                return;
+            } else {
+                $.ajax({
+                    url: '/inwards/FatchListData',
+                    type: 'GET',
+                    data: {
+                        productcode: rproductcode,
+                        quantity: rquantity
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // Clear existing table rows
+                            $("#DataInsert tbody").empty();
+
+                            // Check if data is empty
+                            if (response.dataList.length === 0) {
+                                console.log("No data found in list!");
+                                // Optionally handle the case where no data is found
+                                return;
+                            }
+
+                            // Append data to the table body
+                            $.each(response.dataList, function (index, item) {
+                                var row = "<tr>" +
+                                    "<td>" + (item.location || '') + "</td>" +
+                                    "<td>" + (item.boxno || '') + "</td>" +
+                                    "<td>" + (item.batchcode || '') + "</td>" +
+                                    "<td>" + (item.productcode.toUpperCase() || '') + "</td>" +
+                                    // "<td>" +
+                                    // "<button  style='display: none' class='damage-button btn btn-danger btn-sm' onclick='sendDamageData(\"" + item.location + "\", \"" + item.boxno + "\", \"" + item.batchcode + "\", \"" + item.productcode.toUpperCase() + "\")'>Damage</button>" +
+                                    // "</td>" +
+                                    "<td>" +
+                                    "<button class='delete-button btn btn-danger btn-sm' onclick='sendDeleteData(\"" + item.location + "\", \"" + item.boxno + "\", \"" + item.batchcode + "\", \"" + item.productcode.toUpperCase() + "\")'>Clear</button>"" +
+                                    "</td>" +
+                                    "</tr>";
+
+                                $("#DataInsert tbody").append(row);
+                            });
+
+                            // Show the table
+                            $("#DataInsert").show();
+                        } else {
+                            // Clear table body if no data is found
+                            $("#DataInsert tbody").empty();
+                            $("#DataInsert").hide();
+                            console.log("Data not found in list!");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            }
+            $("#sboxno").val("");
+            $("#sboxno").focus();
+            $("#scaningModal").modal("show");
+            event.preventDefault();
+        }
+    }
+
+
+    // function inwarddochange(event) {
+    //     var element = event.target;
+    //     var currentIndex = element.id.split("-")[1];
+    //     console.log("inwarddochange called for index: " + currentIndex);
+
+    //     var selectedOption = document.getElementById("inwarddono-" + currentIndex).value;
+
+    //     $.ajax({
+    //         url: '/outwarddoes/inwardodetails',
+    //         type: 'POST',
+    //         data: { optionValue1: selectedOption },
+    //         success: function (result) {
+
+    //             //if (response.success) {
+    //             //     // Clear the contents of "Table1" if data is saved successfully
+    //             //     //table1Body.empty();
+    //             // console.log("Inward DO already exist with another Outward DO");
+    //             // }
+
+    //             console.log(result);
+
+    //             // Update the values in the current row based on the currentIndex
+    //             var currentRow = document.getElementById("CodesTable").getElementsByTagName("tbody")[0].rows[currentIndex];
+
+    //             $.each(result, function (key, data) {
+    //                 console.log("Setting values for current row: " + currentIndex);
+    //                 console.log(currentRow);
+
+    //                 // Check if these elements exist in the current row
+    //                 if (currentRow) {
+
+    //                     var formattedDate = formatDate(data.do_orderdate);
+
+    //                     currentRow.querySelector("#inwarddodt").value = formattedDate;
+    //                     currentRow.querySelector("#inwarddoqty").value = data.quantity;
+    //                     currentRow.querySelector("#forclosureoutqty").value = data.forclosureinqty;
+    //                     currentRow.querySelector("#grade").value = data.grade;
+    //                     currentRow.querySelector("#gcv").value = data.gcv;
+
+    //                     //currentRow.querySelector("#excessbalnc").value = "0";
+    //                     currentRow.querySelector("#tilldatedispqty").value = "0";
+
+    //                     if (currentRow.querySelector("#grade").value != null) {
+    //                         var selectedOption1 = currentRow.querySelector("#grade").value;
+    //                         $.ajax({
+    //                             url: '/outwarddoes/yieldfetch',
+    //                             type: 'POST',
+    //                             data: { optionValue1: selectedOption1 },
+    //                             success: function (result) {
+    //                                 console.log(result);
+
+    //                                 $.each(result, function (key, data) {
+    //                                     currentRow.querySelector("#yieldpercnt").value = data.yeild;
+
+    //                                     if (currentRow.querySelector("#yieldpercnt").value != null) {
+    //                                         var selectedOption2 = currentRow.querySelector("#yieldpercnt").value;
+    //                                         var selectedOption3 = currentRow.querySelector("#forclosureoutqty").value;
+    //                                         $.ajax({
+    //                                             url: '/outwarddoes/calcultion',
+    //                                             type: 'POST',
+    //                                             data: { optionValue1: selectedOption2, optionValue2: selectedOption3 },
+    //                                             success: function (result) {
+    //                                                 console.log(result);
+    //                                                 currentRow.querySelector("#qtytobedisptched").value = result;
+    //                                                 currentRow.querySelector("#balanceqtytodispatch").value = result;
+    //                                                 updateTotalQuantity();
+    //                                             },
+    //                                             error: function (xhr, status, error) {
+    //                                                 console.log("An error occurred while executing the action.");
+    //                                             }
+    //                                         });
+    //                                     }
+    //                                 });
+    //                             },
+    //                             error: function (xhr, status, error) {
+    //                                 console.log("An error occurred while executing the action.");
+    //                             }
+    //                         });
+    //                     }
+    //                 } else {
+    //                     console.log("Current row is null for index: " + currentIndex);
+    //                 }
+    //             });
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.log("An error occurred while executing the action.");
+    //         }
+    //     });
+    // }
+
+    var rproductcode, rquantity, selectedSono, soQty, dlQty; // Define global variables to store product code and quantity
+
+    $('#saveButtonSR').click(function () {
+        event.preventDefault();
+        var rowData = [];
+
+        // Iterate over each row of the table
+        $('#CodesTable tbody tr').each(function (rowIndex) {
+            var row = $(this);
+            var inputs = row.find('input');
+            var rowData = inputs.map(function () {
+                return $(this).val();
+            }).get();
+
+            // console.log('Row ' + (rowIndex + 1) + ' data:');
+            // console.log(rowData);
+
+            var tableProductCode = rowData[3].toUpperCase();
+
+            // Compare the table product code with rproductcode
+            if (tableProductCode.toUpperCase() == rproductcode.toUpperCase()) {
+                console.log("Match found! Row data:");
+                console.log(rowData);
+                var so = parseInt(rowData[6]);
+                var sr = parseInt(rowData[8]);
+                var dl = parseInt(rowData[10]);
+
+                // console.log("so : "+so + "sr : "+sr + "dl : "+dl);
+
+                // Perform calculations
+                // var newSo = Math.abs(so - sr);
+                // var newDl = Math.abs(dl - sr);
+                // console.log("newSo : " + newSo + "newDl : " + newDl);
+                // Update values in the table
+                // row.find('input:eq(6)').val(newSo).prop('readonly', true);
+                // row.find('input:eq(10)').val(newDl).prop('readonly', true);
+                row.find('input:eq(8)').prop('readonly', true);
+
+                // Set the flag to indicate that the button has been clicked once
+                row.find('.scaningid').data('clicked', true);
+                // Set the value of <td id="scanidflag"> to 1
+                // $('#scanidflag').text('1');
+                row.find('#scanidflag').text('1');
+
+                
+            } else {
+                console.log("No match found.");
+            }
+        });
+
+       // console.log('Save button clicked');
+        $.ajax({
+            url: '/inwards/SaveSR_List',
+            type: 'POST',
+            data: { productCode : rproductcode.toUpperCase(), soQty: soQty, dlQty: dlQty, srQty: rquantity, sono: selectedSono },
+            success: function(response) {
+                if(response.success){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                    });
+                    console.log('Data saved successfully');
+                    $("#scaningModal").modal("hide");
+
+                    //$('.damage-button, .delete-button').css('display', 'none');
+                }else{
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning',
+                        text: response.message,
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error saving data:', error);
+            }
+        });
+    });
+
+    $('#sboxno').on('keypress', function (event) {
+        if (event.which === 13 || event.keyCode === 13) { // Check if Enter key is pressed
+            scanpickdata();
+        } else {
+        }
+    });
+
+    function getIndividualPartAndCount(boxNo) {
+        // Split the box number by "-"
+        var parts = boxNo.split("-");
+        console.log("parts : " + parts);
+
+        // Extract the second part which contains the individual box information
+        var individualPart = parts[1];
+        console.log("individualPart : " + individualPart);
+
+        var individualParts = individualPart.split("/");
+        console.log("individualParts : " + individualParts);
+
+        // Extract the count from the individual part
+        var count = parseInt(individualParts[1]);
+        console.log("count : " + count);
+
+        return count
+
+    }
+
+    function scanpickdata() {
+        // console.log("rproductcode : " + rproductcode);
+        // console.log("rquantity : " + rquantity);
+        // console.log("selectedSono : " + selectedSono);
+
+        // Check if a SO No. is selected
+        event.preventDefault();
+        // var pattern = /[^a-zA-Z0-9\-\/$,. ]/g;
+        // var test = document.getElementById("sboxno").value.trim().replace(pattern, '');
+        //console.log("test : " + test);
+
+        // document.getElementById("sboxno").value = test;
+
+        var str = document.getElementById("sboxno").value.split(/[,|$]/);
+
+        var boxno = str[3].trim();
+        var batchno = str[5].trim();
+        var grnnn = str[2].trim();
+        // console.log("batchno : " + batchno);
+        // console.log("boxno : " + boxno);
+
+        document.getElementById("sboxno").value = boxno;
+
+        var productcode1 = str[0].trim().toUpperCase();
+        var selectedoption = document.getElementById("sboxno").value;
+
+        // console.log("productcode1 : " + productcode1);
+        // console.log("rproductcode : " + rproductcode);
+        // Check if product code doesn't match
+        if (productcode1.toUpperCase() != rproductcode.toUpperCase()) {
+            // Show SweetAlert for wrong product code scan
+            Swal.fire({
+                icon: 'warning',
+                title: 'Wrong Product Code',
+                text: 'The scanned product code does not match the expected product code.',
+            });
+            $("#sboxno").val(""); // Clear the input field
+            return; // Exit the function if product code is wrong
+        }
+        var requestData = {
+            boxno: boxno,
+            batchno: batchno,
+            productcode: productcode1,
+            sono: selectedSono,
+            rproductcode: rproductcode,
+            rquantity: rquantity
+        };
+        //console.log("Request Data: ", requestData);
+
+        $.ajax({
+            url: '/inwards/SavePickingData',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(requestData),
+            success: function (response) {
+                console.log("Response as string:", JSON.stringify(response));
+                if (response.success) {
+                    $("#DataInsert").show(); // Show the table with the ID "DataInsert"
+
+                    // Access the returned data
+                    var responseData = response.data;
+                    var productCode = responseData.productCode;
+                    var boxNo = responseData.boxNo;
+                    var batchCode = responseData.batchCode;
+                    var location = responseData.location;
+
+
+                    var parts = boxNo.split("-");
+                    //console.log("parts : " + parts);
+
+                    // Extract the second part which contains the individual box information
+                    var individualPart = parts[1];
+                    //console.log("individualPart : " + individualPart);
+
+                    var individualParts = individualPart.split("/");
+                    //console.log("individualParts : " + individualParts);
+
+                    // Extract the count from the individual part
+                    var count = parseInt(individualParts[1]);
+                    //console.log("count : " + count);
+
+                    $("#sgrnno").val(grnnn);
+
+                    // Generate individual boxes
+                    // var individualPartAndCount = getIndividualPartAndCount(boxNo);
+                    //var individualPart = individualPartAndCount.individualPart;
+                    //var count = individualPartAndCount.count;
+
+                    // // Check if the count matches rquantity
+                    // if (count <= rquantity) {
+                    //     Swal.fire({
+                    //         icon: 'warning',
+                    //         title: 'Warning',
+                    //         text: "Number of individual boxes does not match the specified quantity.",
+                    //     });
+                    //     $("#sboxno").val("");
+                    //     return; // Exit the function
+                    // }
+
+                    // console.log("individualPart : " + individualPart + " count : " + count);
+
+                    // Use the data as needed
+                    // console.log("Product Code: " + productCode);
+                    // console.log("Box No: " + boxNo);
+                    // console.log("Batch Code: " + batchCode);
+                    // console.log("Location: " + location);
+
+                    var counter = 0;
+                    var boxcount = 1;
+
+                    var rowCount = $("#DataInsert tbody").find('tr').length;
+                    //console.log("Row count: " + rowCount);
+                    // if (rowCount == 0) {
+                    //     boxcount = 1;
+                    // }
+                    // Iterate through the table rows
+                    $("#DataInsert tbody").find('tr').each(function () {
+                        var row = $(this);
+                        var existingProductCode = row.find('td:eq(3)').text().trim();
+                        var existingLocation = row.find('td:eq(0)').text().trim();
+                        var existingBoxNo = row.find('td:eq(1)').text().trim();
+                        var existingBatchCode = row.find('td:eq(2)').text().trim();
+
+                        var splitbox = existingBoxNo.split("-");
+                        var box1 = splitbox[1].trim();
+
+                        // Compare response data with existing data in the table
+                        if (
+                            existingBatchCode == batchCode.trim() &&
+                            existingBoxNo == boxNo.trim() &&
+                            existingProductCode == productCode.trim() &&
+                            existingLocation == location.trim()
+                        ) {
+                            // Data already exists, so you can return or perform any necessary action
+                            counter++;
+                        }
+                        else if (box1 == individualPart) {
+                            boxcount += 1;
+                            if (parseInt(boxcount) == parseInt(rquantity.trim()) + 1) {
+                                counter++;
+                            } else {
+
+                            }
+                        }
+                        // console.log("Counter : " + counter);
+                    
+                    });
+                    console.log("Quantity : " + rquantity);
+                    console.log("Boxcount :" + boxcount);
+                    console.log("Counter :" + counter);
+
+                    if (counter == 0) {
+                        // Append the new data to the table if no match found
+                        $("#DataInsert tbody").append("<tr><td>"
+                            + location + "</td><td>"
+                            + boxNo + "</td><td>"
+                            + batchCode + "</td><td>"
+                            + productCode + "</td><td>"
+                            // + "<button  style='display: none' class='damage-button btn-danger btn-sm' onclick='sendDamageData(\"" + location + "\", \"" + boxNo + "\", \"" + batchCode + "\", \"" + productCode + "\")'>Damage</button>" + "</td><td>"
+                            + "<button class='delete-button btn-danger btn-sm' onclick='sendDeleteData(\"" + location + "\", \"" + boxNo + "\", \"" + batchCode + "\", \"" + productCode + "\")'>Clear</button>" + "</td></tr>");
+                        $("#sboxno").val("");
+                    } else {
+                        // Show warning if data already exists
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: response.message,
+                        });
+                        $("#sboxno").val("");
+                    }
+                } else {
+                    // Show warning if data already exists
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning',
+                        text: response.message,
+                    });
+                    $("#sboxno").val("");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("AJAX request to SavePickingData failed");
+                console.log("Error: " + error);
+            }
+        });
+    }
+
+    function sendDamageData(location, boxNo, batchCode, productCode) {
+        event.preventDefault();
+
+        // Log the row data to the console
+        console.log("Location: " + location);
+        console.log("Box No: " + boxNo);
+        console.log("Batch Code: " + batchCode);
+        console.log("Product Code: " + productCode);
+
+        Swal.fire({
+            title: 'Confirm Damage',
+            text: 'Are you sure you want to consider this product as damaged ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, continue',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Make an AJAX POST request to the controller action
+                $.ajax({
+                    url: '/inwards/SaleReturnDamage',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        location: location,
+                        boxNo: boxNo,
+                        batchCode: batchCode,
+                        productCode: productCode
+                    }),
+                    success: function (response) {
+                        console.log("Response from controller:", response);
+                        if (response.success) {
+                            // Show SweetAlert success message
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                            });
+                            // Add CSS class to the clicked button
+                            clickedButton.addClass('damaged-button');
+                        } else {
+                            // Show SweetAlert error message
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message,
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                        // Show SweetAlert error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while processing the request.',
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    function sendDeleteData(location, boxNo, batchCode, productCode) {
+        event.preventDefault();
+
+        // Log the row data to the console
+        console.log("Location: " + location);
+        console.log("Box No: " + boxNo);
+        console.log("Batch Code: " + batchCode);
+        console.log("Product Code: " + productCode);
+
+        Swal.fire({
+            title: 'Confirm Clear ?',
+            text: 'Are you sure you want to Clear shipper ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, continue',
+            cancelButtonText: 'No, cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Make an AJAX POST request to the controller action
+                $.ajax({
+                    url: '/inwards/SaleReturnDelete',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        location: location,
+                        boxNo: boxNo,
+                        batchCode: batchCode,
+                        productCode: productCode
+                    }),
+                    success: function (response) {
+                        console.log("Response from controller:", response);
+                        if (response.success) {
+                            // Show SweetAlert success message
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                            });
+                            // // Add CSS class to the clicked button
+                            // clickedButton.addClass('damaged-button');
+                            // Remove the corresponding row from the table body
+                            $("tr").each(function () {
+                                if ($(this).find("td:eq(0)").text().trim() == location &&
+                                    $(this).find("td:eq(1)").text().trim() == boxNo &&
+                                    $(this).find("td:eq(2)").text().trim() == batchCode &&
+                                    $(this).find("td:eq(3)").text().trim() == productCode) {
+                                    $(this).remove();
+                                }
+                            });
+                        } else {
+                            // Show SweetAlert error message
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message,
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                        // Show SweetAlert error message
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while processing the request.',
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    //     function calculate(input) {
+    //     var parentRow = input.closest('tr');
+    //     var quantity = parseInt(parentRow.querySelector('.SOQty-input').value);
+    //     var noofshpperqty = parseInt(parentRow.querySelector('.noofpackets-input').value);
+    //     var totalPacketInput = parentRow.querySelector('.totalpacket-input');
+    //     var totalShipper = noofshpperqty * input.value; // Corrected to multiply 'noofshpperqty' with 'input.value'
+    //     totalPacketInput.value = totalShipper;
+    //     var qty = parseInt(input.value);
+    //     var DLQty = parseInt(parentRow.querySelector('.DLQty-input').value);
+    //     var productcode = parentRow.querySelector('.productcode').value; // Get the value of the product code input
+    //     if (qty > DLQty) {
+    //         input.value = DLQty;
+    //         qty = DLQty;
+    //         totalShipper = noofshpperqty * qty;
+    //         Swal.fire({
+    //             icon: 'warning',
+    //             title: 'Quantity Exceeded',
+    //             text: 'Entered quantity cannot exceed Dispatch quantity of' + productcode,
+    //         });
+    //     }
+
+    //     console.log("noofshpperqty :" + noofshpperqty);
+    //     console.log("quantity :" + input.value);
+    //     console.log("totalShipper :" + totalShipper);
+    // }
+
+    function calculate2(input) {
+        console.log("Function 2 call......");
+        var parentRow = input.closest('tr');
+        var quantity = parseInt(parentRow.querySelector('.quantity-input').value);
+        var noqtypershp = parseFloat(input.value);
+        console.log("noqtypershp : " + noqtypershp);
+        var totalPacketInput = parentRow.querySelector('.totalpacket-input');
+
+        if (noqtypershp > 0) {
+            var totalShipper = quantity / noqtypershp;
+            totalPacketInput.value = totalShipper;
+            console.log("totalShipper : " + totalShipper);
+        } else {
+            totalPacketInput.value = 0; // Set totalPacketInput to 0 if noqtypershp is 0 or invalid
+        }
+    }
+
+    function calculate(input) {
+        console.log("Function 1 call......");
+        var parentRow = input.closest('tr');
+        var quantity = parseInt(parentRow.querySelector('.quantity-input').value);
+        var noofshpperqty = parseInt(parentRow.querySelector('.noofpackets-input').value);
+        var totalPacketInput = parentRow.querySelector('.totalpacket-input');
+
+        var noqtypershpInput = input.parentElement.nextElementSibling.querySelector('.noqtypershp-input');
+
+        if (noofshpperqty === 0) {
+            noqtypershpInput.removeAttribute('readonly');
+            if (parseFloat(noqtypershpInput.value) > 0) {
+                console.log("call function 2 :calculate2()");
+            }
+        }
+        else {
+            noqtypershpInput.value = 0;
+            noqtypershpInput.setAttribute('readonly', 'readonly');
+            var totalShipper = noofshpperqty * quantity;
+            totalPacketInput.value = totalShipper;
+            console.log("totalShipper : " + totalShipper);
+
+            var qty = parseInt(input.value);
+            var DLQty = parseInt(parentRow.querySelector('.DLQty-input').value);
+            var productcode = parentRow.querySelector('.productcode').value.toUpperCase(); // Get the value of the product code input
+            if (qty > DLQty) {
+                input.value = DLQty;
+                qty = DLQty;
+                totalShipper = noofshpperqty * qty;
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Quantity Exceeded',
+                    text: 'Entered quantity cannot exceed Dispatch quantity of' + productcode.toUpperCase(),
+                });
+            }
+        }
+    }
+
+    var quantityInputs = document.querySelectorAll('.quantity-input');
+    quantityInputs.forEach(function (input) {
+        // console.log("Quantity changes....");
+        input.addEventListener('change', function () {
+            var enteredQuantity = parseFloat(this.value);
+            if (enteredQuantity <= 0) { // Check if quantity is less than zero
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Quantity',
+                    text: 'Quantity cannot be less than 0 :)',
+                });
+                this.value = '0'; // Reset value to 0
+            }
+        });
+    });
+
+    $(document).on('click', '.boq-button', function () {
+        // var selectedValue = $(this).closest('tr').find('.templatenamecl option:selected').text();
+        var selectedValue = $(this).closest('tr').find('input[name*="templatename"]').val();
+        var currentRow = $(this).closest('tr');
+        var productcode = currentRow.find('input[name*="productcode"]').val().toUpperCase();
+
+        // Ensure product code exists
+        if (productcode.toUpperCase()) {
+            $.ajax({
+                url: '/inwards/GetTemplateData',
+                type: 'GET',
+                data: { templateName: selectedValue, productcode : productcode },
+                success: function (data) {
+                    // // populateTemplateTable(data);
+                    // // $('#form-modal').modal('show');
+                    // showInModal(data); // Show data in modal
+                    if (data && data.length > 0) {
+                        showInModal(data); // Show data in modal
+                    } else {
+                        showNoDataFoundModal();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("An error occurred while executing the action: " + error);
+                }
+            });
+        }
+
+    });
+
+    function showInModal(data) {
+        var modalBody = $('#form-modal .modal-body');
+        var table = $('<table>').addClass('table table-bordered mt-1');
+        var thead = $('<thead>').append('<tr><th>BOQ Pro.</th><th>Pro. Qty</th></tr>');
+        var tbody = $('<tbody>');
+
+        $.each(data, function (index, item) {
+            var row = '<tr>' +
+                '<td>' + item.boqproductname + '</td>' +
+                '<td>' + item.boqqty + '</td>' +
+                '</tr>';
+            tbody.append(row);
+        });
+
+        table.append(thead).append(tbody);
+        modalBody.empty().append(table);
+        $('#form-modal').modal('show');
+    }
+
+    // function showNoDataFoundModal() {
+    //     var modalBody = $('#form-modal .modal-body');
+    //     modalBody.empty(); // Clear modal body content
+
+    //     modalBody.text("No data found.");
+    //     $('#form-modal').modal('show');
+    // }
+
+    function showNoDataFoundModal() {
+        var modalHeader = $('#form-modal .modal-header');
+        var modalBody = $('#form-modal .modal-body');
+
+        modalHeader.empty(); // Clear modal header content
+        modalBody.empty(); // Clear modal body content
+
+        // Add a custom heading
+        // var heading = $('<h5>').addClass('modal-title').text('BOQ Details');
+        var heading = $('<h5>').addClass('modal-title').text('BOQ Details');
+        modalHeader.append(heading);
+
+        // Add the message to the modal body
+        modalBody.text("No BOQ Data found.").css({
+            'color': 'Green',        // Set text color to green
+            'font-weight': '600'     // Set font weight to 650
+        });
+
+        $('#form-modal').modal('show');
+    }
+
+    $(document).on('click', '.poedit-button', function () {
+        var productCode = $(this).data('productcode').toUpperCase();
+        var sono = $(this).data('sono');
+        var quantity = $(this).data('quantity');
+        console.log(productCode + " - " + sono + " - " + quantity);
+        // Call the function to show product details in the modal
+        showProductDetails2(productCode, sono, quantity);
+    });
+
+    function showProductDetails2(productCode, sono, quantity) {
+        console.log(" data : " + productCode.toUpperCase() + sono + quantity);
+        var editUrl = '/inwards/_partialSubComponentso?productCode=' + productCode.toUpperCase() + '&sono=' + sono + '&quantity=' + quantity;
+        console.log(editUrl);
+        showInPopup(editUrl, 'SubComponents Details');
+    }
+
+    $(document).on('click', '.addserial-button', function () {
+        var productCode = $(this).data('productcode').toUpperCase();
+        var description = $(this).data('description').toUpperCase();
+        var warranty = $(this).data('warranty'); // Corrected attribute name
+        // var quantity = $(this).data('quantity');
+        var sono = $(this).data('sono');
+        var quantity = $(this).closest('tr').find('.quantity-input').val();
+
+        console.log(productCode + " - " + sono + " - " + quantity + " - " + warranty);
+        // Call the function to show product details in the modal
+        showProductDetails3(productCode, sono, quantity, warranty);
+    });
+
+    function showProductDetails3(productCode, sono, quantity, warranty) {
+        console.log(" data : " + productCode + sono + quantity + warranty);
+        var editUrl = '/inwards/_partialAddSerialso?productCode=' + productCode + '&sono=' + sono + '&quantity=' + quantity + '&warranty=' + warranty;
+        console.log(editUrl);
+        showInPopupso(editUrl, 'Add Serial No.');
+    }
+
+    $(document).on('change', '.quantity-input', function () {
+        console.log("Quantity Changed .....");
+        var row = $(this).closest('tr');
+        var quantity = parseFloat($(this).val());
+        var sono = document.getElementById("sono").value;
+        var changedInput = $(this);
+
+
+        // Get the productcode value within this row
+        var productCodeValue = row.find('input[name^="inwardPacket"][name$=".productcode"]').val().toUpperCase();
+        var subcomponent = row.find('input[name^="inwardPacket"][name$=".totalsubassmbly"]').val();
+
+        console.log("quantity : " + quantity);
+        console.log("productCodeValue : " + productCodeValue);
+        console.log("sono : " + sono);
+        $.ajax({
+            url: '@Url.Action("GetSumSubComponentso", "inwards")',
+            type: 'GET',
+            dataType: 'json',
+            data: { selectedvalue: productCodeValue.toUpperCase(), selectedvalue1: quantity, selectedvalue2: sono },
+            success: function (data) {
+
+                console.log("Total : " + data);
+                var subcomponent = row.find('input[name^="inwardPacket"][name$=".totalsubassmbly"]');
+                console.log("totalsubassembly : " + subcomponent.val());
+                if (subcomponent.length > 0) {
+                    subcomponent.val(data);
+                } else {
+                    console.error('Subcomponent not found!');
+                }
+            }
+        });
+
+        var tqtySum = 0;
+        // Other calculations or actions related to the changed row
+    });
+
+    // showInPopupso = (url, title) => {
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: url,
+    //         success: function (res) {
+    //             console.log(res);
+    //             if (res.message === "Sweet") {
+    //                 console.log(res);
+    //                 showAlert(res);
+    //             } else if (res === "AlreadyAdded") {
+    //                 console.log(res);
+    //                 AlreadyAdded();
+    //             } else if (res === "succesfullysradded") {
+    //                 console.log(res);
+    //                 succesfullysradded();
+    //             } else {
+    //                 console.log(res);
+    //                 $('#form-modal .modal-body').html(res);
+    //                 $('#form-modal .modal-title').html(title);
+    //                 $('#form-modal').modal('show');
+    //                 fetchAndDisplayListDataso();
+    //             }
+
+    //         }
+    //     })
+    // }
+
+    // function fetchAndDisplayListDataso() {
+    //     var sono = $('#sono').val();
+    //     var productCode = $('#productcode').val();
+    //     var quantity = $('#quantity').val();
+    //     var warranty = $('#warranty').val();
+
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: '/inwards/ShowItemso?sono=' + sono + '&productCode=' + productCode + '&quantity=' + quantity + '&warranty=' + warranty,
+    //         success: function (response) {
+    //             displayTableso(response.data);
+    //         },
+    //         error: function (error) {
+    //             console.error('Error fetching data:', error);
+    //         }
+    //     });
+    // }
+
+</script>

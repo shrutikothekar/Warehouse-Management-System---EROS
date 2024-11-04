@@ -1,0 +1,218 @@
+﻿@model eros.Models.Customer_Master
+
+@{
+    ViewData["Title"] = "CreateViewCustomer";
+    Layout = null;
+    string[] TableHeaders = new string[] {
+    "Consignee Name",
+    "Consignee Contact No." ,
+    "Consignee Contact Person" ,
+    "Consignee Address" ,
+    "Consignee Email ID",
+    "Consignee City",
+    "Consignee State",
+    "Consignee Pincode"
+    };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div>
+                <div class="mb-1">
+                    @* <div class="card-header bg-dark text-white">
+            <div class="d-flex align-items-baseline">
+            <h5 class="mx-auto font-weight-bolder">Customer Master</h5>
+            </div>
+            </div> *@
+
+                    <div class="row p-1">
+                        <div class="col-md-12">
+                            <form asp-action="CreateViewCustomer" id="CodeSbyAnizForm">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="row">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="customer_id" />
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label asp-for="customername" class="control-label"></label>
+                                        <input asp-for="customername" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="customername" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label asp-for="contactperson" class="control-label"></label>
+                                        <input asp-for="contactperson" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="contactperson" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label asp-for="address" class="control-label"></label>
+                                        <input asp-for="address" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="address" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label asp-for="city" class="control-label"></label>
+                                        <input asp-for="city" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="city" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label asp-for="state" class="control-label"></label>
+                                        <input asp-for="state" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="state" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label asp-for="pincode" class="control-label"></label>
+                                        <input asp-for="pincode" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="pincode" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label asp-for="contactno" class="control-label"></label>
+                                        <input asp-for="contactno" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="contactno" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label asp-for="emailid" class="control-label"></label>
+                                        <input asp-for="emailid" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="emailid" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label asp-for="gstno" class="control-label"></label>
+                                        <input asp-for="gstno" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="gstno" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive col-md-12">
+                                    <table class="table divide-gray-200 table-bordered" id="CodesTable">
+                                        <thead class="bg-gray-200 sticky top-0">
+                                            <tr>
+                                                @foreach (var head in TableHeaders)
+                                                {
+                                                    <th>
+                                                        @head
+                                                    </th>
+
+                                                }
+                                                <th style="width:100px;">
+                                                    <button id='btnAddDetailRow' type="button" class="btn btn-sm btn-secondary visible" onclick="AddItem(this)">
+                                                        Add
+                                                    </button>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="CsDiv">
+                                            @for (int i = 0; i < Model.Consignee_masters.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input asp-for="@Model.Consignee_masters[i].consigneename" class="form-control">
+                                                        <span asp-validation-for="@Model.Consignee_masters[i].consigneename" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.Consignee_masters[i].consigneecontact" class="form-control">
+                                                        <span asp-validation-for="@Model.Consignee_masters[i].consigneecontact" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.Consignee_masters[i].consigneeperson" class="form-control">
+                                                        <span asp-validation-for="@Model.Consignee_masters[i].consigneeperson" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.Consignee_masters[i].consigneeaddress" class="form-control">
+                                                        <span asp-validation-for="@Model.Consignee_masters[i].consigneeaddress" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.Consignee_masters[i].consigneeemail" class="form-control">
+                                                        <span asp-validation-for="@Model.Consignee_masters[i].consigneeemail" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.Consignee_masters[i].consigneecity" class="form-control">
+                                                        <span asp-validation-for="@Model.Consignee_masters[i].consigneecity" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.Consignee_masters[i].consigneestate" class="form-control">
+                                                        <span asp-validation-for="@Model.Consignee_masters[i].consigneestate" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.Consignee_masters[i].consigneepincode" class="form-control">
+                                                        <span asp-validation-for="@Model.Consignee_masters[i].consigneepincode" class="text-danger"></span>
+                                                        <input type="hidden" asp-for="@Model.Consignee_masters[i].IsDeleted" />
+                                                    </td>
+                                                    <td>
+                                                        <button id='btnremove-@i' type="button" class="btn btn-sm btn-success visible" onclick="DeleteItem(this)">Delete</button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                    <input type="hidden" id="hdnLastIndex" value="0" />
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="submit" value="Create" class="btn btn-primary col-md-12" />
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+
+
+@* for js function *@
+<script src="~/js/site.js"></script>
+
+<script src="~/vendor/jquery/jquery.min.js"></script>
+
+<!-- Include Bootstrap CSS (if not already included) -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+
+<!-- Include DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.2/css/jquery.dataTables.min.css" />
+
+<!-- Include DataTables JavaScript -->
+<script src="~/js/cdn.datatables.min.js"></script>
+
+<!-- Include jQuery (if not already included) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+

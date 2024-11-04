@@ -1,0 +1,155 @@
+﻿@model eros.Models.Courier_Master
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder">Courier Master Edit</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <div class="container mt-4">
+                        <div class="row mx-lg-2 mx-md-2">
+                            <div class="col-md-12">
+                                <form asp-action="Edit">
+                                    <input type="hidden" asp-for="id" />
+                                    <div class="row">
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="couriercode" class="control-label">Courier Code</label>
+                                            <input asp-for="couriercode" class="form-control" readonly="true" />
+                                            <span asp-validation-for="couriercode" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="couriername" class="control-label">Courier Name</label>
+                                            <input asp-for="couriername" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                            <span asp-validation-for="couriername" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="contactperson" class="control-label">Contact Person</label>
+                                            <input asp-for="contactperson" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                            <span asp-validation-for="contactperson" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="contactno" class="control-label">Contact No.</label>
+                                            <input asp-for="contactno" data-uppercase autocomplete="off" class="form-control" oninput="validateNumber(this)" />
+                                            <span asp-validation-for="contactno" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="address" class="control-label">Address</label>
+                                            <input asp-for="address" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphNum(this)" />
+                                            <span asp-validation-for="address" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="city" class="control-label">City</label>
+                                            <input asp-for="city" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                            <span asp-validation-for="city" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="state" class="control-label">State</label>
+                                            <input asp-for="state" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                            <span asp-validation-for="state" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="pincode" class="control-label">Pincode</label>
+                                            <input asp-for="pincode" data-uppercase autocomplete="off" class="form-control" oninput="validateNumber(this)" />
+                                            <span asp-validation-for="pincode" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="submit" value="Save" class="btn btn-primary col-md-12" />
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function validateAlphabet(input) {
+            var regex = /^[a-zA-Z\s._-\s]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+
+        function validateAlphNum(input) {
+            var regex = /^[a-zA-Z0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validateNumber(input) {
+            var regex = /^[0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validatePinNumber(input) {
+            var regex = /^[0-5]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+    </script>
+}
+

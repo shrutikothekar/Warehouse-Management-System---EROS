@@ -1,0 +1,578 @@
+﻿@model IEnumerable<eros.Models.Product_Master>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container-fluid">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder">Product Master</h5>
+                            <a asp-action="Create" class="btn btn-success btn-sm text-white mr-1"><i class="fas fa-plus-square"></i> Add</a>
+                            <a onclick="generatePDF()" class="btn btn-danger btn-sm text-white mr-1"><i class="fas fa-file-pdf"></i>Pdf</a>
+                            <a onclick="exportToExcel()" id="exportButton" class="btn btn-success text-white btn-sm mr-1">
+                                <i class="fas fa-file-excel"></i>
+                                Excel
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-sm" id="dataTable" width="100%" cellspacing="0">
+                                <thead class="thead-light  text-center">
+                                    <tr>
+                                        <th>Sr.No.</th>
+                                        <th>
+                                            @* @Html.DisplayNameFor(model => model.productcode) *@Product Code
+                                        </th>
+                                        <th >
+                                            @* @Html.DisplayNameFor(model => model.productdescription) *@ Description
+                                        </th>
+                                        <th>
+                                            @* @Html.DisplayNameFor(model => model.categoryname) *@Categary Name
+                                        </th>
+                                        <th style="width:150px;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class=" text-center">
+                                    @{
+                                        int counter = 1;
+                                    }
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @counter
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.productcode)
+                                            </td>
+                                            <td >
+                                                @Html.DisplayFor(modelItem => item.productdescription)
+                                            </td>
+                                            <td style="width:140px">
+                                                @Html.DisplayFor(modelItem => item.categoryname)
+                                            </td>
+                                            <td style="width:150px">
+                                                <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-success ">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </a>
+                                                <a asp-action="Details" asp-route-id="@item.id" class="btn bg-warning">
+                                                    <i style="color:white" class="fa fa-eye" aria-hidden="true"></i>
+                                                </a>
+                                                <a style="display:none" asp-action="Delete" asp-route-id="@item.id" class="btn btn-danger">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                            </td>
+                                            </tr>
+                                        counter++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @* else if (role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    } *@
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+
+
+<script>
+    var jsPDF = window.jspdf.jsPDF;
+    // function convertToPDF(columnNames, tableData) {
+    //     var doc = new jsPDF();
+    //     var currentDate = new Date();
+
+    //     var additionalText = 'EROS GENERAL AGENCIES PVT LTD.';
+    //     var pageWidth = doc.internal.pageSize.getWidth();
+    //     var additionalTextX = pageWidth / 2;
+    //     doc.setFontSize(14);
+    //     doc.text(additionalText, additionalTextX, 10, { align: 'center' });
+
+    //     var heading1 = 'Storage Location Report';
+    //     var currentDate = new Date();
+    //     var day = currentDate.getDate();
+    //     var month = currentDate.getMonth() + 1; // Month is zero-based, so add 1
+    //     var year = currentDate.getFullYear();
+    //     var formattedDate = (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + year; // Format date as dd/mm/yyyy
+    //     var formattedTime = currentDate.toTimeString().slice(0, 8); // Format time
+    //     var pageWidth = doc.internal.pageSize.getWidth();
+    //     var headingX = pageWidth / 2;
+    //     doc.setFontSize(10);
+    //     doc.text(heading1 + ' - Generated on: ' + formattedDate + ' ' + formattedTime, headingX, 16, { align: 'center' });
+
+    //     var selectedColumns = ['0', '1', '2', '3'];
+
+    //     var rows = tableData.map(row => selectedColumns.map(column => (row[column] !== undefined) ? row[column].toString() : ''));
+
+    //     doc.autoTable({
+    //         head: [columnNames],
+    //         body: rows,
+    //         startY: 30, // Start below the date and time text
+    //         styles: {
+    //             fontSize: 9,
+    //             cellPadding: 2,
+    //             valign: 'middle',
+    //             halign: 'left',
+    //         },
+    //         margin: { top: 20 },
+    //     });
+
+    //     doc.save('ProductMaster.pdf');
+    //     console.log("Doc Generated Successfully!");
+    // }
+    function convertToPDF(columnNames, tableData) {
+        var doc = new jsPDF();
+        var currentDate = new Date();
+
+        // Create an image element and set the source
+        var imgElement = new Image();
+        imgElement.src = '/img/logo1.png'; // Use the correct relative path to your image
+
+        imgElement.onload = function () {
+            // Create a canvas to convert the image to base64
+            var canvas = document.createElement("canvas");
+            canvas.width = imgElement.width;
+            canvas.height = imgElement.height;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(imgElement, 0, 0);
+            var logoBase64 = canvas.toDataURL("image/png"); // Convert image to base64
+
+            var logoWidth = 18;  // Set desired logo width
+            var logoHeight = 15; // Set desired logo height
+            var pageWidth = doc.internal.pageSize.getWidth(); // Get page width to center logo
+
+            // Calculate X position to center the logo
+            var logoX = (pageWidth - logoWidth) / 2;
+
+            // Insert logo at the top center
+            doc.addImage(logoBase64, 'PNG', logoX, 10, logoWidth, logoHeight);
+
+            // Add company name below the logo
+            var additionalText = 'EROS GENERAL AGENCIES PVT LTD.';
+            var additionalTextX = pageWidth / 2;
+
+            doc.setFontSize(14);
+            doc.text(additionalText, additionalTextX, logoHeight + 20, { align: 'center' }); // Adjust Y position based on logo height
+
+            // Add report heading and date/time below the company name
+            var heading1 = 'Storage Location Report';
+            var day = currentDate.getDate();
+            var month = currentDate.getMonth() + 1; // Month is zero-based, so add 1
+            var year = currentDate.getFullYear();
+            var formattedDate = (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + year; // Format date as dd/mm/yyyy
+            var formattedTime = currentDate.toTimeString().slice(0, 8); // Format time
+            var headingX = pageWidth / 2;
+
+            doc.setFontSize(10);
+            doc.text(heading1 + ' - Generated on: ' + formattedDate + ' ' + formattedTime, headingX, logoHeight + 28, { align: 'center' }); // Adjust Y position based on text height
+
+            // Prepare table content
+            var selectedColumns = ['0', '1', '2', '3', '4'];
+            var rows = tableData.map(row => selectedColumns.map(column => (row[column] !== undefined) ? row[column].toString() : ''));
+
+            // Create table below the header
+            doc.autoTable({
+                head: [columnNames],
+                body: rows,
+                startY: logoHeight + 35, // Start table below the heading and date
+                styles: {
+                    fontSize: 9,
+                    cellPadding: 2,
+                    valign: 'middle',
+                    halign: 'left',
+                },
+                margin: { top: 20 },
+            });
+
+            // Save the PDF
+            doc.save('ProductMaterReport_.pdf');
+            console.log("Doc Generated Successfully!");
+        };
+    }
+
+    function generatePDF() {
+        var customHeader = 'Custom PDF Header';
+        var columnNames = ['SrNo.','Pro.Code', 'Description', 'Category'];
+
+        // Get all the data from DataTable
+        var dataTable = $('#dataTable').DataTable();
+        var tableData = dataTable.rows().data().toArray();
+
+        convertToPDF(columnNames, tableData);
+    }
+</script>
+<script>
+    // function exportToExcel() {
+    //      function formatDate(date) {
+    //         const day = String(date.getDate()).padStart(2, '0');
+    //         const month = String(date.getMonth() + 1).padStart(2, '0');
+    //         const year = date.getFullYear();
+    //         return `${day}/${month}/${year}`;
+    //     }
+
+    //     const now = new Date();
+    //     const formattedDate = formatDate(now);
+    //     const formattedTime = now.toLocaleTimeString();
+    //     const sheetHeading = ['EROS GENERAL AGENCIES PVT.LTD'];
+    //     const SubHeading = ['Excel generated on ' + formattedDate + ' at ' + formattedTime];
+    //     const tableHeading = ['SR.', 'Prod.Code', 'Desc.', 'Category'];
+
+
+    //     // const sheetHeading = ['EROS GENERAL AGENCIES PVT.LTD'];
+    //     // const SubHeading = ['Excel generated on ' + (new Date().toLocaleDateString()) + ' at ' + (new Date().toLocaleTimeString())];
+    //     // const tableHeading = ['SR.','Prod.Code', 'Desc.', 'Category'];
+
+    //     // Collecting data from all pages of the table
+    //     const wsData = [sheetHeading, SubHeading, tableHeading];
+
+    //     // Function to collect data from all pages
+    //     function collectDataFromAllPages() {
+    //         var dataTable = $('#dataTable').DataTable();
+    //         var pageCount = dataTable.page.info().pages;
+
+    //         for (let i = 0; i < pageCount; i++) {
+    //             dataTable.page(i).draw('page');
+    //             $('#dataTable tbody tr').each(function () {
+    //                 const rowData = [];
+    //                 $(this).find('td').each(function () {
+    //                     rowData.push($(this).text().trim());
+    //                 });
+    //                 wsData.push(rowData);
+    //             });
+    //         }
+
+    //         // Restore the original page
+    //         dataTable.page(0).draw('page');
+    //     }
+
+    //     // Collect data from all pages of the DataTable
+    //     collectDataFromAllPages();
+
+    //     const workbook = new ExcelJS.Workbook();
+    //     const worksheet = workbook.addWorksheet('Order Sheet');
+
+    //     // Define border style
+    //     const borderStyle = {
+    //         top: { style: 'thin' },
+    //         left: { style: 'thin' },
+    //         bottom: { style: 'thin' },
+    //         right: { style: 'thin' }
+    //     };
+
+    //     // Add and style the sheet heading
+    //     const headingRow = worksheet.addRow(sheetHeading);
+    //     headingRow.font = { bold: true, size: 14 };
+    //     worksheet.mergeCells('A1:D1');
+    //     headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     headingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     const headingRow1 = worksheet.addRow(SubHeading);
+    //     worksheet.mergeCells('A2:D2');
+    //     headingRow1.font = { size: 10 };
+    //     headingRow1.alignment = { horizontal: 'center', vertical: 'center' };
+    //     headingRow1.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     // Add and style the table heading
+    //     const headerRow = worksheet.addRow(tableHeading);
+    //     headerRow.eachCell((cell) => {
+    //         cell.font = { bold: true, size: 14 };
+    //         cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //         cell.border = borderStyle;
+    //     });
+
+    //     // Add data rows and center align, with special alignment for the first two columns
+    //     wsData.slice(3).forEach(dataRow => {
+    //         const row = worksheet.addRow(dataRow);
+    //         row.eachCell((cell, colNumber) => {
+    //             if (colNumber === 2 || colNumber === 3 || colNumber === 4) {
+    //                 cell.alignment = { horizontal: 'left', vertical: 'top', wrapText: true };
+    //             } else {
+    //                 cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //             }
+    //             cell.border = borderStyle;
+    //         });
+    //     });
+
+    //     // Set specific widths for the columns
+    //     worksheet.columns = [
+    //         { width: 10 },  // Set width for the second column
+    //         { width: 30 },  // Set width for the third column
+    //         { width: 35 },  // GRN No column width
+    //         { width: 20 }   // Location column width
+    //     ];
+
+    //     // Generate Excel file and trigger download
+    //     workbook.xlsx.writeBuffer().then(function (buffer) {
+    //         saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'ProductMaster.xlsx');
+    //     });
+    // }
+    function exportToExcel() {
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        const now = new Date();
+        const formattedDate = formatDate(now);
+        const formattedTime = now.toLocaleTimeString();
+        const sheetHeading = ['EROS GENERAL AGENCIES PVT.LTD'];
+        const SubHeading = ['Excel generated on ' + formattedDate + ' at ' + formattedTime];
+        const tableHeading = ['SrNo.', 'Pro.Code', 'Description', 'Category'];
+
+        // Collecting data from all pages of the table
+        const wsData = [sheetHeading, SubHeading, tableHeading];
+
+        // Function to collect data from all pages
+        function collectDataFromAllPages() {
+            var dataTable = $('#dataTable').DataTable();
+            var pageCount = dataTable.page.info().pages;
+
+            for (let i = 0; i < pageCount; i++) {
+                dataTable.page(i).draw('page');
+                $('#dataTable tbody tr').each(function () {
+                    const rowData = [];
+                    $(this).find('td').each(function () {
+                        rowData.push($(this).text().trim());
+                    });
+                    wsData.push(rowData);
+                });
+            }
+
+            // Restore the original page
+            dataTable.page(0).draw('page');
+        }
+
+        // Collect data from all pages of the DataTable
+        collectDataFromAllPages();
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Order Sheet');
+
+        // Define border style
+        const borderStyle = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+
+        // Function to apply border to specific columns (A to D)
+        function applyBorderToRow(row) {
+            row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+                if (colNumber >= 1 && colNumber <= 4) {
+                    cell.border = borderStyle;
+                }
+            });
+        }
+
+        // Add and style the sheet heading
+        const headingRow = worksheet.addRow(sheetHeading);
+        headingRow.font = { bold: true, size: 14 };
+        worksheet.mergeCells('A1:D1');
+        headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        applyBorderToRow(headingRow);
+
+        const headingRow1 = worksheet.addRow(SubHeading);
+        worksheet.mergeCells('A2:D2');
+        headingRow1.font = { size: 10 };
+        headingRow1.alignment = { horizontal: 'center', vertical: 'center' };
+        applyBorderToRow(headingRow1);
+
+        // Add and style the table heading
+        const headerRow = worksheet.addRow(tableHeading);
+        headerRow.eachCell((cell) => {
+            cell.font = { bold: true, size: 14 };
+            cell.alignment = { horizontal: 'center', vertical: 'center' };
+        });
+        applyBorderToRow(headerRow);
+
+        // Add data rows and center align, with special alignment for the first two columns
+        wsData.slice(3).forEach(dataRow => {
+            const row = worksheet.addRow(dataRow);
+            row.eachCell((cell, colNumber) => {
+                if (colNumber === 2 || colNumber === 3 ) {
+                    cell.alignment = { horizontal: 'left', vertical: 'top', wrapText: true };
+                } else {
+                    cell.alignment = { horizontal: 'center', vertical: 'center' };
+                }
+            });
+            applyBorderToRow(row);
+        });
+
+        // Set specific widths for the columns
+        worksheet.columns = [
+            { width: 10 },  // SR. column width
+            { width: 30 },  // Prod.Code column width
+            { width: 35 },  // Desc. column width
+            { width: 20 }   // Category column width
+        ];
+
+        // Generate Excel file and trigger download
+        workbook.xlsx.writeBuffer().then(function (buffer) {
+            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'ProductMaster.xlsx');
+        });
+    }
+
+</script>
+
+<script>
+    // var jsPDF = window.jspdf.jsPDF;
+    // function convertToPDF(columnNames) {
+
+    //     console.log("convertToPDF....!");
+    //     var doc = new jsPDF();
+    //     var currentDate = new Date();
+
+    //     var additionalText = 'Eros General Agencies Pvt.Ltd';
+    //     var ReportName = 'Products Master Report ' + "                         " + currentDate.toLocaleString();
+
+    //     //  Calculate the center position for the header text
+    //     var pageWidth = doc.internal.pageSize.width;
+    //     var textWidth = doc.getStringUnitWidth(additionalText) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+    //     var centerX = (pageWidth - textWidth) / 2;
+
+    //     doc.text(additionalText, centerX, 10); // Centered header text
+    //     doc.text(ReportName, 12, 20);
+
+    //     var dataTable = $('#dataTable').DataTable();
+    //     var selectedColumns = ['0', '1', '2', '3', '4', '5', '6', '7'];
+    //     var processedPages = [];
+    //     function addPageToPDF(pageNumber) {
+    //         dataTable.page(pageNumber).draw('page');
+    //         var tableData = dataTable.rows().data().toArray();
+    //         var columns = selectedColumns;
+    //         var rows = tableData.map(row => selectedColumns.map(column => (row[column] !== undefined) ? row[column].toString() : ''));
+    //         doc.autoTable({
+    //             head: [columnNames],
+    //             body: rows,
+    //             startY: 30, // Start below the date and time text
+    //             styles: {
+    //                 fontSize: 10,
+    //                 cellPadding: 2,
+    //                 valign: 'middle',
+    //                 halign: 'left',
+    //             },
+    //             margin: { top: 20 },
+    //         });
+    //         // if (pageNumber < dataTable.page.info().pages - 1) {
+    //         //     doc.addPage();
+    //         //     addPageToPDF(pageNumber + 1);
+    //         // } else {
+    //             doc.save('productmasterreport_.pdf');
+    //             console.log("Doc Genrate Success !");
+    //        // }
+    //     }
+    //     addPageToPDF(0);
+    // }
+    // function generatePDF() {
+    //    // $('#loaderbody').addClass('show');
+    //     console.log("generatePDF....!");
+    //     var customHeader = 'Custom PDF Header';
+    //     var columnNames = ['Sr No', 'ProductCode', 'Product Description'];
+    //     convertToPDF(columnNames);
+    // }
+</script>
+<script>
+    // document.getElementById("exportButton").addEventListener("click", function () {
+    //     exportToExcel();
+    // });
+    // function exportToExcel() {
+    //     console.log("ExportToExcel....!");
+    //     /* Create a new workbook object */
+    //     var wb = XLSX.utils.book_new();
+    //     /* Create a new worksheet */
+    //     var ws = XLSX.utils.json_to_sheet([], { skipHeader: true });
+
+    //     /* Add headers to the worksheet */
+    //     var headers = ['Sr No', 'ProductCode', 'Product Description'];
+    //     XLSX.utils.sheet_add_aoa(ws, [headers], { origin: 'A1' });
+
+    //     /* Add data to the worksheet */
+    //     var customData = [];
+    //     var dataTable = $('#dataTable').DataTable();
+
+    //     // Iterate through each page of the DataTable
+
+    //     var rows = dataTable.rows().data().toArray();
+
+    //     for (var i = 0; i < rows.length; i++) {
+    //         var rowData = [];
+    //         var cells = rows[i];
+
+    //         for (var j = 0; j < cells.length - 2; j++) {
+    //             rowData.push(cells[j]);
+    //         }
+
+    //         customData.push(rowData);
+    //     }
+
+
+    //     XLSX.utils.sheet_add_aoa(ws, customData, { origin: 'A2' });
+
+    //     /* Append the worksheet to the workbook */
+    //     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    //     /* Save the workbook as an Excel file */
+    //     XLSX.writeFile(wb, "ProductMaster.xlsx");
+    // }
+</script>

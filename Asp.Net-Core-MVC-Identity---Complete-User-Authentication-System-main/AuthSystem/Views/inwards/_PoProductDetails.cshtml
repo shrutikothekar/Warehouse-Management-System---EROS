@@ -1,0 +1,992 @@
+﻿@model eros.Models.inward
+@{
+    // var sweetAlert = @Html.Raw(Json.Serialize(ViewBag.SweetAlert));
+    string[] TableHeaders = new string[] {
+        
+        "Pro. Code",
+        "Prd. Name.",
+        "PO Qty",
+        "Qty",
+        "No. Set/Pro." ,
+        "No. set/shp" ,
+        "No. Shp/Qty" ,
+        // "No. Qty/Shp",
+        //"Ttl Shp" ,
+        //"Ttl Sub",
+        "Shp.Allot",
+         };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="row mx-lg-2 mx-md-2">
+
+            <div class="form-group col-sm-6 mt-3">
+                <label asp-for="partyname" class="control-label">Partyname</label>
+                <input id="spartynameIdinput" class="form-control" asp-for="partyname" readonly />
+                <span asp-validation-for="partyname" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-6 mt-3">
+                <label asp-for="gstinno" class="control-label"></label>
+                <input asp-for="gstinno" data-uppercase autocomplete="off" id="sgstnoId" class="form-control" readonly />
+                <span asp-validation-for="gstinno" class="text-danger"></span>
+            </div>
+            <div>
+                @{
+                    // Get pono value from ViewData
+                    var ponoValue = ViewData["PonoValue"] as string;
+                }
+                <input id="pono" class="form-control" readonly hidden value="@ponoValue" />
+
+
+
+            </div>
+
+        </div>
+
+        <div class="row mx-lg-2 mx-md-2">
+            @* address , contact *@
+            <div class="form-group col-sm-6 mt-3">
+                <label asp-for="contactno" class="control-label"></label>
+                <input asp-for="contactno" data-uppercase autocomplete="off" id="scontactnoId" class="form-control" required readonly />
+                <span asp-validation-for="contactno" class="text-danger"></span>
+            </div>
+            <div class="form-group col-sm-6 mt-3">
+                <label asp-for="address" class="control-label"></label>
+                <input asp-for="address" data-uppercase autocomplete="off" id="saddressId" class="form-control" required readonly />
+                <span asp-validation-for="address" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-12 mx-lg-2 mx-md-2">
+
+            <table id="CodesTable" class="table table-striped table-sm p-2">
+                <thead>
+                    <tr>
+                        @foreach (var head in TableHeaders)
+                        {
+                            <th>
+                                @head
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    @for (int i = 0; i < Model.inwardPacket.Count; i++)
+                    {
+                        <tr>
+                            <td style="display:none;">
+                                <input asp-for="@Model.inwardPacket[i].pono" style="margin-left:20px;" value="@ponoValue" class="form-control" readonly />
+                            </td>
+                            @*  <td>
+                <input asp-for="@Model.inwardPacket[i].productcode" class="form-control" readonly required />
+                <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                </td>
+                <td>
+                <input asp-for="@Model.inwardPacket[i].description" class="form-control" readonly required />
+                <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                </td> *@
+                            <td>
+                                <input asp-for="@Model.inwardPacket[i].productcode" class="form-control"  required readonly
+                                       title="@Model.inwardPacket[i].productcode"
+                                       onmouseover="showTooltip(event, '@Model.inwardPacket[i].productcode', 'tooltip-productcode')"
+                                       onmouseout="hideTooltip('tooltip-productcode')" />
+                                <div id="tooltip-productcode" class="product"></div>
+                                <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <input asp-for="@Model.inwardPacket[i].description" class="form-control"  required
+                                       title="@Model.inwardPacket[i].description"
+                                       onmouseover="showTooltip(event, '@Model.inwardPacket[i].description', 'tooltip-description')"
+                                       onmouseout="hideTooltip('tooltip-description')" />
+                                <div id="tooltip-description" class="product"></div>
+                                <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                            </td>
+                            <td style="display:none; width:80px;">
+                                <input asp-for="@Model.inwardPacket[i].brand" class="form-control warranty-input" readonly />
+                                <span asp-validation-for="@Model.inwardPacket[i].brand" class="text-danger"></span>
+                            </td>
+                            <td style="width:80px;">
+                                <input asp-for="@Model.inwardPacket[i].POQty" readonly class="form-control quantity-POQty" data-quantity="@Model.inwardPacket[i].POQty" data-product-code="@Model.inwardPacket[i].productcode" required />
+                            </td>
+                            <td style="width:80px;">
+                                <input asp-for="@Model.inwardPacket[i].quantity" class="form-control quantity-input" data-quantity="@Model.inwardPacket[i].quantity" data-product-code="@Model.inwardPacket[i].productcode" required />
+                            </td>
+                            <td style="width:80px;">
+                                <input asp-for="@Model.inwardPacket[i].setofsub_assemb" class="form-control" />
+                                <span asp-validation-for="@Model.inwardPacket[i].setofsub_assemb" class="text-danger"></span>
+                            </td>
+                            <td style="width:80px;">
+                                <input asp-for="@Model.inwardPacket[i].qtyperpkt" class="form-control" />
+                                <span asp-validation-for="@Model.inwardPacket[i].qtyperpkt" class="text-danger"></span>
+                            </td>
+                            @*  <td>
+                <input asp-for="@Model.inwardPacket[i].noofpackets" class="form-control" />
+                <span asp-validation-for="@Model.inwardPacket[i].noofpackets" class="text-danger"></span>
+                </td>
+                <td>
+                <input asp-for="@Model.inwardPacket[i].totalpacket" class="form-control" />
+                <span asp-validation-for="@Model.inwardPacket[i].totalpacket" class="text-danger"></span>
+                </td> *@
+                            <td style="width:80px;">
+                                <input asp-for="@Model.inwardPacket[i].noofpackets" class="form-control noofpackets-input" oninput="calculate(this)" />
+                                <span asp-validation-for="@Model.inwardPacket[i].noofpackets" class="text-danger"></span>
+                            </td>
+                            <td style="width:80px;display:none;">
+                                <input asp-for="@Model.inwardPacket[i].noqtypershp" readonly class="form-control noqtypershp-input" oninput="calculate2(this)" />
+                                <span asp-validation-for="@Model.inwardPacket[i].noqtypershp" class="text-danger"></span>
+                            </td>
+                            <td style="width:80px;display:none">
+                                <input asp-for="@Model.inwardPacket[i].totalpacket" readonly class="form-control totalpacket-input" />
+                                <span asp-validation-for="@Model.inwardPacket[i].totalpacket" class="text-danger"></span>
+                            </td>
+                            <td style="width:80px; display:none">
+                                <input asp-for="@Model.inwardPacket[i].totalsubassmbly" id="totalsubassembly" class="form-control totalsubassembly" readonly required />
+                                <span asp-validation-for="@Model.inwardPacket[i].totalsubassmbly" class="text-danger"></span>
+                                <input type="hidden" asp-for="@Model.inwardPacket[i].IsDeleted" />
+                            </td>
+                            <td style="display:none;">
+                                <input asp-for="@Model.inwardPacket[i].uom" class="form-control" readonly />
+                                <span asp-validation-for="@Model.inwardPacket[i].uom" class="text-danger"></span>
+                            </td>
+                            <td style="display: none;">
+                                <button id="hiddenButton"></button>
+                            </td>
+
+                            <td style ="display:none">
+                                <a id="editDetail-@i" class="btn text-white btn-sm btn-warning poedit-button"
+                                   data-id="@Model.inwardPacket[i].id"
+                                   data-quantity="@Model.inwardPacket[i].quantity"
+                                   data-productcode="@Model.inwardPacket[i].productcode"
+                                   data-pono="@ponoValue">
+                                    View
+                                </a>
+                            </td>
+                            <td style="width:60px;">
+                                <button type="button" class="btn btn-success btn-sm scaningiduuu"
+                                        onclick="CreateShippers1111(this)"
+                                        data-productcode="@Model.inwardPacket[i].productcode"
+                                        data-quantity="@Model.inwardPacket[i].quantity">
+                                    <i class="fas fa-tags"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container-field">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container-field">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+
+}
+
+@* MODEL POPUP FOR CREATE SHIPPER *@
+<div class="modal fade" id="createShippersModal" tabindex="-1" role="dialog" aria-labelledby="createShippersModalLabel" data-backdrop="static" data-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog model-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createShippersModalLabel">Create Shippers</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              
+                <div id="scaningid" class="container-fluid p-2">
+                    <div class="row mb-3" style="display:none">
+                        <div class="col-12">
+                            <label for="productnamesSelect" class="form-label small">Product Name</label>
+                            <select class="form-select form-select-sm" id="productnamesSelect">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <label for="createShpQty0" class="form-label small">Generate Shp.Qty</label>
+                            <input type="number" id="createShpQty0" class="form-control form-control-sm" placeholder="Create Shp.qty">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <table id="scaningidtable" class="table table-sm table-bordered">
+                                <thead class="bg-dark">
+                                    <tr>
+                                        <th class="small">Shp.Count</th>
+                                        <th class="small">Quantities In Shipper</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="width:50px;">
+                                            <input  type="number" id="createShpQty" class="form-control form-control-sm" placeholder=" Shp.Count">
+                                        </td>
+                                        <td>
+                                            <input type="text" id="createShpQty1" class="form-control form-control-sm"  placeholder="Quantities In Shipper">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success btn-sm" id="btncreateshp" onclick="CreateShippers(this)">Save Data <i class="fas fa-tags"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .product {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+<script>
+    var qtygrn = 0;
+    function CreateShippers(button) {
+        event.preventDefault();
+        console.log("CreateShippers call");
+        sono = $("#ponoId").val();
+        // var balqty = $('#PickQtySr11').val();
+
+        var table = document.getElementById("scaningidtable");
+        var tableData = [];
+        var totalSum = 0; // Variable to accumulate the total sum
+
+        for (var i = 1; i < table.rows.length; i++) {
+            var cells = table.rows[i].cells;
+            var productCode = cells[0].querySelector('input').value;
+            var quantity = cells[1].querySelector('input').value;
+            totalSum += parseInt(quantity, 10); // Convert quantity to integer and add to total sum
+            tableData.push({ product: productCode, qty: quantity });
+        }
+
+        console.log("Total Quantity Sum:", totalSum + " > " + rquantity + " || " + totalSum + " != " + rquantity);
+        if (totalSum > rquantity ) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Please enter valid quantities ! You have enter quantities - ' + totalSum + ' and inward quantity is ' + rquantity,
+
+            });
+            return;
+        }
+        var table1 = JSON.stringify(tableData);
+
+        if (totalSum == rquantity) {
+            $.ajax({
+                url: '/inwards/CreateStickers',
+                method: 'POST',
+                data: { product: rproductcode, qty: rquantity, tableData: tableData, sono: sono },
+                success: function (response) {
+                    console.log("Success:", response);
+                    // var blob = new Blob([response.fileContent], { type: 'text/plain' });
+                    // var a = document.createElement('a');
+                    // a.href = window.URL.createObjectURL(blob);
+                    // a.download = 'example.prn';
+                    // a.click();
+                    // window.URL.revokeObjectURL(a.href);
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                        }).then(() => {
+                            $('#createShpQty').val("");
+                            $('#createShippersModal').modal('hide');
+                        });
+                        return;
+                    }
+                    else 
+                    {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: response.message,
+                        });
+                        $('#createShpQty').val("");
+                        return;
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: 'Please enter all the quantities !',
+            });
+            $('#createShpQty').val("");
+            return;
+        }
+    }
+    $('#createShpQty0').on('keypress', function (event) {
+        if (event.which === 13) {
+            event.preventDefault();
+            console.log("createShpQty0 call");
+            var balqty = qtygrn;
+
+            var input = $(this);
+            var qty = parseInt(input.val());
+            console.log("qty : " + qty);
+            if (!qty || qty <= 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Please enter a valid quantity!',
+                });
+                return;
+            }
+            $.ajax({
+                url: '/inwards/CheckQtyInList',
+                method: 'POST',
+                data: { product: rproductcode, qty: qty, qty1: rquantity },
+                success: function (response) {
+                    if (response.success) {
+                        var repeatCount = response.data;
+                        console.log(repeatCount);
+                        var tbody = $('#scaningid tbody');
+                        tbody.empty(); // Clear existing rows
+
+                        for (var i = 1; i <= repeatCount; i++) {
+                            console.log("repeatCount : " + repeatCount+ " & i : "+i);
+                            var newRow = $('<tr>');
+                            newRow.append('<td style="width:100px;"><input type="number" class="form-control createShpQty" readonly value="' + (i) + '"></td>');
+                            newRow.append('<td><input type="number" class="form-control createShpQty1" placeholder="Quantities allot" ></td>');
+                            tbody.append(newRow);
+                        }
+                        $('#btncreateshp').show();
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Oops...',
+                            text: 'Entered valid generate shipper value!',
+                        });
+                        $('#createShpQty0').val("");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+    });
+    // function CreateShippers1111(button) {
+    //     event.preventDefault();
+    //     console.log("CreateShippers1111 call");
+    //     var row = $(button).closest('tr'); // Find the closest row relative to the button
+    //     selectedSono = $("#ponoId").val();
+    //     rproductcode = $(button).data('productcode');
+    //     rquantity = $(button).closest('tr').find('.quantity-input').val();
+    //     soQty = $(button).closest('tr').find('.quantity-POQty').val(); // Get SOQty value
+    //     qtygrn = rquantity;
+    //     console.log("selectedSono : " + selectedSono);
+    //     console.log("rproductcode : " + rproductcode);
+    //     console.log("rquantity : " + rquantity);
+    //     console.log("soQty : " + soQty);
+
+    //     $('#createShippersModal').modal('show');
+    // }
+    function CreateShippers1111(button) {
+        // event.preventDefault();
+        // //console.log("rproductcode : "+rproductcode);
+        // console.log("CreateShippers1111 call");
+
+        // var row = $(button).closest('tr');
+        // var selectedSono = $("#ponoId").val(); // Corrected the variable name
+        // var rproductcode = $(button).data('productcode');
+        // var rquantity = $(button).closest('tr').find('.quantity-input').val();
+        // var soQty = $(button).closest('tr').find('.quantity-POQty').val();
+        // var qtygrn = rquantity;
+
+        // console.log("selectedSono: " + selectedSono);
+        // console.log("rproductcode: " + rproductcode);
+        // console.log("rquantity: " + rquantity);
+        // console.log("soQty: " + soQty);
+        // console.log("value set");
+        // rproductcode = rproductcode;
+        // rquantity = rquantity;
+
+            event.preventDefault();
+            console.log("CreateShippers1111 call");
+            var row = $(button).closest('tr'); // Find the closest row relative to the button
+            selectedSono = $("#ponoId").val();
+            rproductcode = $(button).data('productcode');
+            rquantity = $(button).closest('tr').find('.quantity-input').val();
+            soQty = $(button).closest('tr').find('.quantity-POQty').val(); // Get SOQty value
+            NoOfQtyPerShp = $(button).closest('tr').find('.noofpackets-input').val(); // Get SOQty value
+            console.log("NoOfQtyPerShp : *" + NoOfQtyPerShp+"*");
+            console.log("NoOfQtyPerShp : *" + NoOfQtyPerShp+"*");
+            qtygrn = rquantity;
+        
+            if (NoOfQtyPerShp === "")
+            {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Please enter the number No Of Shp Per Qty Value !',
+                });
+            $('#createShippersModal').modal('hide');
+                return;
+            }
+            if (NoOfQtyPerShp == 0 )
+            {
+                //console.log("0 or empty");
+                console.log("selectedSono : " + selectedSono);
+                console.log("rproductcode : " + rproductcode);
+                console.log("rquantity : " + rquantity);
+                console.log("soQty : " + soQty);
+                $.ajax({
+                    url: '/inwards/callAgain',
+                    method: 'POST',
+                    data: { product: rproductcode, qty: rquantity, sono: selectedSono },
+                    success: function (response) {
+                        console.log("Success:", response);
+                        var tableBody = $("#scaningidtable tbody");
+                        $("#createShpQty0").val("");
+                        document.getElementById("createShpQty0").focus();
+                        // Clear the table body before handling new data
+                        if (response.data && Array.isArray(response.data) && response.data.length > 0) { // Ensure data is an array and has length
+                            console.log("Data found: " + response.data.length);
+
+                            console.log("in");
+                            tableBody.empty();
+                            // Bind data to the table
+                            response.data.forEach(function (item) {
+                                var row = `
+                    <tr>
+                        <td style="width:100px;">
+                            <input type="text" readonly id="createShpQty" class="form-control form-control-sm" value="${item.noqtypershp} Box" placeholder="Shp.Count">
+                        </td>
+                        <td>
+                            <input type="text" readonly id="createShpQty1" class="form-control form-control-sm" value="${item.quantity} Quantities" onchange="updateQuantity(this)" placeholder="Quantities In Shipper">
+                        </td>
+                    </tr>`;
+                                tableBody.append(row);
+                            });
+
+
+                            $('#createShippersModal').modal('show'); // Show modal when data exists
+                        } else {
+                            console.log("out");
+                            tableBody.empty(); // Clear the table body when no data is found
+                            $('#createShippersModal').modal('show'); // Still show modal if needed
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error:", error);
+                    }
+                });
+            }
+            else 
+            {
+            //console.log("else ");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                text: 'No of shp per qty value should be 0 , to allot multiple quantities in a shipper !',
+                });
+                $('#createShippersModal').modal('hide');
+                return;
+            }
+
+    }
+</script>
+<script>
+    // function calculate(input) {
+    //     var parentRow = input.closest('tr');
+    //     var quantity = parseInt(parentRow.querySelector('.quantity-input').value);
+    //     var noofshpperqty = parseInt(parentRow.querySelector('.noofpackets-input').value);
+    //     var totalPacketInput = parentRow.querySelector('.totalpacket-input');
+    //     var totalShipper = noofshpperqty * quantity;
+    //     totalPacketInput.value = totalShipper;
+    // }
+
+    function calculate2(input) {
+        console.log("Function 2 call......");
+        var parentRow = input.closest('tr');
+        var quantity = parseInt(parentRow.querySelector('.quantity-input').value);
+        var noqtypershp = parseFloat(input.value);
+        console.log("noqtypershp : " + noqtypershp);
+        var totalPacketInput = parentRow.querySelector('.totalpacket-input');
+
+        if (noqtypershp > 0) {
+            var totalShipper = quantity / noqtypershp;
+            totalPacketInput.value = totalShipper;
+            console.log("totalShipper : " + totalShipper);
+        } else {
+            totalPacketInput.value = 0; // Set totalPacketInput to 0 if noqtypershp is 0 or invalid
+        }
+    }
+
+    function calculate(input) {
+        console.log("Function 1 call......");
+        var parentRow = input.closest('tr');
+        var quantity = parseInt(parentRow.querySelector('.quantity-input').value);
+        var noofshpperqty = parseInt(parentRow.querySelector('.noofpackets-input').value);
+        var totalPacketInput = parentRow.querySelector('.totalpacket-input');
+
+        var noqtypershpInput = input.parentElement.nextElementSibling.querySelector('.noqtypershp-input');
+
+        if (noofshpperqty === 0) {
+            noqtypershpInput.removeAttribute('readonly');
+            if (parseFloat(noqtypershpInput.value) > 0) {
+                console.log("call function 2 :calculate2()");
+            }
+        }
+        else {
+            noqtypershpInput.value = 0;
+            noqtypershpInput.setAttribute('readonly', 'readonly');
+            var totalShipper = noofshpperqty * quantity;
+            totalPacketInput.value = totalShipper;
+            console.log("totalShipper : " + totalShipper);
+        }
+    }
+
+
+    function showTooltip(event, value, tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.innerText = value;
+            tooltip.style.top = (event.clientY + 10) + 'px';
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.display = 'block';
+        }
+    }
+
+    function hideTooltip(tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.style.display = 'none';
+        }
+    }
+   
+    // var quantityInputs = document.querySelectorAll('.quantity-input');
+    // quantityInputs.forEach(function (input) {
+    //     input.addEventListener('change', function () {
+    //         var enteredQuantity = parseFloat(this.value);
+    //         // console.log("Checked...");
+    //         if (enteredQuantity <= 0) {
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Invalid Quantity',
+    //                 text: 'Quantity cannot be less than 0 or Equal to 0 :)',
+    //             });
+    //             this.value = '0';
+    //         }
+    //     });
+    // });
+
+    var quantityInputs = document.querySelectorAll('.quantity-input');
+    quantityInputs.forEach(function (input) {
+            // console.log("Quantity changes....");
+            input.addEventListener('change', function () {
+                var enteredQuantity = parseFloat(this.value);
+
+                if (enteredQuantity <= 0) { // Check if quantity is less than zero
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Quantity',
+                        text: 'Quantity cannot be less than 0 :)',
+                    });
+                    this.value = '0'; // Reset value to 0
+                }
+            });
+    });
+
+    function viewListData() {
+        $('#hiddenButton').trigger('click');
+    }
+
+    $('#hiddenButton').on('click', function () {
+        var productCode = $(this).closest('tr').find('input[name*="productcode"]').val();
+        var warranty = $(this).closest('tr').find('.warranty-input').val();
+        var pono = document.getElementById('pono').value;
+        var quantity = $(this).closest('tr').find('.quantity-input').val();
+        // console.log(productCode + warranty+ pono + quantity);
+        $.ajax({
+            type: "GET",
+            // url: "/inwards/GetSerialNumbersByProductCode",
+            url: "/inwards/_partialAddSerial",
+            data: {
+                productCode: productCode,
+                quantity: quantity,
+                warranty: warranty,
+                pono: pono
+            },
+            success: function (data) {
+                showSrNoInModal(data.data);
+                // showProductDetails33(productCode, null, null, null, data);
+                console.log(data);
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    });
+
+    function showSrNoInModal(data) {
+        var modalBody = $('#form-modal .modal-body');
+        var table = $('<table>').addClass('table table-bordered mt-1');
+        var thead = $('<thead>').append('<tr><th>Serial Numbers</th></tr>');
+        var tbody = $('<tbody>');
+
+        $.each(data, function (index, item) {
+            var row = '<tr>' +  
+                '<td>' + item.serialno + '</td>' +
+                '<td><button class="btn btn-danger delete-btn" data-index="' + index + '">Delete</button></td>' +
+                '</tr>';
+            tbody.append(row);
+        });
+
+        table.append(thead).append(tbody);
+        modalBody.empty().append(table);
+        $('#form-modal').modal('show');
+
+        // Delete button click handler
+        $('.delete-btn').on('click', function () {
+            var index = $(this).data('index');
+            // console.log(index);
+            // Make an AJAX request to delete the row via controller action
+            $.ajax({
+                type: 'POST',
+                url: '/inwards/DeleteRow', // Replace with your actual controller and action method
+                data: { index: index }, // Send the index or identifier of the row to delete
+                success: function (response) {
+                    data.splice(index, 1); // Remove the item from the data list
+                    showSrNoInModal(data); // Re-render the modal with updated data
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+            data.splice(index, 1);
+            // Re-render the modal with updated data
+            showSrNoInModal(data);
+        });
+    }
+
+    $(document).on('click', '.boq-button', function () {
+        // var selectedValue = $(this).closest('tr').find('.templatenamecl option:selected').text();
+        var selectedValue = $(this).closest('tr').find('input[name*="templatename"]').val();
+        var currentRow = $(this).closest('tr');
+        var productcode = currentRow.find('input[name*="productcode"]').val();
+
+        // Ensure product code exists
+        if (productcode) {
+            $.ajax({
+                url: '/inwards/GetTemplateData',
+                type: 'GET',
+                data: { templateName: selectedValue, productcode: productcode },
+                success: function (data) {
+                    // // populateTemplateTable(data);
+                    // // $('#form-modal').modal('show');
+                    // showInModal(data); // Show data in 
+                    // // console.log("Model Popup");
+                    if (data && data.length > 0) {
+                        showInModal(data); // Show data in modal
+                    } else {
+                        showNoDataFoundModal();
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("An error occurred while executing the action: " + error);
+                }
+            });
+        }
+    });
+
+    function showInModal(data) {
+        var modalBody = $('#form-modal .modal-body');
+        var table = $('<table>').addClass('table table-bordered mt-1');
+        var thead = $('<thead>').append('<tr><th>BOQ Pro.</th><th>Pro. Qty</th></tr>');
+        var tbody = $('<tbody>');
+
+        $.each(data, function (index, item) {
+            var row = '<tr>' +
+                '<td>' + item.boqproductname + '</td>' +
+                '<td>' + item.boqqty + '</td>' +
+                '</tr>';
+            tbody.append(row);
+        });
+
+        table.append(thead).append(tbody);
+        modalBody.empty().append(table);
+        $('#form-modal').modal('show');
+    }
+ 
+    function showNoDataFoundModal() {
+        var modalHeader = $('#form-modal .modal-header');
+        var modalBody = $('#form-modal .modal-body');
+
+        modalHeader.empty(); // Clear modal header content
+        modalBody.empty(); // Clear modal body content
+
+        // Add a custom heading
+        // var heading = $('<h5>').addClass('modal-title').text('BOQ Details');
+        var heading = $('<h5>').addClass('modal-title').text('BOQ Details');
+        modalHeader.append(heading);
+
+        // Add the message to the modal body
+        modalBody.text("No BOQ Data found.").css({
+            'color': 'Green',        // Set text color to green
+            'font-weight': '600'     // Set font weight to 650
+        });
+
+        $('#form-modal').modal('show');
+    }
+
+    // $(document).on('click', '.poedit-button', function () {
+    //     var productCode = $(this).data('productcode');
+    //     var pono = $(this).data('pono');
+    //     var quantity = $(this).data('quantity');
+    //     console.log(productCode + " - " + pono + " - " + quantity);
+    //     // Call the function to show product details in the modal
+    //     showProductDetails2(productCode, pono, quantity);
+    // });
+
+    // function showProductDetails2(productCode, pono, quantity) {
+    //     console.log(" data : " + productCode + pono + quantity);
+    //     var editUrl = '/inwards/_partialSubComponentso?productCode=' + productCode + '&sono=' + pono + '&quantity=' + quantity;
+    //     console.log(editUrl);
+    //     showInPopup(editUrl, 'SubComponents Details');
+
+    // }
+    $(document).on('click', '.poedit-button', function () {
+        var productCode = $(this).data('productcode');
+        var pono = $(this).data('pono');
+        var quantity = $(this).closest('tr').find('.quantity-input').val(); // Adjust the selector based on your HTML structure
+        // console.log(productCode + " - " + pono + " - " + quantity);
+        // Call the function to show product details in the modal
+        showProductDetails2(productCode, pono, quantity);
+    });
+
+    function showProductDetails2(productCode, pono, quantity) {
+        // console.log(" data : " + productCode + pono + quantity);
+        var editUrl = '/inwards/_partialSubComponentso?productCode=' + productCode + '&sono=' + pono + '&quantity=' + quantity;
+        // console.log(editUrl);
+        showInPopup(editUrl, 'SubComponents Details');
+    }
+ 
+    $(document).on('click', '.addserial-button', function () {
+        var productCode = $(this).data('productcode');
+        var description = $(this).data('description');
+        var warranty = $(this).data('warranty'); // Corrected attribute name
+        var pono = $(this).data('pono');
+        var quantity = $(this).closest('tr').find('.quantity-input').val();
+        console.log(productCode + " - " + pono + " - " + quantity + " - " + warranty);
+        showProductDetails3(productCode, pono, quantity, warranty);
+    });
+
+    function showProductDetails3(productCode, pono, quantity, warranty) {
+        var editUrl = '/inwards/_partialAddSerial?productCode=' + productCode + '&pono=' + pono + '&quantity=' + quantity + '&warranty=' + warranty;
+        showInPopup(editUrl, 'Add Serial No.');
+    }
+
+    // $(document).on('change', '.quantity-input', function () {
+    //     console.log("Quantity Changed .....");
+    //     var row = $(this).closest('tr');
+    //     var quantity = parseFloat($(this).val());
+    //     var pono = $("#pono").val();
+    //     var changedInput = $(this);
+    //     var inputField = changedInput;
+
+    //     // Get the productcode value within this row
+    //     var productCodeValue = row.find('input[name^="inwardPacket"][name$=".productcode"]').val();
+    //     var subcomponent = row.find('input[name^="inwardPacket"][name$=".totalsubassmbly"]').val();
+
+    //     console.log("quantity : " + quantity);
+    //     console.log("productCodeValue : " + productCodeValue);
+    //     console.log("pono : " + pono);
+
+    //     //1st ajax call
+    //     $.ajax({
+    //         url: '@Url.Action("checkquantityifgreter", "inwards")',
+    //         type: 'GET',
+    //         dataType: 'json',
+    //         data: { selectedvalue: productCodeValue, selectedvalue1: quantity, selectedvalue2: pono },
+    //         success: function (response) {
+    //             if (response === "QuantityGreterError") {
+    //                 console.log('Quantity is greater than specified!');
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Quantity Error!',
+    //                     text: 'Quantity is greater than the specified quantity!',
+    //                 });
+    //                 inputField.val(''); 
+    //             } else {
+    //                 $.ajax({
+    //                     url: '@Url.Action("GetSumSubComponent", "inwards")',
+    //                     type: 'GET',
+    //                     dataType: 'json',
+    //                     data: { selectedvalue: productCodeValue, selectedvalue1: quantity, selectedvalue2: pono },
+    //                     success: function (data) {
+    //                         console.log("Total : " + data);
+    //                         var subcomponent = row.find('input[name^="inwardPacket"][name$=".totalsubassmbly"]');
+    //                         console.log("totalsubassembly : " + subcomponent.val());
+    //                         if (subcomponent.length > 0) {
+    //                             subcomponent.val(data);
+    //                         } else {
+    //                             console.error('Subcomponent not found!');
+    //                         }
+    //                     }
+    //                 });
+    //             }
+    //         },
+    //         error: function (jqXHR, textStatus, errorThrown) {
+    //             console.log('AJAX Error:', textStatus);
+    //         }
+    //     });
+    //     var tqtySum = 0;
+    // });
+
+    $(document).on('change', '.quantity-input', function () {
+       // console.log("Quantity Changed .....");
+        var row = $(this).closest('tr');
+        var quantity = parseFloat($(this).val());
+        var pono = $("#pono").val();
+        var changedInput = $(this);
+        var inputField = changedInput;
+
+        // Get the productcode value within this row
+        var productCodeValue = row.find('input[name^="inwardPacket"][name$=".productcode"]').val();
+        var subcomponent = row.find('input[name^="inwardPacket"][name$=".totalsubassmbly"]').val();
+
+        console.log("quantity : " + quantity);
+        console.log("productCodeValue : " + productCodeValue);
+        console.log("pono : " + pono);
+
+        // 1st ajax call
+        $.ajax({
+            url: '@Url.Action("checkquantityifgreter", "inwards")',
+            type: 'GET',
+            dataType: 'json',
+            data: { selectedvalue: productCodeValue, selectedvalue1: quantity, selectedvalue2: pono },
+            success: function (response) {
+                if (response === "QuantityGreterError") {
+                    console.log('Quantity is greater than specified!');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Quantity Error!',
+                        text: 'Quantity is greater than the specified quantity!',
+                    });
+                    inputField.val('');
+                } else {
+                    
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('First AJAX Error:', textStatus);
+            }
+        });
+        $.ajax({
+            url: '@Url.Action("GetSumSubComponent", "inwards")',
+            type: 'GET',
+            dataType: 'json',
+            data: { selectedvalue: productCodeValue, selectedvalue1: quantity, selectedvalue2: pono },
+            success: function (data) {
+                console.log("Total : " + data);
+                var subcomponent = row.find('input[name^="inwardPacket"][name$=".totalsubassmbly"]');
+                console.log("totalsubassembly : " + subcomponent.val());
+                if (subcomponent.length > 0) {
+                    subcomponent.val(data);
+                } else {
+                    console.error('Subcomponent not found!');
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log('Second AJAX Error:', textStatus);
+            }
+        });
+    });
+
+    // $(document).on('change', '.quantity-input', function () {
+    //     console.log("Quantity Changed .....");
+    //     var row = $(this).closest('tr');
+    //     var quantity = parseFloat($(this).val());
+    //     var pono = document.getElementById("pono").value;
+    //     var changedInput = $(this);
+
+    //     // Get the productcode value within this row
+    //     var productCodeValue = row.find('input[name^="inwardPacket"][name$=".productcode"]').val();
+    //     var subcomponent = row.find('input[name^="inwardPacket"][name$=".totalsubassmbly"]').val();
+
+    //     console.log("quantity : " + quantity);
+    //     console.log("productCodeValue : " + productCodeValue);
+    //     console.log("pono : " + pono);
+    //     $.ajax({
+    //         url: '@Url.Action("GetSumSubComponent", "inwards")',
+    //         type: 'GET',
+    //         dataType: 'json',
+    //         data: { selectedvalue: productCodeValue, selectedvalue1: quantity, selectedvalue2: pono },
+    //         success: function (data) {
+    //             console.log("Total : " + data);
+    //             var subcomponent = row.find('input[name^="inwardPacket"][name$=".totalsubassmbly"]');
+    //             console.log("totalsubassembly : " + subcomponent.val());
+    //             if (subcomponent.length > 0) {
+    //                 subcomponent.val(data);
+    //             } else {
+    //                 console.error('Subcomponent not found!');
+    //             }
+    //         }
+    //     });
+
+    //     var tqtySum = 0;
+    //     // Other calculations or actions related to the changed row
+    // })
+
+</script>

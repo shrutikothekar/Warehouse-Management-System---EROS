@@ -1,0 +1,27 @@
+1,admin@gmail.com,Dashboard,ADMIN
+2,admin@gmail.com,Masters,ADMIN
+3,admin@gmail.com,Operations,ADMIN
+4,admin@gmail.com,User Managment,ADMIN
+5,admin@gmail.com,Customer Master,ADMIN
+6,admin@gmail.com,Product Master,ADMIN
+7,admin@gmail.com,Category Master,ADMIN
+8,admin@gmail.com,Sub-Category Master,ADMIN
+9,admin@gmail.com,Location Master,ADMIN
+10,admin@gmail.com,Usertype Master,ADMIN
+11,admin@gmail.com,Supplier Master,ADMIN
+12,admin@gmail.com,Showroom Master,ADMIN
+13,admin@gmail.com,Transport Master,ADMIN
+14,admin@gmail.com,Courier Master,ADMIN
+15,admin@gmail.com,UOM Master,ADMIN
+16,admin@gmail.com,Inward Entry,ADMIN
+17,admin@gmail.com,Outward Entry,ADMIN
+18,admin@gmail.com,Sale Order Entry,ADMIN
+19,admin@gmail.com,Purchase Order Entry,ADMIN
+20,admin@gmail.com,Storage Operation,ADMIN
+21,admin@gmail.com,Pick List Generation,ADMIN
+22,admin@gmail.com,Picking Operation,ADMIN
+23,admin@gmail.com,In Stock Qty,ADMIN
+24,admin@gmail.com,Validate PST,ADMIN
+25,admin@gmail.com,Physical Stock Take,ADMIN
+26,admin@gmail.com,Loading Dispatch ,ADMIN
+27,admin@gmail.com,Re-Printing Opration,ADMIN

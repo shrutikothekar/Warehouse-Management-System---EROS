@@ -1,0 +1,96 @@
+﻿@model eros.Models.Storage_Operation
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <h1>Edit</h1>
+
+        <h4>Storage_Operation</h4>
+        <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="id" />
+                    <div class="form-group">
+                        <label asp-for="locationcode" class="control-label"></label>
+                        <input asp-for="locationcode" class="form-control" />
+                        <span asp-validation-for="locationcode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="productcode" class="control-label"></label>
+                        <input asp-for="productcode" class="form-control" />
+                        <span asp-validation-for="productcode" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="boxno" class="control-label"></label>
+                        <input asp-for="boxno" class="form-control" />
+                        <span asp-validation-for="boxno" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="batchcode" class="control-label"></label>
+                        <input asp-for="batchcode" class="form-control" />
+                        <span asp-validation-for="batchcode" class="text-danger"></span>
+                    </div>
+
+
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <a asp-action="Index">Back to List</a>
+        </div>
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+   
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

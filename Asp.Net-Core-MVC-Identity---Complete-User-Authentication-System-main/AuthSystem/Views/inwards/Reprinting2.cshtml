@@ -1,0 +1,161 @@
+﻿@model eros.Models.InwardDispatchViewModel
+
+
+<main class="page payment-page">
+    <section class="payment-form mt-4 ">
+        <div class="card m-3">
+            <div class="card-header bg-dark text-white">
+                <div class="d-flex align-items-baseline">
+                    <a asp-action="Index1" asp-controller="inwards" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                    <h5 class="mx-auto font-weight-bolder small-heading"> Re-Printing Operation - Sale orders</h5>
+                    <a asp-action="Index1" asp-controller="inwards" class="btn btn-success text-white  btn-sm"><i class="fa fa-reply"></i> Back</a>
+                </div>
+            </div>
+            <div class="container p-2">
+                @foreach (var inward in Model.SoinwardList)
+                {
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="sono">SO No</label>
+                            <input type="text" class="form-control" id="sono" name="sono" value="@inward.sono" readonly />
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label for="customername">Customer Name</label>
+                            <input type="text" class="form-control" id="customername" readonly name="customername" value="@inward.customername" />
+                        </div>
+                     </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="contactno">Contact No</label>
+                            <input type="text" class="form-control" id="contactno" readonly name="contactno" value="@inward.contactno" />
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label for="address">Address</label>
+                            <input type="text" class="form-control" id="address" readonly name="address" value="@inward.address" />
+                        </div>
+                    </div>
+                }
+                @if (Model.LoadingDispatchList != null && Model.LoadingDispatchList.Any())
+                {
+                    <h6> Dispatched Item Boxes of product </h6>
+                    <table class="table table-bordered" id="dispatchTable">
+                        <thead>
+                            <tr>
+                                <th>Re-Print</th>
+                                <th>Product Code</th>
+                                <th>Box No</th>
+                                <th>Batch Code</th>
+                                <th>Location</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var dispatch in Model.LoadingDispatchList)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" name="selectedItems" value="@dispatch.productcode" />
+                                    </td>
+                                    <td>@dispatch.productcode</td>
+                                    <td>@dispatch.boxno</td>
+                                    <td>@dispatch.batchcode</td>
+                                    <td>@dispatch.location</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p>No Loading Dispatch data found.</p>
+                }
+                <div class="row p-2">
+                    <div class="form-group col-sm-12 mt-3">
+                        <input type="submit" id="reprintButton" value="Reprinting" class="btn btn-success btn-sm col-sm-12" />
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("reprintButton").addEventListener("click", function () {
+            // Get the SO No
+            var sono = document.getElementById("sono").value;
+
+            // Get the table element
+            var table = document.getElementById("dispatchTable");
+            if (!table) {
+                console.error("Table with ID 'dispatchTable' not found.");
+                return; // Exit if the table is not found
+            }
+
+            var rows = table.getElementsByTagName("tr");
+
+            // Array to hold data for checked items
+            var selectedItems = [];
+
+            // Iterate over each row, starting from 1 to skip the header
+            for (var i = 1; i < rows.length; i++) {
+                var checkbox = rows[i].querySelector("input[type='checkbox']");
+                if (checkbox && checkbox.checked) {
+                    var cells = rows[i].getElementsByTagName("td");
+                    var rowData = {
+                        productCode: cells[1].innerText, // Product Code
+                        boxNo: cells[2].innerText,       // Box No
+                        batchCode: cells[3].innerText,   // Batch Code
+                        location: cells[4].innerText      // Location
+                    };
+                    selectedItems.push(rowData);
+                }
+            }
+
+            // Log the SO No and selected items to the console
+            console.log("SO No:", sono);
+            console.log("Selected Items:", selectedItems);
+
+            // Send the data to the server using AJAX
+            $.ajax({
+                url: '/inwards/Reprinting2',  // Replace with your actual action URL
+                type: 'POST',
+                data: {
+                    sono: sono,
+                    selectedItems: selectedItems
+                },
+                success: function (response) {
+                    var blob = new Blob([response], { type: 'text/plain' });
+                    var a = document.createElement('a');
+                    a.href = window.URL.createObjectURL(blob);
+                    a.download = 'example.prn';
+                    a.click();
+                    window.URL.revokeObjectURL(a.href);
+
+                    Swal.fire({
+                        icon: 'success', // success icon
+                        title: 'Success',
+                        text: response.message
+                    }).then(() => {
+                        // Redirect to the Index view of Inwards after success
+                        window.location.href = "/inwards/Index1"; // Replace with your actual Index URL
+                    });
+                },
+                error: function () {
+                    alert('An error occurred while reprinting.');
+                }
+            });
+        });
+    });
+
+</script>

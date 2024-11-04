@@ -1,0 +1,233 @@
+﻿@model eros.Models.subcategory_master
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder">Sub-Category Master</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <div class="container mt-4">
+                        <div class="row mx-lg-2 mx-md-2">
+                            <div class="col-md-12">
+                                <form asp-action="Create">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="row ">
+
+                                        @*SELECT FROM Catgeory MASTERS*@
+                                        <div class="form-group col-sm-6 mt-2">
+                                            <label for="exampleFormControlSelect1">Category Name</label>
+                                            <select class="form-control" asp-for="categoryname" id="exampleFormControlSelect1" asp-items="@ViewBag.categoryname">
+                                            </select>
+                                            <span asp-validation-for="categoryname" class="text-danger"></span>
+                                        </div>
+
+                                        <div class="form-group col-sm-6 mt-2">
+                                            <label asp-for="subcategory_name" class="control-label"></label>
+                                            <input asp-for="subcategory_name" id="subcategory_name" class="form-control" onchange="checkProductCode()" />
+                                            <span asp-validation-for="subcategory_name" class="text-danger"></span>
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="row">
+                                        <div class="col-sm-6 mt-3">
+                                            <input type="submit" value="Save" class="btn btn-primary col-md-12" />
+                                        </div>
+
+                                        <div class="col-sm-6 mt-3">
+                                            <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+   
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+        <script>
+  
+        // function checkProductCode() {
+        //     var subcategory_name = $('#subcategory_name').val().trim(); // Get the value of subcategory_name input field
+        //     var exampleFormControlSelect1 = $('#exampleFormControlSelect1').val().trim(); // Get the value of exampleFormControlSelect1 input field
+
+        //     // Check if both category name and subcategory name are selected
+        //     if (exampleFormControlSelect1 != '' && subcategory_name != '') {
+        //         $.ajax({
+        //             url: '/subcategory_master/subcategoryCheck', // Correct URL path
+        //             type: 'POST',
+        //             data: { subcategory_name: subcategory_name, exampleFormControlSelect1: exampleFormControlSelect1 },
+        //             success: function (response) {
+        //                 if (response.success) {
+        //                     console.log("Response: " + response.message);
+        //                 } else {
+        //                     Swal.fire({
+        //                         title: 'Warning!',
+        //                         text: response.message,
+        //                         icon: 'warning',
+        //                         confirmButtonText: 'OK'
+        //                     }).then((result) => {
+        //                         $('#subcategory_name').val('');
+        //                     });
+        //                 }
+        //             },
+        //             error: function (xhr, textStatus, errorThrown) {
+        //                 console.error("Error:", textStatus, errorThrown);
+        //             }
+        //         });
+        //     } else {
+        //         // Show warning message if either category name or subcategory name is not selected
+        //         Swal.fire({
+        //             title: 'Warning!',
+        //             text: "Please select both the category name and subcategory name!",
+        //             icon: 'warning',
+        //             confirmButtonText: 'OK'
+        //         });
+        //     }
+        // }
+
+        function checkProductCode() {
+            var subcategory_name = $('#subcategory_name').val(); // Get the value of subcategory_name input field without trimming
+            var exampleFormControlSelect1 = $('#exampleFormControlSelect1').val().trim(); // Get the value of exampleFormControlSelect1 input field
+
+            // Check if the category name is selected
+            if (exampleFormControlSelect1 == '') {
+                // Show warning message if category name is not selected
+                Swal.fire({
+                    title: 'Warning!',
+                    text: "Please select the category name first!",
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Focus on category selection dropdown
+                        $('#exampleFormControlSelect1').focus();
+                    }
+                });
+                return; // Exit function early if category is not selected
+            }
+
+            // Check if both category name and subcategory name are selected
+            if (subcategory_name != '') {
+                $.ajax({
+                    url: '/subcategory_master/subcategoryCheck', // Correct URL path
+                    type: 'POST',
+                    data: { subcategory_name: subcategory_name, exampleFormControlSelect1: exampleFormControlSelect1 },
+                    success: function (response) {
+                        if (response.success) {
+                            console.log("Response: " + response.message);
+                        } else {
+                            Swal.fire({
+                                title: 'Warning!',
+                                text: response.message,
+                                icon: 'warning',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Focus on subcategory input field
+                                    $('#subcategory_name').focus();
+                                }
+                            });
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.error("Error:", textStatus, errorThrown);
+                    }
+                });
+            } else {
+                // Show warning message if subcategory name is not entered
+                Swal.fire({
+                    title: 'Warning!',
+                    text: "Please enter the subcategory name!",
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Focus on subcategory input field
+                        $('#subcategory_name').focus();
+                    }
+                });
+            }
+        }
+
+
+
+       // oninput = "validateAlphabet(this)"
+            // function validateAlphabet(input) {
+            //     var regex = /^[a-zA-Z\s._-\s]+$/;
+            //     var value = input.value;
+
+            //     if (!regex.test(value)) {
+            //         input.value = value.slice(0, -1);
+            //     }
+            // }
+
+            // function validateAlphNum(input) {
+            //     var regex = /^[a-zA-Z0-9]+$/;
+            //     var value = input.value;
+
+            //     if (!regex.test(value)) {
+            //         input.value = value.slice(0, -1);
+            //     }
+            // }
+            // function validateNumber(input) {
+            //     var regex = /^[0-9]+$/;
+            //     var value = input.value;
+
+            //     if (!regex.test(value)) {
+            //         input.value = value.slice(0, -1);
+            //     }
+            // }
+            // function validatePinNumber(input) {
+            //     var regex = /^[0-5]+$/;
+            //     var value = input.value;
+
+            //     if (!regex.test(value)) {
+            //         input.value = value.slice(0, -1);
+            //     }
+            // }
+        </script>
+}
+
+
+

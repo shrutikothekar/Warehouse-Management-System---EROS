@@ -1,0 +1,417 @@
+﻿@model eros.Models.inward
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    // var sweetAlert = @Html.Raw(Json.Serialize(ViewBag.SweetAlert));
+    string[] TableHeaders = new string[] {
+        "Pro. Code",
+        "Prd. Name.",
+        "Brand",
+        "Qty",
+        "No. set/pro." ,
+        "No. Qty/shp" ,
+        "No. shp/Qty" ,
+        "Ttl shp" ,
+        "Ttl sub",
+         };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <main class="page payment-page">
+
+            <section class="payment-form mt-4 ">
+                <div class="card m-3">
+                    <form asp-action="EditStatuss">
+                        <div class="card-header text-white p-1" style="background-color:#FC2947;">
+                            <div class="d-flex align-items-baseline">
+                                <a href="/inwards/StockMovementList" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                                <h5 class="mx-auto text-white text-2xl font-semibold .small-heading">Update Status</h5>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="inward_id" />
+                            <input type="hidden" asp-for="pono" />
+                            <input type="hidden" asp-for="flag" />
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="vendername" class="control-label"></label>
+                                    <input asp-for="vendername" data-uppercase autocomplete="off" readonly class="form-control" />
+                                    <span asp-validation-for="vendername" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="pono" class="control-label"></label>
+                                    <input asp-for="pono" data-uppercase autocomplete="off" readonly class="form-control" />
+                                    <span asp-validation-for="pono" class="text-danger"></span>
+                                </div>
+                                <div style="display:none" class="form-group col-sm-6 mt-3">
+                                    <label asp-for="typeofreturn" class="control-label"></label>
+                                    <select asp-for="typeofreturn" id="typeofreturn" class="form-control">
+                                        <option value="Returned">Returned</option>
+                                        <option value="Non-Returnable">Non-Returnable</option>
+                                        <option value="Billed">Billed</option>
+                                    </select>
+                                    <span asp-validation-for="typeofreturn" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-3 mt-3" id="referencenoSection">
+                                    <label asp-for="dcno" id="referencenoLabel" class="control-label"></label>
+                                    <input asp-for="dcno" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="dcno" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-3 mt-3" id="dcdateSection">
+                                    <label asp-for="dcdate" id="dcdateLabel" class="control-label"></label>
+                                    <input asp-for="dcdate" type="date" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="dcdate" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-3 mt-3" id="invoicenoSection">
+                                    <label asp-for="invoiceno" id="invoicenoLabel" class="control-label"></label>
+                                    <input asp-for="invoiceno" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="invoiceno" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-3 mt-3">
+                                    <label id="invoicedateLabel" asp-for="invoicedate" class="control-label"></label>
+                                    <input asp-for="invoicedate" type="date" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="invoicedate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="partyname" class="control-label"></label>
+                                    @* <input asp-for="partyname" data-uppercase autocomplete="off" class="form-control" /> *@
+                                    <select class="form-control" readonly disabled asp-for="partyname" id="partynameId1" asp-items="@ViewBag.partyname" onchange="dropdownChanged1()">
+                                    </select>
+                                    <span asp-validation-for="partyname" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="gstinno" class="control-label"></label>
+                                    <input asp-for="gstinno" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <input asp-for="ordertype" class="form-control" hidden />
+                                    <span asp-validation-for="gstinno" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="contactno" class="control-label"></label>
+                                    <input asp-for="contactno" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="contactno" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="address" class="control-label"></label>
+                                    <input asp-for="address" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="address" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mx-lg-2 mx-md-2">
+
+                                <table id="CodesTable" class="table table-striped table-sm p-2">
+                                    <thead>
+                                        <tr>
+                                            @foreach (var head in TableHeaders)
+                                            {
+                                                <th>
+                                                    @head
+                                                </th>
+                                            }
+                                        </tr>
+
+                                    </thead>
+                                    <tbody id="tbody">
+                                        @for (int i = 0; i < Model.inwardPacket.Count; i++)
+                                        {
+                                            <tr>
+                                                <td style="display:none;">
+                                                    <input asp-for="@Model.inwardPacket[i].pono" readonly class="form-control" readonly />
+                                                </td>
+                                                @*  <td>
+                                    <input asp-for="@Model.inwardPacket[i].productcode" class="form-control" readonly required />
+                                    <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                    <select class="form-control " asp-for="@Model.inwardPacket[i].description" asp-items="@ViewBag.description" onchange="handleDespChange(this)"></select>
+                                    <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                                    </td> *@
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].productcode" readonly class="form-control" readonly required
+                                                           title="@Model.inwardPacket[i].productcode"
+                                                           onmouseover="showTooltip(event, '@Model.inwardPacket[i].productcode', 'tooltip-productcode')"
+                                                           onmouseout="hideTooltip('tooltip-productcode')" />
+                                                    <div id="tooltip-productcode" class="product"></div>
+                                                    <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].description" readonly class="form-control" readonly required
+                                                           title="@Model.inwardPacket[i].description"
+                                                           onmouseover="showTooltip(event, '@Model.inwardPacket[i].description', 'tooltip-description')"
+                                                           onmouseout="hideTooltip('tooltip-description')" />
+                                                    <div id="tooltip-description" class="product"></div>
+                                                    <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].brand" readonly class="form-control warranty-input" readonly />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].brand" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].quantity" readonly class="form-control quantity-input" data-quantity="@Model.inwardPacket[i].quantity" data-product-code="@Model.inwardPacket[i].productcode" required />
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].setofsub_assemb" readonly class="form-control" />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].setofsub_assemb" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].qtyperpkt" readonly class="form-control" />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].qtyperpkt" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].noofpackets" readonly class="form-control" />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].noofpackets" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].totalpacket" readonly class="form-control" />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].totalpacket" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].totalsubassmbly" readonly id="totalsubassembly" class="form-control totalsubassembly" readonly required />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].totalsubassmbly" class="text-danger"></span>
+                                                    <input type="hidden" asp-for="@Model.inwardPacket[i].IsDeleted" />
+                                                </td>
+                                                <td style="display:none;">
+                                                    <input asp-for="@Model.inwardPacket[i].uom" readonly class="form-control" readonly />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].uom" class="text-danger"></span>
+                                                </td>
+                                                <td style="display: none;">
+                                                    <button id="hiddenButton"></button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="grnno" class="control-label"></label>
+                                    <input asp-for="grnno" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="grnno" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="grndate" class="control-label"></label>
+                                    <input asp-for="grndate" readonly data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="grndate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="hdnLastIndex" value="0" />
+                            <div class="row mx-lg-2 mx-md-2">
+                                @* batchcode, remark *@
+                                <div class="form-group col-sm-6 mt-2">
+                                    <label asp-for="batchcode" class="control-label"></label>
+                                    <input asp-for="batchcode" readonly data-uppercase autocomplete="off" class="form-control" required oninput="validateAlphNum(this)" />
+                                    <span asp-validation-for="batchcode" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-2">
+                                    <label asp-for="remarks"  class="control-label"></label>
+                                    <input asp-for="remarks" readonly data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                    <span asp-validation-for="remarks" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mx-lg-2 mx-md-2" style="display:none;">
+                                <div class="form-group col-sm-4 mt-3 ">
+                                    <label asp-for="date" readonly class="control-label">Date</label>
+                                    <input type="date" data-uppercase autocomplete="off" id="datepicker" asp-for="date" class="form-control" />
+                                    <span asp-validation-for="date" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-4 mt-3">
+                                    <label asp-for="time" readonly class="control-label">Time</label>
+                                    <input type="time" data-uppercase autocomplete="off" id="timepicker" asp-for="time" class="form-control" />
+                                    <span asp-validation-for="time" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <input type="submit" value="Edit" class="btn btn-success col-sm-12" />
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <a class="btn btn-danger col-sm-12" asp-action="Index">Back to List</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        @* <div class="row">
+                <div class="form-group col-sm-6">
+                <div class="form-group col-sm-12 mt-2">
+                <input type="submit" value="Change Status"  class="btn btn-success col-sm-12" />
+                </div>
+                </div>
+                </div> *@
+
+                    </form>
+                </div>
+
+
+            </section>
+        </main>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+<style>
+    .product {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+
+    function showTooltip(event, value, tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.innerText = value;
+            tooltip.style.top = (event.clientY + 10) + 'px';
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.display = 'block';
+        }
+    }
+
+    function hideTooltip(tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.style.display = 'none';
+        }
+    }
+    function handleDespChange(selectElement) {
+        var product = selectElement.value;
+
+        var tid = selectElement.id;
+        var product = selectElement.value;
+        console.log(product);
+
+        var txtProductCodeId = tid.replaceAll('description', 'productcode');
+        var txtuomId = tid.replaceAll('description', 'uom');
+        var txtbrandId = tid.replaceAll('description', 'brand');
+
+        var txtProductCode = document.getElementById(txtProductCodeId);
+        var txtuom = document.getElementById(txtuomId);
+        var txtbrand = document.getElementById(txtbrandId);
+
+        txtProductCode.value = null;
+        $.ajax({
+            url: '@Url.Action("ActionName_description", "inwards")',
+            type: 'GET',
+            dataType: 'json',
+            data: { selectedvalue: product },
+            success: function (data) {
+                console.log(data);
+
+                txtProductCode.value = data.modelno;
+                txtuom.value = data.uom;
+                txtbrand.value = data.brand;
+            }
+        });
+    }
+
+
+    // $(document).ready(function () {
+    //     $('#typeofreturn').change(function () {
+    //         var selectedValue = $(this).val();
+
+    //         // Hide all sections initially
+    //         $('#radioButtonsSection').hide();
+    //         $('#referencenoSection').hide();
+    //         $('#dcdateSection').hide();
+    //         $('#invoicenoSection').hide();
+
+    //         if (selectedValue === 'Billed') {
+    //             $('#radioButtonsSection').show();
+
+    //             $('input[name="option"]').change(function () {
+    //                 var optionSelected = $('input[name="option"]:checked').val();
+
+    //                 // Hide all sections initially
+    //                 $('#referencenoSection').hide();
+    //                 $('#dcdateSection').hide();
+    //                 $('#invoicenoSection').hide();
+
+    //                 // Show the relevant sections based on the selected radio button
+    //                 if (optionSelected === 'dc') {
+    //                     $('#referencenoSection').show();
+    //                     $('#dcdateSection').show();
+    //                     $('#dcdateLabel').text('DC Date'); // Change label text for DC Date
+    //                     $('#referencenoLabel').text('DC No.'); // Change label text for DC Date
+
+    //                 } else if (optionSelected === 'invoice') {
+    //                     $('#invoicenoSection').show();
+    //                     $('#dcdateSection').show();
+    //                     $('#dcdateLabel').text('Invoice Date'); // Change label text for Invoice Date
+    //                     $('#invoicenoLabel').text('Invoice No.'); // Change label text for Invoice Date
+
+    //                 }
+    //             });
+    //         }
+    //     });
+    // });
+
+</script>

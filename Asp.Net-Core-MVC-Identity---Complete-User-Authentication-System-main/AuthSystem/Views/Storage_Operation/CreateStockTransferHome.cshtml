@@ -1,0 +1,666 @@
+﻿@model IEnumerable<eros.Models.DMRPRRP>
+
+@{
+    ViewData["Title"] = "StockIn";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+}
+
+<style>
+    label {
+        font-size: small;
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem;
+    }
+</style>
+
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        @* <div class="mt-3">
+        <div class="card mb-3">
+        <div class="card-header bg-dark text-white">
+            <div class="d-flex align-items-baseline">
+                <h6 class="mx-auto font-weight-bolder small-heading">Stock Transfer Details</h6>
+                <label class="text-white font-weight-bolder mr-5" id="count"></label>
+                <a asp-action="Index" asp-controller="Home" class="btn btn-success btn-sm text-white"><i class="fa fa-reply"></i> Back</a>
+            </div>
+        </div>
+
+        <div class="container mt-2">
+            <div class="row mx-lg-2 mx-md-2">
+                <div class="col-md-3 col-sm-6 mb-2">
+                    <label for="OrderFilter" class="form-label small">Select Status</label>
+                    <select class="form-select form-select-sm" id="OrderFilter">
+                        <option value="">All</option>
+                        <option value="Demo">Demo</option>
+                        <option value="Repair">Repair</option>
+                        <option value="Replacement">Replacement</option>
+                    </select>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-2">
+                    <label for="partyNameFilter" class="form-label small">Select PartyName</label>
+                    <select id="partyNameFilter" class="form-control">
+                        <option value="">All</option>
+                        @foreach (var party in Model.Select(m => m.partyname).Distinct())
+                        {
+                            <option value="@party">@party</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-2">
+                    <label for="VenderNameFilter" class="form-label small">Select Vender Type</label>
+                    <select id="VenderNameFilter" class="form-control">
+                        <option value="">All</option>
+                        @foreach (var party in Model.Select(m => m.from).Distinct())
+                        {
+                            <option value="@party">@party</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-2">
+                    <label for="StatusFilter" class="form-label small">Select Status </label>
+                    <select id="StatusFilter" class="form-control">
+                        <option value="">All</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Pending">Pending</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mx-lg-2 mx-md-2">
+                <div class="col-md-12">
+                    <table class="table table-sm table-striped table-hover" id="dataTable">
+                        <thead class="thead-dark sticky-top">
+                            <tr class="small">
+                                <th style="display:none">OrderType</th>
+                                <th>RefId</th>
+                                <th>IN/OUT</th>
+                                <th>Vendor</th>
+                                <th>PartyName</th>
+                                <th>Product Code</th>
+                                <th>Qty</th>
+                                <th>StockType</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th style="display:none">id</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small">
+                                    @foreach (var item in Model.OrderByDescending(x => x.id))
+                                    {
+                                <tr>
+                                    <td style="display:none">@item.ordertype</td>
+                                    <td style=" cursor: pointer;">
+                                        <a href="#" class="product-code-link">@item.refno</a>
+                                    </td>
+                                    <td>
+                                        @if (item.inout == 1)
+                                        {
+                                            <span class="text-success">
+                                                <i class="fas fa-download" title="Inward"></i> In
+                                            </span>
+                                        }
+                                        else if (item.inout == 2)
+                                        {
+                                            <span class="text-primary">
+                                                <i class="fas fa-upload" title="Outward"></i> Out
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            @item.inout
+                                        }
+                                    </td>
+                                    <td>@item.from</td>
+                                    <td>@item.partyname</td>
+                                    <td>@item.productcode</td>
+                                    <td>@item.qty</td>
+
+                                    <td>
+                                        @if (item.condition == "DMG")
+                                        {
+                                            <span class="badge badge-warning">Damage</span>
+                                        }
+                                        else if (item.condition == "ST")
+                                        {
+                                            <span class="badge badge-success">Good Condition</span>
+                                        }
+                                        else if (item.condition == "NONRPR")
+                                        {
+                                            <span class="badge badge-danger">Non Repairable</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-secondary">Unknown Condition</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Status == "Pending")
+                                        {
+                                            <span class="badge badge-warning">Pending</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-success">Completed</span>
+                                        }
+                                    </td>
+                                    <td style="width:100px;">@DateTime.ParseExact(item.date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy")</td>
+                                    <td style="display:none">@item.id</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> *@
+        <div class="mt-3">
+            <div class="card mb-3">
+                <div class="card-header bg-dark text-white">
+                    <div class="d-flex align-items-baseline">
+                        <h6 class="mx-auto font-weight-bolder small-heading">Stock Transfer Details</h6>
+                        <label class="text-white font-weight-bolder mr-5" id="count"></label>
+                        <a asp-action="Index" asp-controller="Home" class="btn btn-success btn-sm text-white"><i class="fa fa-reply"></i> Back</a>
+                    </div>
+                </div>
+
+                <div class="container mt-2">
+                    <div class="row mx-lg-2 mx-md-2">
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="OrderFilter" class="form-label small">Select Status</label>
+                            <select class="form-select form-select-sm" id="OrderFilter">
+                                <option value="">All</option>
+                                <option value="Demo">Demo</option>
+                                <option value="Repair">Repair</option>
+                                <option value="Replacement">Replacement</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="partyNameFilter" class="form-label small">Select PartyName</label>
+                            <select id="partyNameFilter" class="form-control">
+                                <option value="">All</option>
+                                @foreach (var party in Model.Select(m => m.partyname).Distinct())
+                                {
+                                    <option value="@party">@party</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="VenderNameFilter" class="form-label small">Select Vender Type</label>
+                            <select id="VenderNameFilter" class="form-control">
+                                <option value="">All</option>
+                                @foreach (var party in Model.Select(m => m.from).Distinct())
+                                {
+                                    <option value="@party">@party</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <label for="StatusFilter" class="form-label small">Select Status </label>
+                            <select id="StatusFilter" class="form-control">
+                                <option value="">All</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mx-lg-2 mx-md-2">
+                        <div class="col-md-12">
+                            <table class="table table-sm table-striped table-hover" id="dataTable">
+                                <thead class="thead-dark sticky-top">
+                                    <tr class="small">
+                                        <th style="display:none">OrderType</th>
+                                        <th>RefId</th>
+                                        <th>IN/OUT</th>
+                                        <th>Vendor</th>
+                                        <th>PartyName</th>
+                                        <th style="display:none">Product Code</th>
+                                        <th>Qty</th>
+                                        <th>Pending Qty</th>
+                                        <th style="display:none">StockType</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th style="display:none">id</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="small">
+                                    @foreach (var item in Model.OrderByDescending(x => x.id))
+                                    {
+                                        <tr>
+                                            <td style="display:none">@item.ordertype</td>
+                                            <td style=" cursor: pointer;">
+                                                <a href="#" class="product-code-link">@item.refno</a>
+                                            </td>
+                                            <td>
+                                                @if (item.inout == 1)
+                                                {
+                                                    <span class="text-success">
+                                                        <i class="fas fa-download" title="Inward"></i> In
+                                                    </span>
+                                                }
+                                                else if (item.inout == 2)
+                                                {
+                                                    <span class="text-primary">
+                                                        <i class="fas fa-upload" title="Outward"></i> Out
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    @item.inout
+                                                }
+                                            </td>
+                                            <td>@item.from</td>
+                                            <td>@item.partyname</td>
+                                            <td style="display:none">@item.productcode</td>
+                                            <td>@item.qty</td>
+                                            <td>@item.pqty</td>
+
+                                            <td style="display:none">
+                                                @if (item.condition == "DMG")
+                                                {
+                                                    <span class="badge badge-warning">Damage</span>
+                                                }
+                                                else if (item.condition == "ST")
+                                                {
+                                                    <span class="badge badge-success">Good Condition</span>
+                                                }
+                                                else if (item.condition == "NONRPR")
+                                                {
+                                                    <span class="badge badge-danger">Non Repairable</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-secondary">Unknown Condition</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.Status == "Pending")
+                                                {
+                                                    <span class="badge badge-warning">Pending</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-success">Completed</span>
+                                                }
+                                            </td>
+                                            <td style="width:100px;">@DateTime.ParseExact(item.date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy")</td>
+                                            <td style="display:none">@item.id</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+        
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>You do not have access to this page. Please contact your administrator for assistance.</p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>You do not have access to this page. Please contact your administrator for assistance.</p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    .small-heading {
+        font-size: 1rem;
+    }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div id="productModal" class="modal fade small-text" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Order Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><b>Reference Id: </b><span id="modalProductCode"></span></p>
+                <div class="row">
+                    <input type="text" class="form-control form-control-sm" id="refnoField" readonly style="display:none">
+                    <div class="form-group col-sm-5">
+                        <label for="partyname">Party Name</label>
+                        <input type="text" class="form-control form-control-sm" id="partyname" readonly>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="vendor">Vendor Name</label>
+                        <input type="text" class="form-control form-control-sm" id="vendor" readonly>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="returntype">Return Type</label>
+                        <select class="form-select form-select-sm" id="statusSelect"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label for="mobileno">Mobile No</label>
+                        <input type="text" class="form-control form-control-sm" id="mobileno" readonly>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="gstno">GST No</label>
+                        <input type="text" class="form-control form-control-sm" id="gstno" readonly>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control form-control-sm" id="address" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="batch">Batch Code</label>
+                        <input type="text" class="form-control form-control-sm" id="batch" readonly>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="grn">GRN NO</label>
+                        <input type="text" class="form-control form-control-sm" id="grn" readonly>
+                    </div>
+                    <div class="form-group col-sm-4">
+                        <label for="date">Date</label>
+                        <input type="text" class="form-control form-control-sm" id="date" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label for="dcnooo">DC NO.</label>
+                        <input type="text" class="form-control form-control-sm" id="dcnooo">
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="dcnooodt">DC Date</label>
+                        <input type="date" class="form-control form-control-sm" id="dcnooodt">
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="inoiceno">Invoice No.</label>
+                        <input type="text" class="form-control form-control-sm" id="inoicenooo">
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="innooodt">Invoice Date</label>
+                        <input type="date" class="form-control form-control-sm" id="innooodt">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveButton" disabled>Save</button> <!-- Save button -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .small-text {
+        font-size: 12px;
+    }
+</style>
+
+
+<script>
+    // Add click event for the Save button
+    // Add click event for the Save button
+    $("#saveButton").on('click', function () {
+        // Gather all the input field values
+        var dataToSave = {
+            refno: $('#refnoField').val(), // Add a field for refno in your modal/form
+            partyname: $('#partyname').val(),
+            vendor: $('#vendor').val(),
+            gstno: $('#gstno').val(),
+            mobileno: $('#mobileno').val(),
+            address: $('#address').val(),
+            batch: $('#batch').val(),
+            grn: $('#grn').val(),
+            date: $('#date').val(),
+            dcno: $('#dcnooo').val(),
+            dcdate: $('#dcnooodt').val(),
+            invoiceno: $('#inoicenooo').val(),
+            invoicedate: $('#innooodt').val(),
+            returnType: $('#statusSelect').val() // Assuming you want to save the selected return type
+        };
+
+        // Optional: Validate required fields here before sending AJAX
+
+        // Send the AJAX request to save the data
+        $.ajax({
+            url: '/inwards/UpdateTransactionList_Data',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(dataToSave),
+            success: function (response) {
+                if (response.success) {
+                    $('#productModal').modal('hide'); // Hide the modal
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Data saved successfully!',
+                        text: response.message,
+                    }).then((result) => {
+                        // Redirect to home after user confirms
+                        window.location.href = '/Home/'; // Adjust the URL as needed
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning!',
+                        text: response.message,
+                    });
+                    return;
+                }
+            },
+            error: function (error) {
+                console.error('Error saving data:', error);
+                alert('Failed to save data. Please try again.');
+            }
+        });
+    });
+
+    // // Function to format date string to YYYY-MM-DD
+    // function formatDate(dateString) {
+    //     // Parse the date string (assuming it's in a format like "MM/DD/YYYY" or "YYYY-MM-DD")
+    //     var date = new Date(dateString);
+    //     // Format to YYYY-MM-DD
+    //     return date.toISOString().split('T')[0];
+    // }
+    function formatDate(dateString) {
+        // Check if the date string is valid (not "-" or empty)
+        if (!dateString || dateString === "-") {
+            return ""; // Return empty string or handle as needed
+        }
+
+        // Parse the date string (assuming it's in a format like "MM/DD/YYYY" or "YYYY-MM-DD")
+        var date = new Date(dateString);
+
+        // Check if the date is valid
+        if (isNaN(date.getTime())) {
+            console.error('Invalid date:', dateString);
+            return ""; // Handle invalid date format (return empty or a default value)
+        }
+
+        // Format to YYYY-MM-DD
+        return date.toISOString().split('T')[0];
+    }
+
+    $('#dataTable').on('click', '.product-code-link', function (event) {
+        event.preventDefault();
+        var refid = $(this).text().trim();
+        $('#modalProductCode').text(refid);
+
+        $.ajax({
+            url: '/inwards/GetDMRPRRP_Details',
+            type: 'GET',
+            data: { refid: refid },
+            success: function (response) {
+                if (response.success) {
+                    // Bind the data to input fields in the modal
+                    $('#partyname').val(response.data.partyname);
+                    $('#vendor').val(response.data.vendor);
+                    $('#gstno').val(response.data.gstno);
+                    $('#mobileno').val(response.data.mobileno);
+                    $('#address').val(response.data.address);
+                    $('#batch').val(response.data.batch);
+                    $('#grn').val(response.data.grn);
+                    $('#date').val(response.data.date);
+                    $('#refnoField').val(refid);
+
+                    // Populate the return type dropdown based on status
+                    var statusSelect = $('#statusSelect');
+                    statusSelect.empty(); // Clear previous options
+                    console.log("RESPONSE: " + JSON.stringify(response.data));
+                    if (response.data.isCompleted) {
+                        console.log("IsCompleted");
+                        // If status is 'Completed', show specific return type
+                        statusSelect.append(`<option value="Returned">${response.data.returntype}</option>`);
+                        // Set values for DC NO and DC Date and make them readonly
+                        $("#dcnooo").val(response.data.dcno).prop('readonly', true);
+                        $("#dcnooodt").val(formatDate(response.data.dcdate)).prop('readonly', true); // Format the date
+                        $("#inoicenooo").val(response.data.inno).prop('readonly', true);
+                        $("#innooodt").val(formatDate(response.data.indate)).prop('readonly', true); // Format the date
+
+                        $("#saveButton").prop('disabled', true);
+                    } else {
+                        console.log("Is NotCompleted");
+
+                        if(response.data.ordertype.trim() == "Repair" || response.data.ordertype.trim() == "Replacement"){
+                            // If not 'Completed', show all options
+                            statusSelect.append('<option value="">--Select Return Type--</option>');
+                            statusSelect.append('<option value="Returned">Returned</option>');
+                            statusSelect.append('<option value="Non-Returnable">Non-Returnable</option>');
+                        }
+                        else 
+                        {
+                            // If not 'Completed', show all options
+                            statusSelect.append('<option value="">--Select Return Type--</option>');
+                            statusSelect.append('<option value="Returned">Returned</option>');
+                            statusSelect.append('<option value="Non-Returnable">Non-Returnable</option>');
+                            statusSelect.append('<option value="Billed">Billed</option>');
+                        }                        
+
+                        // Clear values and set fields to editable
+                        $("#dcnooo").val("").prop('readonly', false);
+                        $("#dcnooodt").val("").prop('readonly', false);
+                        $("#inoicenooo").val("").prop('readonly', false);
+                        $("#innooodt").val("").prop('readonly', false);
+
+
+                        $("#saveButton").prop('disabled', false);
+                    }
+
+                    // Show the modal
+                    $('#productModal').modal('show');
+                } else {
+                    console.error('No data found!');
+                    alert('No data found for the provided reference ID.');
+                }
+            },
+            error: function (error) {
+                console.error('Error fetching data:', error);
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        // Initialize DataTable and store it in the 'table' variable
+        var table = $('#dataTable').DataTable({
+            "ordering": false  // Disable sorting
+        });
+    });
+
+    $(document).ready(function () {
+        var table = $('#dataTable').DataTable();
+
+        $('#OrderFilter').on('change', function () {
+            var selectedStatus = $(this).val();
+            console.log("Selected Status: " + selectedStatus);
+            if (selectedStatus === 'All') {
+                table.columns(0).search('').draw(); // Assuming Status column index is 0
+            } else {
+                table.columns(0).search(selectedStatus).draw();
+            }
+
+            // Log the filtered data to the console
+            console.log("Filtered Data by OrderFilter:");
+            table.rows({ filter: 'applied' }).data().each(function (value) {
+                console.log(value);  // Display each row of filtered data
+            });
+        });
+
+        $('#partyNameFilter').on('change', function () {
+            var selectedParty = $(this).val();
+            console.log("partyNameFilter: *" + selectedParty + "*");
+            if (selectedParty === 'All') {
+                table.columns(4).search('').draw(); // Assuming PartyName column index is 4
+            } else {
+                table.columns(4).search(selectedParty).draw();
+            }
+
+            // Log the filtered data to the console
+            console.log("Filtered Data by partyNameFilter:");
+            table.rows({ filter: 'applied' }).data().each(function (value) {
+                console.log(value);  // Display each row of filtered data
+            });
+        });
+
+        $('#VenderNameFilter').on('change', function () {
+            var selectedParty = $(this).val();
+            console.log("VenderNameFilter: *" + selectedParty + "*");
+            if (selectedParty === 'All') {
+                table.columns(3).search('').draw(); // Assuming PartyName column index is 4
+            } else {
+                table.columns(3).search(selectedParty).draw();
+            }
+
+            // Log the filtered data to the console
+            console.log("Filtered Data by VenderNameFilter:");
+            table.rows({ filter: 'applied' }).data().each(function (value) {
+                console.log(value);  // Display each row of filtered data
+            });
+        });
+
+        // Status Filter
+        $('#StatusFilter').on('change', function () {
+            var selectedStatus = $(this).val();
+            console.log("StatusFilter: " + selectedStatus);
+            if (selectedStatus === '') { // Handle 'All' (empty string)
+                table.columns(9).search('').draw(); // Assuming Status column index is 10
+            } else {
+                table.columns(9).search(selectedStatus).draw();
+            }
+
+            // Log the filtered data to the console
+            console.log("Filtered Data by StatusFilter:");
+            table.rows({ filter: 'applied' }).data().each(function (value) {
+                console.log(value);  // Display each row of filtered data
+            });
+        });
+    });
+
+
+</script>

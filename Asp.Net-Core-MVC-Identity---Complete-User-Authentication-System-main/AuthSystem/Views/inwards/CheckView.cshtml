@@ -1,0 +1,147 @@
+﻿@* @model IEnumerable<eros.Models.inward> *@
+@model eros.Models.inward
+
+@{
+    ViewData["Title"] = "CheckWarrantyStatus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="mt-2">
+            <div class="card m-2">
+                <div class="card-header bg-dark text-white">
+                    <div class="d-flex align-items-baseline">
+                        <a href="/" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                        <h5 class="mx-auto font-weight-bolder">Check Warranty Status</h5>
+                    </div>
+                </div>
+                <main class="page payment-page">
+                    <section class="payment-form mt-1">
+                        <div class="">
+                            <div class="card-details bg-secondary">
+                                &nbsp;&nbsp;
+                                <div class="form-check form-check-inline mt-2 mb-2">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="1">
+                                    <label class="form-check-label text-white" for="flexRadioDefault1">
+                                        Supplier
+                                    </label>
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="2">
+                                    <label class="form-check-label text-white" for="flexRadioDefault2">
+                                        Customer
+                                    </label>
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </div>
+
+                        <div class="container" id="form1">
+                            <div class="row">
+                                <div class="card-body" id="CheckWarrantyStatus">
+                                    @Html.Partial("_CheckView", Model)
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+                </main>
+            </div>
+        </div>
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+
+}
+
+
+@* 
+    <script>
+        $("input[name='flexRadioDefault']").click(function () {
+            var inoutType = $(this).val();
+            console.log(inoutType);
+            loadPendingInwardData(inoutType);
+        });
+
+        function loadPendingInwardData(inoutType) {
+            $.ajax({
+                url: '/inwards/GetWarrantyStatusData',
+                type: 'GET',
+                data: {
+                    inoutType: inoutType,
+                },
+                success: function (result) {
+                    $("#CheckWarrantyStatus").html(result);
+                },
+                error: function () {
+                    console.log("An error occurred while executing the action.");
+                }
+            });
+        }
+    </script>
+ *@
+
+    <!-- Your HTML remains mostly the same -->
+    <!-- Add a script tag at the end to include jQuery and your script -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("input[name='flexRadioDefault']").click(function (event) {
+                event.preventDefault(); // Prevent the default behavior
+
+                var inoutType = $(this).val();
+                loadPendingInwardData(inoutType);
+            });
+
+            function loadPendingInwardData(inoutType) {
+                $.ajax({
+                    url: '/inwards/GetWarrantyStatusData',
+                    type: 'GET',
+                    data: {
+                        inoutType: inoutType,
+                    },
+                    success: function (result) {
+                        $("#CheckWarrantyStatus").html(result);
+                    },
+                    error: function () {
+                        console.log("An error occurred while executing the action.");
+                    }
+                });
+            }
+        });
+    </script>

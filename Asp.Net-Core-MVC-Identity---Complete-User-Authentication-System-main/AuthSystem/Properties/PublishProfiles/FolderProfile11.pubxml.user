@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>D:\Publish12thMarch</_PublishTargetUrl>
+    <History>True|2024-03-12T08:00:43.9302706Z;True|2024-03-12T12:21:05.7117887+05:30;False|2024-03-12T12:18:53.6831400+05:30;True|2024-03-12T12:10:16.2754997+05:30;True|2024-03-12T12:00:27.4004644+05:30;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="AuthDbContextConnection">
+      <Value>Server=localhost%3bPort=5432%3bDatabase=erosdb%3bUser ID=postgres%3bPassword=system%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

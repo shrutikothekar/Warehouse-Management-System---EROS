@@ -1,0 +1,153 @@
+﻿@model IEnumerable<eros.Models.so_inward>
+
+@{
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <form asp-action="SaveSelectedRows" method="post">
+            <div class="w-screen-lg  mt-2">
+                <div class="table-responsive table-container max-h-80  overflow-y-auto">
+                    @*            <div class="table-responsive">
+            *@                   <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="thead-light">
+                                <tr>
+                                    @*  <th>
+                            @Html.DisplayNameFor(model => model.vendername)
+                            </th>
+                            <th>
+                            @Html.DisplayNameFor(model => model.typeofreturn)
+                            </th>
+                            <th>
+                            @Html.DisplayNameFor(model => model.grnno)
+                            </th>
+                            <th>
+                            @Html.DisplayNameFor(model => model.grndate)
+                            </th>
+                            <th>
+                            @Html.DisplayNameFor(model => model.batchcode)
+                            </th>
+                            <th>
+                            @Html.DisplayNameFor(Model => Model.grndate)
+                            </th>
+                            <th>
+                            @Html.DisplayNameFor(Model => Model.batchcode)
+                            </th>
+                            <th>Action</th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        @* <td>
+                            @Html.DisplayFor(modelItem => item.vendername)
+                            </td>
+                            <td>
+                            @Html.DisplayFor(modelItem => item.typeofreturn)
+                            </td>
+
+                            <td>
+                            @Html.DisplayFor(modelItem => item.referenceno)
+                            </td>
+
+                            <td>
+                            @Html.DisplayFor(modelItem => item.gstinno)
+                            </td>
+
+                            <td>
+                            @Html.DisplayFor(modelItem => item.grnno)
+                            </td>
+                            <td>
+                            @Html.DisplayFor(modelItem => item.grndate)
+                            </td>
+
+                            <td>
+                            @Html.DisplayFor(modelItem => item.batchcode)
+                            </td>
+                            <td>
+                            @*<a asp-action="Edit" asp-route-id="@item.inward_id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.inward_id">Details</a>
+
+                            </td>*@
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    @*</div>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-10">
+                    <span class="font-weight-bold text-capitalize">Total Quntity : @Model.Count()</span>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" id="filegenerate" class="btn hover:bg-blue-700 bg-blue-600 col-md-12 mt-1 rounded-sm shadow-md text-white">File Generate</button>
+                </div>
+            </div>
+
+        </form>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+
+@section scripts {
+
+}
+<script>
+    // Handle select all functionality
+    document.getElementById("selectAll").addEventListener("change", function () {
+        var checkboxes = document.getElementsByClassName("rowCheckbox");
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = this.checked;
+        }
+    });
+</script>
+
+<script>
+    function reloadPageAfter2Seconds() {
+        location.reload();
+    }
+    document.getElementById("filegenerate").addEventListener("click", function () {
+        // Call the function after 2 seconds (2000 milliseconds)
+        setTimeout(reloadPageAfter2Seconds, 10000);
+    });
+</script>

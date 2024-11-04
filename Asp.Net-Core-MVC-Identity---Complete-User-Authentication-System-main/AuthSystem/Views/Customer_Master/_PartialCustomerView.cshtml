@@ -1,0 +1,247 @@
+﻿@model eros.Models.Customer_Master
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+    string[] TableHeaders = new string[] {
+    "Consignee Name",
+    "Consignee Contact No." ,
+    "Consignee Contact Person" ,
+    "Consignee Address" ,
+    "Consignee Email ID",
+    "Consignee City",
+    "Consignee State",
+    "Consignee Pincode"
+    };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder">Customer Master</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form asp-action="Create" id="CodeSbyAnizForm">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="row">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <input type="hidden" asp-for="customer_id" />
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="customername" class="control-label"></label>
+                                        <input asp-for="customername" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="customername" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="contactperson" class="control-label"></label>
+                                        <input asp-for="contactperson" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="contactperson" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="address" class="control-label"></label>
+                                        <input asp-for="address" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="address" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="city" class="control-label"></label>
+                                        <input asp-for="city" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="city" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="state" class="control-label"></label>
+                                        <input asp-for="state" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="state" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="pincode" class="control-label"></label>
+                                        <input asp-for="pincode" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="pincode" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="contactno" class="control-label"></label>
+                                        <input asp-for="contactno" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="contactno" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="emailid" class="control-label"></label>
+                                        <input asp-for="emailid" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="emailid" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="gstno" class="control-label"></label>
+                                        <input asp-for="gstno" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="gstno" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+
+                                <div class="table-responsive col-md-12">
+                                    <table class="table divide-gray-200" id="CodesTable">
+                                        <thead class="bg-gray-200 sticky top-0">
+                                            <tr>
+                                                @foreach (var head in TableHeaders)
+                                                {
+                                                    <th>
+                                                        @head
+                                                    </th>
+
+                                                }
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @for (int i = 0; i < Model.Consignee_masters.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.EditorFor(x => x.Consignee_masters[i].consigneename, new { htmlAttributes = new { @class = "form-control" } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(x => x.Consignee_masters[i].consigneecontact, new { htmlAttributes = new { @class = "form-control" } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(x => x.Consignee_masters[i].consigneeperson, new { htmlAttributes = new { @class = "form-control " } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(x => x.Consignee_masters[i].consigneeaddress, new { htmlAttributes = new { @class = "form-control " } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(x => x.Consignee_masters[i].consigneeemail, new { htmlAttributes = new { @class = "form-control" } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(x => x.Consignee_masters[i].consigneecity, new { htmlAttributes = new { @class = "form-control" } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(x => x.Consignee_masters[i].consigneestate, new { htmlAttributes = new { @class = "form-control" } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(x => x.Consignee_masters[i].consigneepincode, new { htmlAttributes = new { @class = "form-control" } })
+                                                    </td>
+                                                    <td>
+                                                        <a id="btndummy-@i" type="button" class="btn btn-primary invisible">Dummy</a>
+                                                        <a id='btnadd-@i' type="button" class="btn btn-primary text-white visible" onclick="AddItem(this)">Add</a>
+                                                        <a id='btnremove-@i' type="button" class="btn btn-primary text-white visible" onclick="Deleteitem(this)">Delete</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+
+
+
+                                    </table>
+
+                                    <input type="hidden" id="hdnLastIndex" value="0" />
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="submit" value="Create" class="btn btn-primary col-md-12" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    else if (role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
+<script>
+    function Deleteitem(btn) {
+        var table = document.getElementById('CodesTable');
+        var rows = table.getElementsByTagName('tr');
+        if (rows.length == 1) {
+            alert("This row can't be deleted");
+        }
+        $(btn).closest('tr').remove();
+    }
+
+    function AddItem(btn) {
+        var table = document.getElementById('CodesTable');
+        var rows = table.getElementsByTagName('tr');
+        var rowOuterHtml = rows[rows.length - 1].outerHTML;
+        var lastrowIdx = document.getElementById('hdnLastIndex').value;
+        var nextrowIdx = eval(lastrowIdx) + 1;
+        document.getElementById('hdnLastIndex').value = nextrowIdx;
+
+        rowOuterHtml = rowOuterHtml.replaceAll('_' + lastrowIdx + '_', '_' + nextrowIdx + '_');
+        rowOuterHtml = rowOuterHtml.replaceAll('[' + lastrowIdx + ']', '[' + nextrowIdx + ']');
+        rowOuterHtml = rowOuterHtml.replaceAll('-' + lastrowIdx, '-' + nextrowIdx);
+        var newRow = table.insertRow();
+        newRow.innerHTML = rowOuterHtml;
+
+        var btnAddID = btn.id;
+        var btnDeleteid = btnAddID.replaceAll('btnadd', 'btnremove');
+
+        // Instead of hiding the "Add" button, you can update its text and function
+        var addbtn = document.getElementById(btnAddID);
+        addbtn.textContent = "Add"; // Update button text
+        addbtn.onclick = function () { AddItem(addbtn); }; // Update button click function
+
+        var delbtn = document.getElementById(btnDeleteid);
+        delbtn.classList.add("visible");
+        delbtn.classList.remove("invisible");
+    }
+
+</script>

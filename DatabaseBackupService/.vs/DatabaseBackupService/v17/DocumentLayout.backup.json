@@ -1,0 +1,116 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|\\\\192.168.10.101\\mktg\\interns\\niraj\\backup service\\databasebackupservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|\\\\192.168.10.101\\mktg\\interns\\niraj\\backup service\\databasebackupservice\\controllers\\backup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|\\\\192.168.10.101\\mktg\\interns\\niraj\\backup service\\databasebackupservice\\data\\backupdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|\\\\192.168.10.101\\mktg\\interns\\niraj\\backup service\\databasebackupservice\\databasebackupservice.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|\\\\192.168.10.101\\mktg\\interns\\niraj\\backup service\\databasebackupservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 8,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e506b91c-c606-466a-90a9-123d1d1e12b3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DatabaseBackupService.csproj",
+              "DocumentMoniker": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\DatabaseBackupService.csproj",
+              "RelativeDocumentMoniker": "DatabaseBackupService.csproj",
+              "ToolTip": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\DatabaseBackupService.csproj",
+              "RelativeToolTip": "DatabaseBackupService.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-07-02T22:46:20.77Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BackUpDbContext.cs",
+              "DocumentMoniker": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\data\\BackUpDbContext.cs",
+              "RelativeDocumentMoniker": "data\\BackUpDbContext.cs",
+              "ToolTip": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\data\\BackUpDbContext.cs",
+              "RelativeToolTip": "data\\BackUpDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-02T22:30:03.334Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "backup.cs",
+              "DocumentMoniker": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\Controllers\\backup.cs",
+              "RelativeDocumentMoniker": "Controllers\\backup.cs",
+              "ToolTip": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\Controllers\\backup.cs",
+              "RelativeToolTip": "Controllers\\backup.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJkAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-02T22:24:43.563Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAAAAsAAABNAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-07-02T21:55:43.686Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "\\\\192.168.10.101\\mktg\\Interns\\Niraj\\BACKUP SERVICE\\DatabaseBackupService\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-02T21:55:41.514Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

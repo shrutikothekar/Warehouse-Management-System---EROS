@@ -1,0 +1,147 @@
+﻿@model IEnumerable<eros.Models.InStockQty>
+@{
+     Layout = null;
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+
+}
+
+<div class="card-body">
+
+    <div class="table-responsive filteredDataTable">
+        <table class="table table-bordered table-hover text-center table-sm mt-0 pt-0" id="dataTable" width="100%" cellspacing="0">
+            <thead class="thead-light  text-center">
+                <tr class="small">
+                <th>No.</th>
+                <th>Pro.Code</th>
+                <th>Total In.Qty</th>
+                <th> < 30 </th>
+                <th>30 to 60</th>
+                <th>60 to 90 </th>
+                <th>90 to 180 </th>
+                <th>180 to 270 </th>
+                <th>270 to 365 </th>
+                <th>365 to 1460 </th>
+                <th> > 1460  </th>
+                  
+            </tr>
+        </thead>
+            <tbody class="small text-center">
+            @{
+                int counter = 1;
+            }
+            @foreach (var quantity in Model)
+            {
+                <tr>
+                    <td>@counter</td>
+                        <td style="width:250px;text-align:left">@Html.DisplayFor(modelItem => quantity.productcode)</td>
+                        <td style="width:250px;">@Html.DisplayFor(modelItem => quantity.currentqty)</td>
+                        <td style="width:250px;">@Html.DisplayFor(modelItem => quantity.less30days)</td>
+                        <td style="width:250px;">@Html.DisplayFor(modelItem => quantity.days30to60)</td>
+                        <td style="width:250px;">@Html.DisplayFor(modelItem => quantity.days60to90)</td>
+                        <td style="width:250px;">@Html.DisplayFor(modelItem => quantity.days90to180)</td>
+                        <td style="width:250px;">@Html.DisplayFor(modelItem => quantity.days180to270)</td>
+                        <td style="width:250px;">@Html.DisplayFor(modelItem => quantity.days270to365)</td>
+                        <td style="width:250px;">@Html.DisplayFor(modelItem => quantity.days365to1460)</td>
+                        <td style="width:250px;">@Html.DisplayFor(modelItem => quantity.above1460days)</td>
+                  
+                </tr>
+                counter++;
+            }
+        </tbody>
+    </table>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
+<script >
+    var filteredData = [];
+    function exportToPdf() {
+        var data = [];
+        var heading = 'EROS GENERAL AGENCIES PVT. LTD.';
+
+        // Define the indices of the selected columns (0-based index)
+        var selectedColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // Example: columns Sr.No, PO No., Supplier Name, Qty
+
+        function extractDataFromAllPages() {
+            var allData = [];
+            var dataTable = $('#dataTable').DataTable();
+            dataTable.rows({ search: 'applied' }).every(function (rowIdx, tableLoop, rowLoop) {
+                var rowData = [];
+                $(this.node()).find('td').each(function (index) {
+                    if (selectedColumns.includes(index)) {
+                        rowData.push($(this).text().trim());
+                    }
+                });
+                allData.push(rowData);
+            });
+            return allData;
+        }
+
+
+        // Extract data from all pages of the DataTable
+        data = extractDataFromAllPages();
+
+        // Filter data based on the selected date range if specified
+        if (filteredData.length > 0) {
+            data = filteredData.map(row => selectedColumns.map(index => row[index]));
+            heading = 'EROS GENERAL AGENCIES PVT LTD.';
+        }
+
+        // Get the current date and time
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString();
+        const formattedTime = currentDate.toLocaleTimeString();
+        const dateTimeString = `'Stock Ageing Analysis - Generated on: ${formattedDate} at ${formattedTime}`;
+
+        // Create subheading text
+        const selectedTemplate = 'Template Name'; // Replace with the actual template name
+        const subHeadingText = ` Orders Details (${dateTimeString})`;
+
+        var element = document.createElement('div');
+        element.innerHTML = `
+                        <h2 style="text-align: center; font-size: 12px;">${heading}</h2>
+                        <h6 style="text-align: center; font-size: 12px;">${subHeadingText}</h6>
+                        <table style="border-collapse: collapse; width: 100%; font-size: 10px; margin-top: 3px;">
+                            <thead>
+                                <tr style="background-color: #f2f2f2;">
+                                            ${selectedColumns.includes(0) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">SR.No</th>' : ''}
+                                            ${selectedColumns.includes(1) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">productcode</th>' : ''}
+                                            ${selectedColumns.includes(2) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">TotalInQty</th>' : ''}
+                                            ${selectedColumns.includes(3) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">(< 30)</th>' : ''}
+                                            ${selectedColumns.includes(4) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">30 to 60</th>' : ''}
+                                            ${selectedColumns.includes(5) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">60 to 90</th>' : ''}
+                                            ${selectedColumns.includes(6) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">90 to 180</th>' : ''}
+                                            ${selectedColumns.includes(7) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">180 to 270</th>' : ''}
+                                            ${selectedColumns.includes(8) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">270 to 365</th>' : ''}
+                                            ${selectedColumns.includes(9) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">365 to 1460</th>' : ''}
+                                            ${selectedColumns.includes(10) ? '<th style="border: 1px solid #ddd; padding: 2px;text-align:center;">(> 1460 )</th>' : ''}
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.map((row, index) => `
+                                    <tr style="${(index + 1) % 20 === 0 ? 'page-break-after: always;' : ''}">
+                                            ${row.map(cell => `<td style="border: 1px solid #ddd; text-align:center; padding: 2px;">${cell}</td>`).join('')}
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+
+        var options = {
+            margin: [10, 10, 10, 10],
+            filename: 'Stock_Ageing.pdf',
+            image: { type: 'jpeg', quality: 1.0 },
+            html2canvas: { scale: 4 },  // Increase scale for better quality
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(options).from(element).save();
+    }
+</script>

@@ -1,0 +1,149 @@
+﻿@model eros.Models.Cascade.city
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder">State Master</h5>
+                            <a asp-controller="category_master" asp-action="IndexState" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <div class="container mt-4">
+                        <div class="row mx-lg-2 mx-md-2">
+                            <div class="col-md-12">
+                                <form asp-action="CityData" id="countryForm">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6 mt-2">
+                                            <label for="statename">State Name</label>
+                                            <select class="form-control" asp-for="statename" id="statename" asp-items="@ViewBag.statenames">
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-6 mt-2">
+                                            <label for="Name" class="control-label">City Name</label>
+                                            <input asp-for="Name" id="cityname" class="form-control" onchange="dropdownChanged()" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 mt-3">
+                                            <input type="submit" value="Save" class="btn btn-primary col-md-12" />
+                                        </div>
+
+                                        <div class="col-sm-6 mt-3">
+                                            <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    else 
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css">
+
+<script>
+    function dropdownChanged() {
+
+        var value1 = document.getElementById("cityname").value.trim();
+
+        $.ajax({
+            url: '/category_master/CheckCityname',
+            type: 'GET',
+            data: { selectedValue: value1 },
+            success: function (data) {
+                console.log("data: ", data);
+                if (data.success) {
+                    console.log("OK");
+                    // Update the textbox value with the generated supplier code
+                    // document.getElementById("suppliercode").value = data.num;  // Use 'num' from the response
+                }
+                else {
+                    Swal.fire({
+                        title: 'Warning!',
+                        text: data.message, // Use 'data.message' instead of 'response.message'
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        $('#cityname').val(''); // Clear supplier name input
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle the error response
+                console.log("An error occurred while executing the action: ", error);
+            }
+        });
+
+
+    }
+
+    $(document).ready(function () {
+        $('#countryForm').submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("CityData", "category_master")',
+                data: formData,
+                success: function (response) {
+                    console.log('Form submitted successfully.');
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '@Url.Action("IndexCity", "category_master")';
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error submitting form:', error);
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'An error occurred while submitting the form. Please try again later.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+    });
+</script>

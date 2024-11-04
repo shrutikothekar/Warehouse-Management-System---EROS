@@ -1,0 +1,527 @@
+﻿@model eros.Models.inward
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder small-heading">Inward Entry</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <main class="page payment-page">
+                        <section class="payment-form">
+                            <div class="p-2">
+                                <div class="card-details bg-light">
+                                    @* <form method="post" action="radio" id="form10" onkeydown="return event.key != 'Enter';">
+                            <!-- Example of added margin space -->
+                            <div class="mt-3"></div>
+
+                            <input type="radio" class="btn-check visually-hidden" name="nav" id="nav-Demo-tab" autocomplete="off" value="Demo">
+                            <label class="btn btn-outline-light" style="width:180px; margin-right: 10px;" for="nav-Demo-tab">Demo</label>
+
+                            <input type="radio" class="btn-check visually-hidden" name="nav" id="nav-Repair-tab" autocomplete="off" value="Repair">
+                            <label class="btn btn-outline-light" style="width:180px; margin-right: 10px;" for="nav-Repair-tab">Repair</label>
+
+                            <input type="radio" class="btn-check visually-hidden" name="nav" id="nav-Replacement-tab" autocomplete="off" value="Replacement">
+                            <label class="btn btn-outline-light" style="width:180px; margin-right: 10px;" for="nav-Replacement-tab">Replacement</label>
+
+                            <input type="radio" class="btn-check visually-hidden" name="nav" id="nav-Purchase-tab" autocomplete="off" value="Purchase">
+                            <label class="btn btn-outline-light" style="width:180px; margin-right: 10px;" for="nav-Purchase-tab">Purchase</label>
+
+                            <input type="radio" class="btn-check visually-hidden" name="nav" id="nav-Salereturn-tab" autocomplete="off" value="Sale Return">
+                            <label class="btn btn-outline-light" style="width:180px; margin-right: 10px;" for="nav-Salereturn-tab">Sale Return</label>
+                            </form> *@
+
+                                    <form class="bg-secondary mt-2 mx-2" method="post" action="radio" id="form10" onkeydown="return event.key != 'Enter';">
+                                        &nbsp;&nbsp;
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Demo-tab" autocomplete="off" value="Demo">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Demo-tab">Demo</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Repair-tab" autocomplete="off" value="Repair">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Repair-tab">Repair</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Replacement-tab" autocomplete="off" value="Replacement">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Replacement-tab">Replacement</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Purchase-tab" autocomplete="off" value="Purchase">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Purchase-tab">Purchase</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Salereturn-tab" autocomplete="off" value="Sale Return">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Salereturn-tab">Sale Return</label>
+                                    </form>
+                                </div>
+                            </div>
+                            <br />
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+
+}
+
+<style>
+    .select2-selection__rendered {
+        width: 520px;
+    }
+</style>
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+@* <script type="text/javascript">
+    $(function () {
+        $("#ponoId").select2();
+    });
+</script> *@
+
+<script>
+
+    // (function () {
+    //     //$('#CodesTable').DataTable();
+    //     console.log("hi");
+    //     $('#dataTable').DataTable();
+    //     $('#timepicker').timepicker({
+    //         timeFormat: 'hh:mm p',
+    //     });
+    // });
+
+    $(document).ready(function () {
+        // Listen for change event on radio buttons
+        $('input[name="nav"]').change(function () {
+            // Submit the form when a radio button is changed
+            $('#form10').submit();
+        });
+    });
+</script>
+
+<script>
+    // const demoButton = document.getElementById("nav-Demo-tab");
+    // const repairButton = document.getElementById("nav-Repair-tab");
+    // const replacementButton = document.getElementById("nav-Replacement-tab");
+    // const purchaseButton = document.getElementById("nav-Purchase-tab");
+    // const saleReturnButton = document.getElementById("nav-Salereturn-tab");
+
+    // // // Define the resetTable function
+    // // function resetTable(tableId) {
+    // //     // Clear table rows
+    // //     var tableBody = document.getElementById(tableId).getElementsByTagName("tbody")[0];
+    // //     while (tableBody.firstChild) {
+    // //         tableBody.removeChild(tableBody.firstChild);
+    // //     }
+    // // }
+
+    // demoButton.addEventListener("click", function () {
+    //     // resetTable("CodesTable"); // Reset table for Repair tab
+    //     document.getElementById('ordertypeId1').value = demoButton.value;
+    //     document.getElementById('ordertypeId2').value = demoButton.value;
+    //     document.getElementById('ordertypeId3').value = demoButton.value;
+    //     document.getElementById('ordertypeId4').value = demoButton.value;
+    //     document.getElementById('ordertypeId5').value = demoButton.value;
+    // });
+    // repairButton.addEventListener("click", function () {
+    //     // resetTable("CodesTable"); // Reset table for Repair tab
+    //     document.getElementById('ordertypeId1').value = repairButton.value;
+    //     document.getElementById('ordertypeId2').value = repairButton.value;
+    //     document.getElementById('ordertypeId3').value = repairButton.value;
+    //     document.getElementById('ordertypeId4').value = repairButton.value;
+    //     document.getElementById('ordertypeId5').value = repairButton.value;
+    // });
+    // replacementButton.addEventListener("click", function () {
+    //     // resetTable("CodesTable"); // Reset table for Repair tab
+    //     document.getElementById('ordertypeId1').value = replacementButton.value;
+    //     document.getElementById('ordertypeId2').value = replacementButton.value;
+    //     document.getElementById('ordertypeId3').value = replacementButton.value;
+    //     document.getElementById('ordertypeId4').value = replacementButton.value;
+    //     document.getElementById('ordertypeId5').value = replacementButton.value;
+    // });
+    // purchaseButton.addEventListener("click", function () {
+    //     document.getElementById('ordertypeId1').value = purchaseButton.value;
+    //     document.getElementById('ordertypeId2').value = purchaseButton.value;
+    //     document.getElementById('ordertypeId3').value = purchaseButton.value;
+    //     document.getElementById('ordertypeId4').value = purchaseButton.value;
+    //     document.getElementById('ordertypeId5').value = purchaseButton.value;
+    // });
+    // saleReturnButton.addEventListener("click", function () {
+    //     document.getElementById('ordertypeId1').value = saleReturnButton.value;
+    //     document.getElementById('ordertypeId2').value = saleReturnButton.value;
+    //     document.getElementById('ordertypeId3').value = saleReturnButton.value;
+    //     document.getElementById('ordertypeId4').value = saleReturnButton.value;
+    //     document.getElementById('ordertypeId5').value = saleReturnButton.value;
+    // });
+
+
+    // function calculateTotal() {
+    //     var index = element.id.split('_')[1]; // Extract the index from the element's id
+    //     console.log(index);
+    //     var selectedOption = document.getElementById("qty_" + index).value;
+    //     var value1 = document.getElementById("noofpackets_" + index).value;
+    //     var value2 = document.getElementById("qtyperpkt_" + index).value;
+    //     console.log(value1);
+    //     console.log(value2);
+    //     console.log(selectedOption);
+    // }
+
+    // //for demo
+    // function changewb1() {
+    //     if (document.getElementById("SelectVenderId1").value != "") {
+    //         var selectedValue = document.getElementById("SelectVenderId1").value;
+    //         var studentSelect = $('#partynameId1');
+    //         $.ajax({
+    //             url: '@Url.Action("ChangePartyName", "inwards")',
+    //             type: 'GET',
+    //             dataType: 'json',
+    //             data: { selectedvalue: selectedValue },
+    //             success: function (data) {
+    //                 $('#partynameId1').empty();
+    //                 $('#partynameId1').append($('<option>').text("--Select PartyName--").val("--Select PartyName--"));
+    //                 $.each(data, function (index, item) {
+    //                     $('#partynameId1').append($('<option>').text(item.value).val(item.value));
+    //                 });
+    //             }
+    //         });
+    //     }
+    // }
+    // function dropdownChanged1() {
+    //     var selectedOption = document.getElementById("partynameId1").value;
+    //     var selectedOption1 = document.getElementById("SelectVenderId1").value;
+    //     $.ajax({
+    //         url: '/inwards/ActionName',
+    //         type: 'POST',
+    //         data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+    //         success: function (result) {
+    //             document.getElementById("addressId1").value = result.data.address;
+    //             document.getElementById("gstnoId1").value = result.data.gstno;
+    //             document.getElementById("contactnoId1").value = result.data.contactno;
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.log("An error occurred while executing the action.");
+    //         }
+    //     });
+    // }
+
+
+    // //for repair
+    // function changewb2() {
+    //     if (document.getElementById("SelectVenderId2").value != "") {
+    //         var selectedValue = document.getElementById("SelectVenderId2").value;
+    //         var studentSelect = $('#partynameId2');
+    //         $.ajax({
+    //             url: '@Url.Action("ChangePartyName", "inwards")',
+    //             type: 'GET',
+    //             dataType: 'json',
+    //             data: { selectedvalue: selectedValue },
+    //             success: function (data) {
+    //                 $('#partynameId2').empty();
+    //                 $('#partynameId2').append($('<option>').text("--Select PartyName--").val("--Select PartyName--"));
+    //                 $.each(data, function (index, item) {
+    //                     $('#partynameId2').append($('<option>').text(item.value).val(item.value));
+    //                 });
+    //             }
+    //         });
+    //     }
+    // }
+    // function dropdownChanged2() {
+    //     var selectedOption = document.getElementById("partynameId2").value;
+    //     var selectedOption1 = document.getElementById("SelectVenderId2").value;
+    //     $.ajax({
+    //         url: '/inwards/ActionName',
+    //         type: 'POST',
+    //         data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+    //         success: function (result) {
+    //             document.getElementById("addressId2").value = result.data.address;
+    //             document.getElementById("gstnoId2").value = result.data.gstno;
+    //             document.getElementById("contactnoId2").value = result.data.contactno;
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.log("An error occurred while executing the action.");
+    //         }
+    //     });
+    // }
+
+    // //for replacement
+    // function changewb3() {
+    //     if (document.getElementById("SelectVenderId3").value != "") {
+    //         var selectedValue = document.getElementById("SelectVenderId3").value;
+    //         var studentSelect = $('#partynameId3');
+    //         $.ajax({
+    //             url: '@Url.Action("ChangePartyName", "inwards")',
+    //             type: 'GET',
+    //             dataType: 'json',
+    //             data: { selectedvalue: selectedValue },
+    //             success: function (data) {
+    //                 $('#partynameId3').empty();
+    //                 $('#partynameId3').append($('<option>').text("--Select PartyName--").val("--Select PartyName--"));
+    //                 $.each(data, function (index, item) {
+    //                     $('#partynameId3').append($('<option>').text(item.value).val(item.value));
+    //                 });
+    //             }
+    //         });
+    //     }
+    // }
+    // function dropdownChanged3() {
+    //     var selectedOption = document.getElementById("partynameId3").value;
+    //     var selectedOption1 = document.getElementById("SelectVenderId3").value;
+    //     $.ajax({
+    //         url: '/inwards/ActionName',
+    //         type: 'POST',
+    //         data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+    //         success: function (result) {
+    //             document.getElementById("addressId3").value = result.data.address;
+    //             document.getElementById("gstnoId3").value = result.data.gstno;
+    //             document.getElementById("contactnoId3").value = result.data.contactno;
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.log("An error occurred while executing the action.");
+    //         }
+    //     });
+    // }
+
+    // //for purchase
+    // function changewbsupplier() {
+    //     if (document.getElementById("SelectSupplierId").value != "") {
+    //         console.log("supplier id select");
+    //         var selectedValue = document.getElementById("SelectSupplierId").value;
+    //         console.log(selectedValue);
+    //         console.log(" is get")
+    //         var studentSelect = $('#ponoId');
+    //         $.ajax({
+    //             url: '@Url.Action("Changepono", "inwards")',
+    //             type: 'GET',
+    //             dataType: 'json',
+    //             data: { selectedvalue: selectedValue },
+    //             success: function (data) {
+    //                 // Set the values in the textboxes
+    //                 console.log("pono sselected...............");
+    //                 $('#ponoId').empty();
+    //                 $('#ponoId').append($('<option>').text("--Select PONO--").val("--Select PONO--"));
+    //                 $.each(data, function (index, item) {
+    //                     $('#ponoId').append($('<option>').text(item.value).val(item.value));
+    //                 });
+
+    //             }
+    //         });
+    //     }
+    // }
+    // function dropdownChangedpono() {
+    //     if (document.getElementById('ponoId').ariaValueMax != "") {
+    //         console.log("pono id selected");
+    //         var selectedOption = document.getElementById("ponoId").value;
+    //         // var selectedOption1 = document.getElementById("SelectSupplierId").value;
+    //         var selectedOption1 = "Supplier";
+    //         // Make an AJAX request to the controller action
+    //         $.ajax({
+    //             url: '/inwards/ActionName1',
+    //             type: 'POST',
+    //             data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+    //             success: function (result) {
+
+    //                 $('#output1').empty();
+    //                 $("#output1").html(result);
+    //                 // document.getElementById("spartynameIdinput").value = result.data.suppliername;
+    //                 // document.getElementById("saddressId").value = result.data.address;
+    //                 // document.getElementById("sgstnoId").value = result.data.gstinno;
+    //                 // document.getElementById("scontactnoId").value = result.data.contactno;
+    //                 // document.getElementById("sreferencenoId").value = result.data.pono;
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 // Handle the error response
+    //                 console.log("An error occurred while executing the action.");
+    //             }
+    //         });
+    //     }
+    // }
+
+    // //for sale return
+    // function changewbcustomer() {
+    //     if (document.getElementById("SelectcustomerId").value != "") {
+    //         console.log("customer id select");
+    //         var selectedValue = document.getElementById("SelectcustomerId").value;
+    //         console.log(selectedValue);
+    //         var studentSelect = $('#sonoId');
+    //         $.ajax({
+    //             url: '@Url.Action("Changesono", "inwards")',
+    //             type: 'GET',
+    //             dataType: 'json',
+    //             data: { selectedvalue: selectedValue },
+    //             success: function (data) {
+    //                 // Set the values in the textboxes
+    //                 $('#sonoId').empty();
+    //                 //console.log(data);
+    //                 $('#sonoId').append($('<option>').text("--Select SONO--").val("--Select SONO--"));
+    //                 $.each(data, function (index, item) {
+    //                     $('#sonoId').append($('<option>').text(item.value).val(item.value));
+    //                 });
+
+    //             }
+    //         });
+    //     }
+    // }
+    // function dropdownChangedsono() {
+    //     var selectedOption = document.getElementById("sonoId").value;
+    //     var selectedOption1 = document.getElementById("SelectcustomerId").value;
+    //     // var selectedOption1 = "Customer";
+    //     console.log("sono id + customer");
+    //     // Make an AJAX request to the controller action
+    //     $.ajax({
+    //         url: '/inwards/ActionName2',
+    //         type: 'POST',
+    //         data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+    //         success: function (result) {
+    //             $('#output2').empty();
+    //             $("#output2").html(result);
+    //         },
+    //         error: function (xhr, status, error) {
+    //             // Handle the error response
+    //             console.log("An error occurred while executing the action.");
+    //         }
+    //     });
+    // }
+
+    // document.addEventListener('change', function (e) {
+    //     if (event.target.id.indexOf('description') >= 0) {
+    //         var tid = event.target.id;
+    //         var product = document.getElementById(tid).value;
+    //         console.log(product);
+    //         var txtProductCodeId = tid.replaceAll('description', 'productcode');
+    //         var txtbrandnameId = tid.replaceAll('description', 'brandname');
+    //         var txthsncodeId = tid.replaceAll('description', 'uom');
+    //         var txtsubcomponentId = tid.replaceAll('description', 'subcomponents');
+
+    //         var txtProductCode = document.getElementById(txtProductCodeId);
+    //         var txtbrandname = document.getElementById(txtbrandnameId);
+    //         var txthsncode = document.getElementById(txthsncodeId);
+    //         var txtsubcomponent = document.getElementById(txtsubcomponentId);
+
+    //         txtProductCode.value = null;
+
+    //         $.ajax({
+    //             url: '@Url.Action("ActionName_description", "inwards")',
+    //             type: 'GET',
+    //             dataType: 'json',
+    //             data: { selectedvalue: product },
+    //             success: function (data) {
+    //                 console.log(data);
+    //                 txtProductCode.value = data.modelno;
+    //                 txthsncode.value = data.hsncode;
+    //                 txtbrandname.value = data.brandname;
+    //                 txtsubcomponent.value = data.subcomponents;
+    //                 console.log("data.category is : " + data.categoryname)
+
+
+    //             }
+    //         });
+    //     }
+    // }, false);
+
+    // // Attach the click event to the edit buttons
+    // //DEMO
+    // $(document).on('click', '.poedit1-button', function () {
+    //     var productCode = $(this).data('productcode');
+    //     var dcno = $('#dreferenceno').val(); // Assuming this is a general reference
+    //     var invoiceno = $('#dinvoiceno').val(); // Assuming this is a general reference
+    //     var quantity = $(this).closest('tr').find('input[name="inwardPacket[i].quantity"]').val();
+    //     console.log(productCode + " - " + dcno + " - " + invoiceno + " - " + quantityVal);
+    //     showProductDetails2(productCode, dcno, invoiceno, quantity);
+    // });
+    // function showProductDetails2(productCode, dcno, invoiceno, quantity) {
+    //     var editUrl = '/inwards/_partialSubComponent1?productCode=' + productCode + '&dcno=' + dcno + '&invoiceno=' + invoiceno + '&quantity=' + quantity;
+    //     showInPopup(editUrl, 'SubComponents Details');
+    // }
+    // $(document).on('click', '.addserial1-button', function () {
+    //     var productCode = $(this).data('productcode');
+    //     var dcno = $('#dreferenceno').val(); // Assuming this is a general reference
+    //     var invoiceno = $('#dinvoiceno').val(); // Assuming this is a general reference
+    //     var quantity = $(this).closest('tr').find('input[name="inwardPacket[i].quantity"]').val();
+    //     console.log(productCode + " - " + dcno + " - " + invoiceno + " - " + quantity );
+    //     showProductDetails3(productCode, dcno, invoiceno, quantity);
+    // });
+    // function showProductDetails3(productCode, dcno, invoiceno, quantity) {
+    //     var addUrl = '/inwards/_partialAddSerial1?productCode=' + productCode + '&dcno=' + dcno + '&invoiceno=' + invoiceno + '&quantity=' + quantity ;
+    //     console.log(" data : " + productCode + " - " + dcno + " - " + invoiceno + " - " + quantity );
+    //     showInPopup(addUrl, 'Add Serial No.');
+    // }
+
+    // //REPAIR
+
+
+    // //REPLACEMENT
+    // $(document).on('click', '.poedit3-button', function () {
+    //     var productCode = $(this).data('productcode');
+    //     var quantity = $(this).data('quantity');
+    //     var dcno = $('#r2referenceno').val();
+    //     var invoiceno = $('#r2invoiceno').val();
+    //     console.log(productCode + " - " + dcno + " - " + invoiceno + " - " + quantity);
+    //     showProductDetails4(productCode, dcno, invoiceno, quantity);
+    // });
+
+    // function showProductDetails4(productCode, dcno, invoiceno, quantity) {
+    //     console.log(" data : " + productCode + dcno + invoiceno + quantity);
+    //     var editUrl = '/inwards/_partialSubComponentr2?productCode=' + productCode + '&dcno=' + dcno + '&invoiceno=' + invoiceno + '&quantity=' + quantity;
+    //     console.log(editUrl);
+    //     showInPopup(editUrl, 'SubComponents Details');
+    // }
+
+</script>
+
+@* SEARCHABLE DROPDOWN *@

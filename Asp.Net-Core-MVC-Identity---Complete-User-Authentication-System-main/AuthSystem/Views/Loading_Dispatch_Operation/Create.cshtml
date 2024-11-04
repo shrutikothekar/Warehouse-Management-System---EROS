@@ -1,0 +1,2301 @@
+﻿@* //correct
+ *@
+
+@model eros.Models.Dispatch_New
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders1 = new string[] {
+        // "SONO",
+        "Product Code",
+         "Location",
+         "Shipper No.",
+        "Batch Code",
+        // "Picked Count",
+
+    };
+
+    string[] TableHeaders2 = new string[] {
+        "SONO",
+        "Product Code",
+        "Shipper No.",
+        "Batch Code",
+
+
+    };
+    string[] TableHeaders3 = new string[] {
+        "SONO",
+        "Unloading Sequence Root",
+
+
+
+    };
+    //var dropDownData = ViewBag.DropDownDatasono as SelectList;
+    var transportOptions = ViewBag.transportname;
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="mt-3">
+            <div class="card mb-3">
+
+                <div class="card-header bg-dark text-white pt-lg-3 pb-lg-3">
+                    <div class="d-flex align-items-baseline">
+                        <h5 class="mx-auto font-weight-bolder text-white small-heading" style="font-size:3vh;">Loading & Dispatch Process</h5>
+
+                        <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                    </div>
+                </div>
+                <main class="page payment-page">
+                    <section class="payment-form mt-3">
+                        <div class="container">
+                            <div class="card-details bg-dark pl-2 mt-3 mb-2">
+                                <div class="row">
+                                    <div class="col-lg-2 col-md-3 mx-2">
+                                        <div class="form-check form-check-inline mt-2 mb-2 pr-lg-5">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="1">
+                                            <label class="form-check-label text-white" for="flexRadioDefault1">
+                                                Single SO
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 mx-2">
+                                        <div class="form-check form-check-inline mt-2 mb-2 pr-lg-5">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="2">
+                                            <label class="form-check-label text-white" for="flexRadioDefault2">
+                                                Multiple SO
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form id="form1">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-3 mt-2" id="sono">
+                                                <label asp-for="Loading_Dispatch_Operation.sono" id="sotxt" class="control-label"></label>
+                                                <select asp-for="Loading_Dispatch_Operation.sono" id="sonoId" asp-items="@ViewBag.data1" onchange="fetchdropdown()" style="height:35px; width: 180px;"></select>
+                                                <span asp-validation-for="Loading_Dispatch_Operation.sono" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3  " id="dispateex">
+                                                <label class="control-label">Transport</label>
+                                                <select id="type" name="dispatchtype" onchange="showForm()" style="height:35px; width: 180px;" required>
+                                                    <option value="select">select dispatch type</option>
+                                                    <option value="Courier">Courier</option>
+                                                    <option value="Transport">Transport</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-sm-4 mt-2" id="xxtbtn" style="display:none">
+                                                <button type="button" class="btn btn-info btn-sm" onclick="ShowDetails()">Show Details</button>
+                                                @* <button type="button" class="btn btn-info btn-sm" onclick="showDetailsView()">Show Details</button> *@
+                                                <button type="button" class="btn btn-info btn-sm" id="startPickingBtn" onclick="showStartDiv()">Start Loading</button>
+                                            </div>
+                                            <label class="text-secondary font-weight-bolder mr-5" id="count"></label>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Loading_Dispatch_Operation.dcno" class="control-label"></label>
+                                                <input asp-for="Loading_Dispatch_Operation.dcno" id="dcno" data-uppercase autocomplete="off" class="form-control" />@* oninput="validateNumber(this)" *@
+                                                <span asp-validation-for="Loading_Dispatch_Operation.dcno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Loading_Dispatch_Operation.dcdate" class="control-label"></label>
+                                                <input asp-for="Loading_Dispatch_Operation.dcdate" type="date" id="dcdate" data-uppercase autocomplete="off" class="form-control" />
+                                                <span asp-validation-for="Loading_Dispatch_Operation.dcdate" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Loading_Dispatch_Operation.invoiceno" class="control-label"></label>
+                                                <input asp-for="Loading_Dispatch_Operation.invoiceno" id="invoiceno" data-uppercase autocomplete="off" class="form-control" /> @* oninput="validateNumber(this)" *@
+                                                <span asp-validation-for="Loading_Dispatch_Operation.invoiceno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Loading_Dispatch_Operation.invoicedate" class="control-label"></label>
+                                                <input asp-for="Loading_Dispatch_Operation.invoicedate" id="invoicedate" type="date" data-uppercase autocomplete="off" class="form-control" />
+                                                <span asp-validation-for="Loading_Dispatch_Operation.invoicedate" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                
+
+                                        <div id="courierForm" style="display: none;">
+                                            <hr />
+                                            <div class="table-responsive col-sm-12 col-md-12 p-0">
+                                                <table id="courierTable">
+                                                    <tr>
+
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Courier Name</label>
+                                                            <select class="form-control" data-uppercase asp-items="ViewBag.couriername" style="width:150px;" id="extcourier" required></select>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Docket No.</label>
+                                                            <input data-uppercase autocomplete="off" id="extawb" style="width:150px;" class="form-control" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Dispatch Date</label>
+                                                            <input type="date" data-uppercase autocomplete="off" id="datekk" style="width:150px;" class="form-control" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <hr />
+                                        </div>
+
+                                        <div id="transportForm" style="display: none;">
+                                            <hr />
+                                            <div class="table-responsive col-sm-12 col-md-12 p-0">
+                                                <table id="transportTable">
+                                                    <tr>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Transport Name</label>
+                                                            <select class="form-control" data-uppercase asp-items="ViewBag.transportname" style="width:150px;" id="exttransport" required></select>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Truck No.</label>
+                                                            <input data-uppercase autocomplete="off" id="truck" class="form-control" style="width:150px;" oninput="validateAlphNum(this)" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Driver Name</label>
+                                                            <input data-uppercase autocomplete="off" id="drivernm" style="width:150px;" class="form-control" oninput="validateAlphabet(this)" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Contact no</label>
+                                                            <input data-uppercase autocomplete="off" id="contact" style="width:150px;" class="form-control" oninput="validateNumber(this)" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Dispatch Date</label>
+                                                            <input type="date" a data-uppercase autocomplete="off" style="width:150px;" id="dateff" class="form-control" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        @*</div>*@
+
+                                        <div class="modal fade" id="mainTableModal" tabindex="-1" role="dialog" aria-labelledby="mainTableModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="mainTableModalLabel">Picking Sale Order Details</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="table-responsive col-md-12 p-0" >
+                                                            <table class="table table-striped table-sm" id="table1">
+                                                                <thead class="bg-gray-200 ">
+                                                                    <tr>
+                                                                        @foreach (var head in TableHeaders1)
+                                                                        {
+                                                                            <th style=" background:white;">
+                                                                                @head
+                                                                            </th>
+                                                                        }
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="CsDiv">
+                                                                </tbody>
+                                                            </table>
+                                                            <input type="hidden" id="hdnLastIndex" value="0" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row" id="boxnoDiv" style="display:none;">
+                                           
+                                            <div class="form-group col-sm-3 mt-2 ml-4">
+                                                <label asp-for="Loading_Dispatch_Operation.boxno" id="boxtxt" class="control-label">Shipper No.</label>
+                                                <input asp-for="Loading_Dispatch_Operation.boxno" data-uppercase autocomplete="off" class="form-control" id="boxno" onkeypress="Loadingdata(event)" />
+                                                <span asp-validation-for="Loading_Dispatch_Operation.boxno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-2 mt-2 ml-4">
+                                                <label class="control-label">Remaining Scan:</label>
+                                                <span id="remainingScanCounter112" style="color:red; display:none; font-weight:700; font-size:20px;"></span>
+                                                <input id="remainingScanCounter" style="height:5vh; font-size: 20px; color: red; font-weight: 650;" class="form-control" type="text" value="0" readonly />
+                                            </div>
+                                            <div class="form-group col-sm-2 mt-2 ml-4">
+                                                <label class="control-label">Scanned Shippers:</label>
+                                                <span id="scannedShipperCounter112" style="color:green;display:none; font-weight:700; font-size:20px;"></span>
+                                                <input id="scannedShipperCounter" style="height:5vh; font-size: 20px; color: green; font-weight: 650;" class="form-control" type="text" value="0" readonly />
+                                            </div>
+                                            <div class="form-group col-sm-2 mt-2 ml-4">
+                                                <label class="control-label">Total Shippers:</label>
+                                                <span id="totalShipperCounter112" style="color:midnightblue;display:none; font-weight:700; font-size:20px;"></span>
+                                                <input id="totalShipperCounter" style="height:5vh; font-size: 20px; color: midnightblue; font-weight: 650;" class="form-control" type="text" value="0" readonly />
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="tableData1" id="tableData1" />
+                                        <div class="table-responsive col-sm-12 mt-2 " id="preInwardTable">
+                                            <table class="table table-bordered table-striped divide-gray-300 small" id="DataInsert" style="display:none;">
+
+                                                <thead style="background-color: #666; color: #fff;" >
+                                                    <tr>
+                                                        <th>Shipper No.</th>
+                                                        <th>Product Code</th>
+                                                        <th>Batch Code</th>
+                                                        @* <th>Product Name</th>*@
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" id="single" style="display:none;" class="btn btn-success col-md-12" onclick="SaveData()">Save</button>
+                                            </div>
+                                        </div>
+                                   
+                                    </form>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form id="form2">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <div class="row">
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Loading_Dispatch_Operation.dcno" class="control-label"></label>
+                                                <input asp-for="Loading_Dispatch_Operation.dcno" id="dcno1" data-uppercase autocomplete="off" class="form-control" />@* oninput="validateNumber(this)" *@
+                                                <span asp-validation-for="Loading_Dispatch_Operation.dcno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Loading_Dispatch_Operation.dcdate" class="control-label"></label>
+                                                <input asp-for="Loading_Dispatch_Operation.dcdate" type="date" id="dcdate1" data-uppercase autocomplete="off" class="form-control" />
+                                                <span asp-validation-for="Loading_Dispatch_Operation.dcdate" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Loading_Dispatch_Operation.invoiceno" class="control-label"></label>
+                                                <input asp-for="Loading_Dispatch_Operation.invoiceno" id="invoiceno1" data-uppercase autocomplete="off" class="form-control" /> @* oninput="validateNumber(this)" *@
+                                                <span asp-validation-for="Loading_Dispatch_Operation.invoiceno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Loading_Dispatch_Operation.invoicedate" class="control-label"></label>
+                                                <input asp-for="Loading_Dispatch_Operation.invoicedate" id="invoicedate1" type="date" data-uppercase autocomplete="off" class="form-control" />
+                                                <span asp-validation-for="Loading_Dispatch_Operation.invoicedate" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            
+                                            <div class="form-group col-sm-4 mt-2">
+                                                <label asp-for="Loading_Dispatch_Operation.sono"  class="control-label">Order No.</label>
+                                                <select asp-for="Loading_Dispatch_Operation.sono" style="width:320px;" id="sonovalueform2" multiple asp-items="@ViewBag.datanew" onchange="AddItem()" multiselect-select-all="true"></select>
+                                            </div>
+                                            <div class="form-group col-sm-4 mt-2" id="loadsheetno">
+                                                <label id="" class="control-label">Loading Sequence</label>
+                                                <select id="loadTxt" class="form-control " asp-items="@ViewBag.loaddata" onchange="fetchdropdownnew()"
+                                                        required></select>
+                                                <span class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-4 mt-2" id="dispa1">
+                                                <label id="typeext" class="control-label">Transport</label>
+                                                <select id="typexxt" class="form-control " name="dispatchtype" onchange="showData()"
+                                                        required>
+                                                    <option value="select">select dispatch type</option>
+                                                    <option value="Courier">Courier</option>
+                                                    <option value="Transport">Transport</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="tableData" id="tableData" />
+
+                                        <div class="table-responsive col-sm-12 col-md-6 p-3">
+                                            <table class="table table-striped table-sm" id="CodesTable">
+                                                <thead class="bg-gray-200">
+
+                                                    <tr>
+                                                        @foreach (var head in TableHeaders3)
+                                                        {
+                                                            <th style="background:white;">
+                                                                @head
+                                                            </th>
+                                                        }
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="Table1">
+                                                </tbody>
+                                            </table>
+                                            <div class="form-group col-sm-4 mt-2" buttonsize" style="display:flex; align-items: center;">
+                                                <label class="control-label mt-2"></label>
+                                                <label class="control-label mt-2"></label>
+                                                <label class="control-label mt-2"></label>
+                                                <label class="control-label mt-2"></label>
+                                                <button id='btnSave' style="display:none; width:100px;" type="button" class="btn btn-sm btn-success
+                                          visible p-2" onclick="SaveDataload()" data-toggle="tooltip" title="Save">
+                                                    <i class="fas fa-save"> Save </i>
+                                                </button>
+                                                &nbsp;
+                                                <button id='btnEdit' style="display:none; width:100px;" type="button" class="btn btn-sm btn-success
+                                          visible p-2" onclick="EditDataload()" data-toggle="tooltip" title="Update">
+                                                    <i class="fas fa-pencil-alt"> Update </i>
+                                                </button>
+                                                &nbsp;
+                                                <button id='btnActive' type="button" style="width:100px;" class="btn btn-sm btn-warning visible p-2" onclick="AddActive()" data-toggle="tooltip" title="Edit">
+                                                    <i class="fas fa-edit"> Edit </i>
+                                                </button>
+                                                &nbsp;
+                                            </div>
+                                            <button type="button" id='btnClear' value="Clear" class="btn btn-secondary btn-sm mr-2" onclick="clearfrm()">
+                                                <span class="d-none d-sm-inline">Clear</span>
+                                                <span class="d-inline d-sm-none">Clear</span>
+                                            </button>
+                                            <button type="button" class="btn btn-info btn-sm mr-2" id="startloadBtn" onclick="showDiv()">
+                                                <span class="d-none d-sm-inline">Start Loading</span>
+                                                <span class="d-inline d-sm-none">Start Load</span>
+                                            </button>
+                                            <button type="button" class="btn btn-info btn-sm " id="detailext" onclick="showView()">
+                                                <span class="d-none d-sm-inline">Show Details</span>
+                                                <span class="d-inline d-sm-none">Show Details</span>
+                                            </button>
+                                            <label class="text-secondary font-weight-bolder mr-5" id="count1"></label>
+                                        </div>
+                                        <div id="courierForm1" style="display: none;">
+                                            <hr />
+                                            <div class="table-responsive col-sm-12 col-md-12 p-0">
+                                                <table id="courierTable1">
+                                                    <tr>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Courier Name</label>
+                                                            <select class="form-control" data-uppercase asp-items="ViewBag.couriername" style="width:150px;" id="courierxxt" required></select>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Docket No.</label>
+                                                            <input data-uppercase autocomplete="off" id="dockxxt" style="width:150px;" class="form-control" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Dispatch Date</label>
+                                                            <input type="date" data-uppercase autocomplete="off" style="width:150px;" id="datecou" class="form-control" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        <div id="transportForm1" style="display: none;">
+                                            <hr />
+                                         
+                                            <div class="table-responsive col-sm-12 col-md-12 p-0">
+                                                <table id="transportTable1">
+                                                    <tr>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Transport Name</label>
+                                                            <select class="form-control" data-uppercase asp-items="ViewBag.transportname" style="width:150px;" id="transportxxt" required></select>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Truck No.</label>
+                                                            <input data-uppercase autocomplete="off" id="truckxxt" class="form-control" style="width:150px;" oninput="validateAlphNum(this)" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Driver Name</label>
+                                                            <input data-uppercase autocomplete="off" id="driverxxt" class="form-control" style="width:150px;" style="width:150px;" oninput="validateAlphabet(this)" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Contact no</label>
+                                                            <input data-uppercase autocomplete="off" id="contactxxt" class="form-control" style="width:150px;" oninput="validateNumber(this)" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;width:150px;">
+                                                            <label class="control-label">Dispatch Date</label>
+                                                            <input type="date" data-uppercase autocomplete="off" id="datexxt" style="width:150px;" class="form-control" required />
+                                                            <span class="text-danger"></span>
+                                                        </td>
+
+                                                        <td class="form-group" style="margin: 5px; padding: 10px;">
+                                                            <button onclick="addNewRow()" class="btn btn-success btn-sm" style="background-color: green; color: white;">Add</button>
+                                                        </td>
+                                                        <td class="form-group" style="margin:5px; padding:10px;">
+                                                            <button onclick="deleteRow(this)" class="btn btn-danger btn-sm" style="background-color: red; color: white;">Delete</button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        <input type="hidden" name="tableData" id="tableData" />
+                                        <div class="modal fade" id="mainModal" tabindex="-1" role="dialog" aria-labelledby="mainTableModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="mainTableModalLabel">Picking Sale Order Details</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="table-responsive col-sm-12 col-md-12 p-0" >
+                                                            <table class="table divide-gray-200" id="table2" >
+                                                                <thead class="bg-gray-200 sticky-top">
+                                                                    <tr>
+                                                                        @foreach (var head in TableHeaders2)
+                                                                        {
+                                                                            <th style="background:grey;" class="text-white">
+                                                                                @head
+                                                                            </th>
+                                                                        }
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="dataCsDiv">
+                                                                </tbody>
+                                                            </table>
+
+                                                            <input type="hidden" id="hdnLastIndex" value="0" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="boxnoDiv1" style="display:none;">
+                                            <div class="form-group col-sm-2 mx-lg-4 mx-sm-4 mx-md-4">
+                                                <label asp-for="Loading_Dispatch_Operation.boxno" class="control-label">Shipper No.</label>
+                                                <input asp-for="Loading_Dispatch_Operation.boxno" data-uppercase autocomplete="off" class="form-control" id="boxext" onkeypress="unloaddata(event)" />
+                                                <span asp-validation-for="Loading_Dispatch_Operation.boxno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-2 mx-lg-2 mx-sm-2 mx-md-2">
+                                                <label asp-for="Loading_Dispatch_Operation.sono" id="soext" class="control-label  w-100">Sale Order No.</label>
+                                                <input asp-for="Loading_Dispatch_Operation.sono" data-uppercase autocomplete="off" class="form-control" id="sonotext" readonly="true" />
+                                                <span asp-validation-for="Loading_Dispatch_Operation.sono" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-2 mt-2 ml-4">
+                                                <label class="control-label">Remaining Scan:</label>
+                                                <span id="remainingScanCounter11" style="color:red; display:none; font-weight:700; font-size:20px;"></span>
+                                                <input id="remainingScanCounterm" style="height:5vh; font-size: 20px; color: red; font-weight: 650;" class="form-control" type="text" value="0" readonly />
+                                            </div>
+                                            <div class="form-group col-sm-2 mt-2 ml-4">
+                                                <label class="control-label">Scanned Shippers:</label>
+                                                <span id="scannedShipperCounter11" style="color:green;display:none; font-weight:700; font-size:20px;"></span>
+                                                <input id="scannedShipperCounterm" style="height:5vh; font-size: 20px; color: green; font-weight: 650;" class="form-control" type="text" value="0" readonly />
+                                            </div>
+                                            <div class="form-group col-sm-2 mt-2 ml-4">
+                                                <label class="control-label">Total Shippers:</label>
+                                                <span id="totalShipperCounter11" style="color:midnightblue;display:none; font-weight:700; font-size:20px;"></span>
+                                                <input id="totalShipperCounterm" style="height:5vh; font-size: 20px; color: midnightblue; font-weight: 650;" class="form-control" type="text" value="0" readonly />
+                                            </div>
+
+                                        </div>
+                                        <input type="hidden" name="tableData1" id="tableData1" />
+                                        <div class="table-responsive col-sm-12 mt-2" id="preInwardTable" >
+                                            <table class="table table-bordered table-striped divide-gray-300 small" id="Desert">
+                                                <thead style="background-color: #666; color: #fff;">
+                                                    <tr>
+                                                        <th>Shipper No.</th>
+                                                        <th>Product Code</th>
+                                                        <th>Batch Code</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                 
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <button type="button" class="btn btn-success col-md-12" onclick="MultipleLoadData()">Save</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    #form1 {
+        display: none;
+    }
+
+    .custom-width {
+        width: 500px; /* Set the width to your desired value */
+    }
+
+    .buttonsize {
+        position: relative;
+        right: 10px;
+    }
+</style>
+
+
+
+
+@*<div class="container">*@
+@*</div>*@
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+                <style>
+                    .multiselect-dropdown {
+                        width: 257px !important;
+                        height: 38px;s
+                    }
+                </style>
+     }
+
+  
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  
+
+    <script>
+        //SHOW DETAILS FOR DISPATCHED PRODUCTS
+        function ShowDetails() {
+            console.log("ShowDetails call");
+            var sono = $('#sonoId').val();
+            $.ajax({
+                url: '/Loading_Dispatch_Operation/TMPDataDetails',
+                data: { sono: sono },
+                type: 'GET',
+                success: function (response) {
+                    console.log(response); // Log the entire response object for inspection
+
+                    $('#CsDiv').empty(); // Clear previous data
+                    if (response.success) {
+                        response.data.forEach(function (item) {
+                            var row = '<tr>';
+                            row += `<td data-name="productcode">${item.productcode}</td>`;
+                            row += `<td data-name="location">${item.location}</td>`;
+                            row += `<td data-name="batchcode">${item.batchcode}</td>`;
+                            row += `<td data-name="boxno">${item.boxno}</td>`;
+                            // row += `<td data-name="srno">${item.instockqty}</td>`;
+                            row += '</tr>';
+                            $("#CsDiv").append(row); // Append the constructed row to the table body
+                        });
+                    } else {
+                        var row = '<tr><td colspan="8" style="text-align:center;">' + response.message + '</td></tr>';
+                        $("#CsDiv").append(row);
+                    }
+
+                    // Show modal using Bootstrap modal method
+                    $('#mainTableModal').modal('show');
+
+                    // Read and filter the table data after appending
+                    //readTableData($('#sonoId').val());
+                },
+                error: function () {
+                    console.log('An error occurred while fetching the details.');
+                }
+            });
+        }
+        function ShowDetails1() {
+            console.log("ShowDetails1 call");
+            var sono = $('#sonoId').val();
+            $.ajax({
+                url: '/Loading_Dispatch_Operation/TMPDataDetails',
+                data: { sono: sono },
+                type: 'GET',
+                success: function (response) {
+                    console.log(response); // Log the entire response object for inspection
+
+                    $('#CsDiv').empty(); // Clear previous data
+                    if (response.success) {
+                        response.data.forEach(function (item) {
+                            var row = '<tr>';
+                            row += `<td data-name="productcode">${item.productcode}</td>`;
+                            row += `<td data-name="location">${item.location}</td>`;
+                            row += `<td data-name="batchcode">${item.batchcode}</td>`;
+                            row += `<td data-name="boxno">${item.boxno}</td>`;
+                            // row += `<td data-name="srno">${item.instockqty}</td>`;
+                            row += '</tr>';
+                            $("#CsDiv").append(row); // Append the constructed row to the table body
+                        });
+                    } else {
+                        var row = '<tr><td colspan="8" style="text-align:center;">' + response.message + '</td></tr>';
+                        $("#CsDiv").append(row);
+                    }
+
+                    // Show modal using Bootstrap modal method
+                    // $('#mainTableModal').modal('show');
+
+                    // Read and filter the table data after appending
+                    //readTableData($('#sonoId').val());
+                },
+                error: function () {
+                    console.log('An error occurred while fetching the details.');
+                }
+            });
+        }
+        // $('#invoicedate, #dcdateInput, #grndate').on('change', function () {
+        //     // Get the selected date value
+        //     var selectedDate = $(this).val();
+
+        //     // Determine which input triggered the event
+        //     var triggerId = $(this).attr('id');
+
+        //     // Determine the corresponding label and validation span IDs
+        //     var labelId, validationId;
+        //     if (triggerId === 'invoicedate') {
+        //         labelId = 'invoicedateLabel';
+        //         validationId = 'invoicedateValidation';
+        //     } else if (triggerId === 'dcdateInput') {
+        //         labelId = 'dcdateLabel';
+        //         validationId = 'dcdateValidation';
+        //     } else if (triggerId === 'grndate') {
+        //         labelId = 'grndateid';
+        //         validationId = 'grndateValidation';
+        //     }
+
+        //     // Get the selected PONO value
+        //     var selectedPono = $('#ponoId').val();
+
+        //     // Only call the controller action if either invoicedate or dcdate changes
+        //     if (triggerId === 'invoicedate' || triggerId === 'dcdateInput' || triggerId === 'grndate') {
+        //         // Call the controller action with the selected date and PONO
+        //         $.ajax({
+        //             url: '/inwards/ChangeDate',
+        //             type: 'POST',
+        //             data: {
+        //                 selectedDate: selectedDate,
+        //                 selectedPono: selectedPono
+        //             },
+        //             success: function (response) {
+        //                 if (response.success) {
+        //                     // Date is valid, do any additional logic here
+        //                     console.log(response.message);
+        //                 } else {
+        //                     // Display SweetAlert for invalid date
+        //                     Swal.fire({
+        //                         icon: 'warning',
+        //                         title: 'Enter Correct Date ',
+        //                         text: response.message,
+        //                     });
+
+        //                     // Reset the corresponding date input to its previous value
+        //                     $('#' + triggerId).val('');
+        //                 }
+        //             },
+        //             error: function (error) {
+        //                 // Handle the error response if needed
+        //                 console.error(error);
+        //             }
+        //         });
+        //     }
+        // });
+        function updateSonotext() {
+            $("#table2 tbody tr").each(function () {
+                var row = $(this);
+                console.log("Table Value:" + row.find("td").eq(0).text());
+                var sonoValue = row.find("td").eq(0).text();
+                console.log("first sono: " + sonoValue);
+                $('#sonotext').val(sonoValue); // Update sonotext with the sono value
+                return false;
+            });
+        }
+        function clearfrm() {
+            var sonoValue = $('#sonovalueform2').val();
+            var form = document.getElementById("form2");
+            form.reset();
+        }
+        // $(function () {
+        //     $('#sonoTxt').multiselect();
+        // });
+        // $('#sonoTxt').multiselect({
+        //     includeSelectAllOption: true,
+        //     selectAllText: ' Select all',
+        // })
+    </script>
+    <script>
+        // Get today's date in the format yyyy-mm-dd
+        const today = new Date().toISOString().split('T')[0];
+        // Set the value of the input field to today's date
+        document.getElementById('datexxt').value = today;
+        document.getElementById('datecou').value = today;
+        document.getElementById('dateff').value = today;
+        document.getElementById('datekk').value = today;
+    </script>
+    <script>
+        function validateAlphabet(input) {
+            var regex = /^[a-zA-Z\s._-\s]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validateAlphNum(input) {
+            var regex = /^[a-zA-Z0-9]{10}$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, 10);
+            }
+        }
+        function validateNumber(input) {
+            var regex = /^\d{0,10}$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validatePinNumber(input) {
+            var regex = /^[0-5]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+    </script>
+    <script>
+        function showStartDiv() {
+            // Show the startdiv and unblock the UI
+            $("#boxnoDiv").show();
+            $("#DataInsert").show();
+            $("#dispat").show();
+            document.getElementById("boxno").focus();
+            $.unblockUI();
+        }
+        function showDetailsView() {
+            $('#mainTableModal').modal('show');
+        }
+        function showDiv() {
+            // Show the startdiv and unblock the UI
+            $("#boxnoDiv1").show();
+            $("#Desert").show();
+            $("#loadsheetno").hide();
+            $("#CodesTable").show();
+            $("#sonodiv").show();
+            $("#extbtbt").show();
+            $("#multi").hide();
+            $("#btnEdit").show();
+            $("#btnActive").show();
+            $("#btnClear").hide();
+            // $("#btnSave").hide();
+            updateSonotext();
+            document.getElementById("boxext").focus();
+
+            // Show the "sono" text
+
+
+
+            //$.unblockUI();
+        }
+        function showView() {
+            $('#mainModal').modal('show');
+        }
+        //function showsequnce() {
+        //    // Show the startdiv and unblock the UI
+        //   // $("#boxnoDiv1").show();
+        //   // $("#Desert").show();
+        //    //$("#dispat1").show();
+        //    //$("#CodesTable").hide();
+        //    document.getElementById("boxext").focus();
+        //    $.unblockUI();
+        //}
+        function showsequnce() {
+            $('#sequenceTableModal').modal('show');
+        }
+        var transportOptions = @Html.Raw(Json.Serialize(transportOptions));
+        function addNewRow() {
+            var table = $("#transportTable1");
+            var newRow = $("<tr>");
+
+            newRow.append('<td class="form-group" style="margin:5px; padding:10px;"><label class="control-label">Transport Name</label><select class="form-control" data-uppercase style="height:5vh;" id="exttransport' + table.find('tr').length + '"></select></td>');
+            newRow.append('<td class="form-group" style="margin:5px; padding:10px;"><label class="control-label">Truck No.</label><input data-uppercase autocomplete="off" id="truck" class="form-control" /><span class="text-danger"></span></td>');
+            newRow.append('<td class="form-group" style="margin:5px; padding:10px;"><label class="control-label">Driver Name</label><input data-uppercase autocomplete="off" id="drivernm" class="form-control" /><span class="text-danger"></span></td>');
+            newRow.append('<td class="form-group" style="margin:5px; padding:10px;"><label class="control-label">Contact no</label><input data-uppercase autocomplete="off" id="contact" class="form-control" /><span class="text-danger"></span></td>');
+            newRow.append('<td class="form-group" style="margin:5px; padding:10px;"><label class="control-label">Dispatch Date</label><input type="date" data-uppercase autocomplete="off" id="date" class="form-control" /><span class="text-danger"></span></td>');
+            newRow.append('<td class="form-group btn btn-success btn-sm" style="margin:5px; padding:10px;"><button onclick="addNewRow()" style="background-color: green; color: white;">Add</button></td>');
+            newRow.append('<td class="form-group btn btn-danger btn-sm" style="margin:5px; padding:10px;"><button onclick="deleteRow(this)" style="background-color: red; color: white;">Delete</button></td>');
+
+            table.append(newRow);
+
+            // Populate the dropdown with options
+            var dropdownId = 'exttransport' + (table.find('tr').length - 1);
+            var dropdown = $('#' + dropdownId);
+            transportOptions.forEach(function (option) {
+                dropdown.append('<option value="' + option.value + '">' + option.text + '</option>');
+            });
+        }
+        function deleteRow(button) {
+            var table = $(button).closest("table");
+            var rows = table.find("tbody tr");
+
+            // Check if there's only one row left
+            if (rows.length === 1) {
+                //  alert("At least one row must remain.");
+                return;
+            }
+
+            // Get the reference of the button's parent row and remove it
+            $(button).closest("tr").remove();
+        }
+    </script>
+    <script>
+        function AddItem() {
+            // Clear existing content of Table1
+            $("#Table1").empty();
+
+            // Get all selected options from the sono dropdown
+            var selectedSonoOptions = $("#sonovalueform2 option:selected");
+            var rowCount = $("#Table1 tr").length; // Get the current number of rows
+            var expectedSequence = []; // Array to store expected sequence
+
+            // Iterate through each selected option and add a new row for each
+            selectedSonoOptions.each(function (index) {
+                // Increment the row count for each iteration
+                rowCount++;
+
+                // Get the text value of the selected sono
+                var selectedSono = $(this).text();
+                // $(this).prop('disabled', true);
+                // Add a new row to the table with the selected value and serial number
+                var newRow = '<tr>' +
+                    //'<td>' + rowCount + '</td>' + // Serial number column
+                    '<td>' + selectedSono + '</td>' +
+                    '<td><input class="form-control unloadsequenceInput" autocomplete="off" data-row="' + rowCount + '"><span class="text-danger"></span></td>' +
+                    '</tr>';
+
+                $("#Table1").append(newRow);
+
+                // Push the row count to the expectedSequence array
+                expectedSequence.push(rowCount);
+            });
+
+            $(".unloadsequenceInput").on('input', function () {
+                var row = parseInt($(this).data('row')); // Get the row number
+                var value = parseInt($(this).val()); // Get the input value as an integer
+
+                // Check if the input value is not a number or if it's not in the expected sequence
+                if (isNaN(value) || !expectedSequence.includes(value)) {
+                    // alert("Please type the unload sequence correctly according to the selected pattern.");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Wrong Sequence !',
+                        text: 'Please Enter Correct sequence Loading Number !',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    $(this).val(""); // Clear the input field
+                } else {
+                    var duplicate = false;
+
+                    // Check if the entered value is a duplicate across all rows
+                    $(".unloadsequenceInput").not(this).each(function () {
+                        if (parseInt($(this).val()) === value) {
+                            duplicate = true;
+                            return false; // Exit the loop if a duplicate is found
+                        }
+                    });
+
+                    if (duplicate) {
+                        // alert("Duplicate numbers are not allowed. Please enter a unique number.");
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Duplicate sequence number !',
+                            text: 'You have entered a duplicate sequence number, Please enter correct sequence !',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        $(this).val(""); // Clear the input field
+                    }
+                }
+            });
+
+            // Hide buttons and other elements
+            $("#btnEdit").hide();
+            $("#btnSave").show();
+            $("#multi").hide();
+        }
+        function AddActive() {
+            var table1Body = $("#Table1");
+            var inputValues = []; // Array to store input values
+
+            table1Body.find("tr").each(function () {
+                var inputValue = $(this).find("td input");
+                var value = inputValue.val().trim();
+
+                // Check if value already exists
+                if (inputValues.includes(value)) {
+                    // Duplicate value found, handle accordingly
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Duplicate sequence number!',
+                        text: 'Entered Sequence no "' + value + '" is already exists.',
+                    });
+                    inputValue.val(''); // Clear the input field
+                    return false; // Exit the loop
+                }
+
+                // Add value to array
+                inputValues.push(value);
+                inputValue.prop('readonly', false);
+            });
+
+            // If no duplicate found, proceed with hiding/showing buttons
+            document.getElementById("btnSave").style.display = "none";
+            document.getElementById("btnEdit").style.display = "block";
+        }
+        // Event listener to check for duplicate values as the user types
+        $(document).on('input', '#Table1 input', function () {
+            var currentValue = $(this).val().trim();
+            var inputValues = [];
+
+            // Collect all current input values
+            $('#Table1 input').each(function () {
+                var value = $(this).val().trim();
+                if (value !== '') {
+                    inputValues.push(value);
+                }
+            });
+
+            // Check if current value already exists
+            if (inputValues.indexOf(currentValue) !== inputValues.lastIndexOf(currentValue)) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Duplicate sequence number',
+                    text: 'Entered Sequence no "' + value + '" is already exists.',
+                });
+                $(this).val(''); // Clear the input field
+            }
+        });
+        function EditDataload() {
+            var table1Body = $("#Table1");
+
+            var dataToSave = [];
+            var anyEmpty = false;
+
+            table1Body.find("tr").each(function () {
+                var sonoValue = $(this).find("td:first-child").text();
+                var inputValue = $(this).find("td input").val();
+                var seq = $("#loadTxt").val();
+                if (inputValue.trim() === "") {
+                    anyEmpty = true;
+                    return false;
+                }
+                dataToSave.push({
+                    sono: sonoValue,
+                    unloadsequence: inputValue,
+                    loadingsheetno: seq
+                });
+            });
+            if (anyEmpty) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'unloadsequence',
+                    text: 'Please fill in all unloadsequence',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                return;
+            }
+            dataToSave.sort(function (a, b) {
+                return b.unloadsequence - a.unloadsequence;
+            });
+            $.ajax({
+                type: "POST",
+                url: "/Loading_Dispatch_operation/EditDataToDatabase", // Update with your actual endpoint
+                data: JSON.stringify(dataToSave),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $('#loadTxt').empty();
+                    $.each(response, function (index, item) {
+                        $('#loadTxt').append($('<option>').text(item.text).val(item.text));
+                    });
+                    table1Body.find("tr").each(function () {
+
+                        var inputValue = $(this).find("td input");
+
+                        inputValue.prop('readonly', true);
+                    });
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Update Sequence successfully',
+                        showConfirmButton: false,
+                        timer: 1500 // Adjust the timer as needed
+                    });
+
+                },
+                error: function () {
+                    alert("Error communicating with the server");
+                }
+            });
+
+        }
+        function SaveDataload() {
+            // Get the reference to the "Table1" tbody
+            var table1Body = $("#Table1");
+
+            // Create an array to store data
+            var dataToSave = [];
+
+            // Variable to track if any unloadsequence textbox is empty
+            var anyEmpty = false;
+
+            // Iterate through each row in "Table1" and extract data
+            table1Body.find("tr").each(function () {
+                var sonoValue = $(this).find("td:first-child").text();
+                var inputValue = $(this).find("td input").val();
+
+                // Check if the unloadsequence textbox is empty
+                if (inputValue.trim() === "") {
+                    anyEmpty = true;
+                    return false; // Exit the loop if any empty textbox is found
+                }
+
+                // Add the data to the array
+                dataToSave.push({
+                    sono: sonoValue,
+                    unloadsequence: inputValue
+                });
+            });
+
+            // If any unloadsequence textbox is empty, show an error message
+            if (anyEmpty) {
+                // Swal.fire({
+                //     icon: 'error',
+                //     title: 'unloadsequence',
+                //     text: 'Please fill in all unloadsequence',
+                //     showConfirmButton: false,
+                //     timer: 1500
+                // });
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Unload Sequence Alert',
+                    text: 'Please ensure all unload sequences are filled in.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+
+
+                //alert("Please fill in all unloadsequence textboxes.");
+                return; // Exit the function early
+            }
+            dataToSave.sort(function (a, b) {
+                return b.unloadsequence - a.unloadsequence;
+            });
+            // Use AJAX to send the data to the server
+            $.ajax({
+                type: "POST",
+                url: "/Loading_Dispatch_operation/SaveDataToDatabase", // Update with your actual endpoint
+                data: JSON.stringify(dataToSave),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    $('#loadTxt').empty();
+                    $.each(response, function (index, item) {
+                        $('#loadTxt').append($('<option>').text(item.text).val(item.text));
+                    });
+                    table1Body.find("tr").each(function () {
+                        var inputValue = $(this).find("td input");
+                        inputValue.prop('readonly', true);
+                    });
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Sequence Saved Successfully',
+                        text: 'The sequence has been saved successfully.',
+                        showConfirmButton: false,
+                        timer: 1500 // Adjust the timer as needed
+                    });
+
+
+                    // Swal.fire({
+                    //     icon: 'success',
+                    //     title: 'Sequence saved successfully',
+                    //     text: 'Sequence saved successfully',
+                    //     showConfirmButton: false,
+                    //     timer: 1500 // Adjust the timer as needed
+                    // });
+                },
+                error: function () {
+                    alert("Error communicating with the server");
+                }
+            });
+            $('#loadsheetno').show();
+            // $('#loadTxt').show();
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#sonoId").on("change", function () {
+                // You can add code here if needed.
+            });
+        });
+        // function fetchdropdown() {
+        //     if ($("#sonoId").attr("aria-value-max") !== "") {
+        //         //$("#dispateex").show();
+        //         $("#xxtbtn").show();
+        //         var selectedOption = $("#sonoId").val();
+        //         $.ajax({
+        //             url: '/Loading_Dispatch_Operation/Getdispatch',
+        //             type: 'POST',
+        //             data: { optionValue: selectedOption },
+        //             success: function (result) {
+        //                 console.log(result.data1);
+
+        //                 // $('#CsDiv').empty();
+        //                 $('#CsDiv').empty();
+        //                 //alert("hi");
+        //                 $.each(result.data1, function (i, item) {
+        //                     var newRow = '<tr>' +
+        //                         //'<td><input id="productcode" name="Loading_Dispatch_Operation1[' + i + '].productcode" class="form-control" value="' + item.productcode + '" readonly></td>' +
+        //                         //'<td><input id="productname" name="Loading_Dispatch_Operation1[' + i + '].productname" class="form-control" value="' + item.productname + '" readonly></td>' +
+        //                         //'<td><input id="location" name="Loading_Dispatch_Operation1[' + i + '].location" class="form-control" value="' + item.location + '" readonly></td>' +
+        //                         //'<td><input id="boxno" name="Loading_Dispatch_Operation1[' + i + '].boxno" class="form-control" value="' + item.boxno + '" readonly></td>' +
+        //                         //'<td><input id="batchcode" name="Loading_Dispatch_Operation1[' + i + '].batchcode" class="form-control" value="' + item.batchcode + '" readonly></td>' +
+        //                         //'<td><input id="pickedqty" name="Loading_Dispatch_Operation1[' + i + '].pickedqty" class="form-control" value="' + item.pickedqty + '" readonly></td>' +
+        //                         //'<td><input id="balanceqty" name="Loading_Dispatch_Operation1[' + i + '].balanceqty" class="form-control" value="' + item.balanceqty + '" readonly></td>' +
+        //                         '<td>' + item.sono + '</td>' +
+        //                         '<td id="procode">' + item.productcode + '</td>' +
+        //                         //'<td>' + item.productname + '</td>' +
+        //                         '<td>' + item.location + '</td>' +
+        //                         '<td>' + item.boxno + '</td>' +
+        //                         '<td>' + item.batchcode + '</td>' +
+        //                         //'<td>' + item.pickedqty + '</td>' +
+        //                         //'<td>' + item.balanceqty + '</td>' +
+
+        //                         '</tr>';
+
+        //                     $('#CsDiv').append(newRow);
+        //                     $.each(result, function (i, item) {
+        //                         // ... (existing code)
+
+        //                         // Set values from the selected row
+        //                         //$("#extname").val(item.prdname);
+        //                         //$("#extso").val(item.soqty);
+        //                         //$("#extpick").val(item.pickingqty);
+        //                         ////$("#extlocation").val(item.location);
+        //                         //// $("#boxno").val(item.boxno);
+        //                         //qty += parseInt(item.pickingqty);
+        //                         //$("#boxno, #btnsusp, #DataInsert, #btnSave,#extqty,#extpickg,#exqtyp,#expickig").show();
+        //                         //$("#boxnoDiv").show();
+        //                         //$("#DataInsert").show();
+        //                         //$("#dispat").show();
+        //                         //document.getElementById("boxno").focus();
+        //                         //
+        //                     });
+
+        //                 });
+        //                 $.each(result.data2, function (i, item) {
+        //                     //console.log(result.data2);
+        //                     var newRow = '<tr>' +
+        //                         //'<td>' + item.location + '</td>' + // Replace with the actual properties you want to display
+        //                         '<td>' + item.boxno + '</td>' +
+        //                         '<td>' + item.productcode + '</td>' +
+        //                         '<td>' + item.batchcode + '</td>' +
+        //                         '</tr>';
+
+        //                     $("#DataInsert tbody").append(newRow);
+        //                 });
+
+        //             },
+        //             error: function (xhr, status, error) {
+        //                 console.log("An error occurred while executing the action.");
+        //             }
+
+        //         }); // Missing closing parenthesis for $.ajax()
+        //     }
+        // }
+        function fetchdropdown() {
+            if ($("#sonoId").attr("aria-value-max") !== "") {
+                //$("#dispateex").show();
+                $("#xxtbtn").show();
+                var selectedOption = $("#sonoId").val();
+                $.ajax({
+                    url: '/Loading_Dispatch_Operation/Getdispatch',
+                    type: 'POST',
+                    data: { optionValue: selectedOption },
+                    success: function (result) {
+                        console.log(result.data1);
+                        console.log("result :" + result);
+                        $("#remainingScanCounter").val(result.remaining);
+                        $("#scannedShipperCounter").val(result.scanned);
+                        $("#totalShipperCounter").val(result.totalcount);
+                        $('#CsDiv').empty();
+
+                        //alert("hi");
+                        // $.each(result.data1, function (i, item) {
+                        //     var newRow = '<tr>' +
+                        //         '<td id="procode">' + item.productcode.toUpperCase() + '</td>' +
+                        //         '<td>' + item.location + '</td>' +
+                        //         '<td>' + item.boxno + '</td>' +
+                        //         '<td>' + item.batchcode + '</td>' +
+                        //         '</tr>';
+
+                        //     $('#CsDiv').append(newRow);
+                        // });
+                        $.each(result.data2, function (i, item) {
+                            //console.log(result.data2);
+                            var newRow = '<tr>' +
+                                //'<td>' + item.location + '</td>' + // Replace with the actual properties you want to display
+                                '<td>' + item.boxno + '</td>' +
+                                '<td>' + item.productcode.toUpperCase() + '</td>' +
+                                '<td>' + item.batchcode + '</td>' +
+                                '</tr>';
+
+                            $("#DataInsert tbody").append(newRow);
+                        });
+                        ShowDetails1();
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("An error occurred while executing the action.");
+                    }
+
+                }); // Missing closing parenthesis for $.ajax()
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("form").bind("keypress", function (e) {
+                if (e.keyCode == 13) {
+                    return false;
+                }
+            });
+
+
+        });
+    </script>
+    <script>
+        function showForm() {
+            var select = document.getElementById("type");
+            var courierForm = document.getElementById("courierForm");
+            var transportForm = document.getElementById("transportForm");
+
+            if (select.value === "Courier") {
+                courierForm.style.display = "block";
+                transportForm.style.display = "none";
+            } else if (select.value === "Transport") {
+                courierForm.style.display = "none";
+                transportForm.style.display = "block";
+            } else {
+                courierForm.style.display = "none";
+                transportForm.style.display = "none";
+            }
+            $('#single').show();
+        }
+    </script>
+    <script>
+        // function Loadingdata(event) {
+        //     if (event.key === "Enter") {
+        //         var count = 0;
+        //         var sono = $("#sonoId").val();
+        //         var test = $("#boxno").val().trim();
+        //         console.log("Test: " + test);
+        //         $("#boxno").val(test);
+
+        //         var box = $("#boxno").val().split(/[,|$]/);
+        //         if (box.length >= 6) {
+
+        //             var ONE = box[1].trim(); 
+        //             var TWO = box[2].trim(); 
+        //             var selectedoption = box[3].trim(); 
+        //             var selectedoption1 = box[0].trim(); 
+        //             var FOUR = box[4].trim(); 
+        //             var selectedoption2 = box[5].trim();
+
+        //             alert("check");
+
+        //             console.log(selectedoption1)
+        //             console.log(ONE)
+        //             console.log(TWO)
+        //             console.log(selectedoption)
+        //             console.log(FOUR)
+        //             console.log(selectedoption2)
+
+        //             $.ajax({
+        //                 url: '@Url.Action("Getload")',
+        //                 type: "GET",
+        //                 data: {
+        //                     boxno: selectedoption,
+        //                     procode: selectedoption1,
+        //                     batch: selectedoption2,
+        //                     sono: sono,
+        //                     remainingScanCounter: $("#remainingScanCounter").val(),
+        //                     scannedShipperCounter: $("#scannedShipperCounter").val(),
+        //                     totalShipperCounter: $("#totalShipperCounter").val(),
+        //                 },
+        //                 success: function (data) {
+        //                     console.log("Data : " + data);
+        //                     console.log("JSON Data : " + JSON.stringify(data));
+        //                     if(data.flag == 0 ){
+        //                         alert(data.flag);
+        //                     }
+        //                     else 
+        //                     {
+        //                        alert(data.flag);
+        //                     }
+        //                     if (data.boxno && data.productcode.toUpperCase() && data.batchcode) 
+        //                     {
+                                
+        //                         $("#remainingScanCounter").val(data.remaining);
+        //                         $("#scannedShipperCounter").val(data.scanned);
+        //                         $("#totalShipperCounter").val(data.totalcount);
+
+        //                         var tableBody = $("#DataInsert tbody");
+        //                         var newRow = $('<tr>');
+        //                         newRow.append($('<td>').text(data.boxno));
+        //                         newRow.append($('<td>').text(data.productcode.toUpperCase()));
+        //                         newRow.append($('<td>').text(data.batchcode));
+        //                         tableBody.prepend(newRow);
+        //                         $("#boxno").val("");
+
+        //                         var remainingRowCount = $("#remainingScanCounter").val();
+        //                         if (remainingRowCount == 0) 
+        //                         {
+        //                             Swal.fire({
+        //                                 icon: 'success',
+        //                                 title: 'All Shippers scanned successfully.',
+        //                                 text: 'All Shippers of sale order scanned completely !',
+        //                                 showConfirmButton: true,
+        //                             }).then((result) => {
+        //                                 if (result.isConfirmed) {
+        //                                     $("#boxnoDiv").hide();
+        //                                     $("#ButtonsId").hide();
+        //                                     $("#DataInsert").hide();
+        //                                     $('#type').show();
+        //                                     showForm();
+        //                                 }
+        //                             });
+        //                         }
+
+        //                         $("#remainingScanCounter").val(result.remaining);
+        //                         $("#scannedShipperCounter").val(result.scanned);
+        //                         $("#totalShipperCounter").val(result.totalcount);
+        //                     } 
+        //                     else 
+        //                     {
+        //                         Swal.fire({
+        //                             icon: 'warning',
+        //                             title: 'Wrong Sale Order Sequence',
+        //                             text: 'Please scan the shipper in the correct sale order sequence.',
+        //                         });
+        //                         return;
+        //                     }
+        //                 },
+        //                 error: function (xhr, status, error) {
+        //                     console.log("An error occurred while executing the action.");
+        //                 }
+        //             });
+
+
+        //             // if (flag === "1") {
+        //             // } else {
+        //             //     // Invalid case
+        //             //     Swal.fire({
+        //             //         icon: 'warning',
+        //             //         title: 'Warning',
+        //             //         text: 'Please scan correct boxno of that sale order  !!',
+        //             //     });
+        //             //     $("#boxno").val("");
+        //             // }
+        //         } else {
+        //             alert("Input value does not have enough elements.");
+        //         }
+        //     }
+        // }
+        function Loadingdata(event) {
+            if (event.key === "Enter") {
+                var sono = $("#sonoId").val();
+                var test = $("#boxno").val().trim();
+                console.log("Test: " + test);
+                $("#boxno").val(test);
+
+                var box = $("#boxno").val().split(/[,|$]/);
+                if (box.length >= 6) {
+                    var ONE = box[1].trim();
+                    var TWO = box[2].trim();
+                    var selectedoption = box[3].trim();
+                    var selectedoption1 = box[0].trim();
+                    var FOUR = box[4].trim();
+                    var selectedoption2 = box[5].trim();
+
+                    $.ajax({
+                        url: '@Url.Action("Getload")',
+                        type: "GET",
+                        data: {
+                            boxno: selectedoption,
+                            procode: selectedoption1,
+                            batch: selectedoption2,
+                            sono: sono,
+                            remainingScanCounter: $("#remainingScanCounter").val(),
+                            scannedShipperCounter: $("#scannedShipperCounter").val(),
+                            totalShipperCounter: $("#totalShipperCounter").val(),
+                        },
+                        success: function (data) {
+                            console.log("Data : " + data);
+                            console.log("JSON Data : " + JSON.stringify(data));
+
+                            if (data.success) 
+                            {
+                                if (data.flag == 0) 
+                                {
+                                    // Simple data (flag == 0)
+                                    console.log("Flag is 0: Simple Data");
+
+                                    // Update counters
+                                    $("#remainingScanCounter").val(data.result.remaining);
+                                    $("#scannedShipperCounter").val(data.result.scanned);
+                                    $("#totalShipperCounter").val(data.result.totalcount);
+
+                                    // Append a single row
+                                    var tableBody = $("#DataInsert tbody");
+                                    var newRow = $('<tr>');
+                                    newRow.append($('<td>').text(data.result.boxno));
+                                    newRow.append($('<td>').text(data.result.productcode.toUpperCase()));
+                                    newRow.append($('<td>').text(data.result.batchcode));
+                                    tableBody.prepend(newRow);
+                                    $("#boxno").val("");
+
+                                    // Check if all shippers are scanned
+                                    if (data.result.remaining == 0) 
+                                    {
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'All Shippers scanned successfully.',
+                                            text: 'All Shippers of the sale order have been scanned completely!',
+                                            showConfirmButton: true,
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                $("#boxnoDiv").hide();
+                                                $("#ButtonsId").hide();
+                                                $("#DataInsert").hide();
+                                                $('#type').show();
+                                                showForm();
+                                            }
+                                        });
+                                    }
+
+                                } 
+                                else if (data.flag == 1) 
+                                {
+                                    // List of data (flag == 1)
+                                    console.log("Flag is 1: List of Data");
+
+                                    var tableBody = $("#DataInsert tbody");
+                                    // tableBody.empty(); // Clear the table before adding new data
+
+                                    data.loadpicklist.forEach(function (item) {
+                                        var newRow = $('<tr>');
+                                        newRow.append($('<td>').text(item.boxno));
+                                        newRow.append($('<td>').text(item.productcode.toUpperCase()));
+                                        newRow.append($('<td>').text(item.batchcode));
+                                        tableBody.prepend(newRow);
+                                    });
+                                    $("#boxno").val("");
+                                    $("#remainingScanCounter").val(data.remaining.length);
+                                    $("#scannedShipperCounter").val(data.scanned.length);
+                                    $("#totalShipperCounter").val(data.totalcount.length);
+
+                                    // // Check if all shippers are scanned
+                                    // if (data.result.remaining == 0) {
+                                    //     Swal.fire({
+                                    //         icon: 'success',
+                                    //         title: 'All Shippers scanned successfully.',
+                                    //         text: 'All Shippers of the sale order have been scanned completely!',
+                                    //         showConfirmButton: true,
+                                    //     }).then((result) => {
+                                    //         if (result.isConfirmed) {
+                                    //             $("#boxnoDiv").hide();
+                                    //             $("#ButtonsId").hide();
+                                    //             $("#DataInsert").hide();
+                                    //             $('#type').show();
+                                    //             showForm();
+                                    //         }
+                                    //     });
+                                    // }
+                                }
+                            } 
+                            else 
+                            {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Warning',
+                                    text: data.message 
+                                });
+                                $("#boxno").val("");
+                                return;
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("An error occurred while executing the action.");
+                        }
+                    });
+                } else {
+                    alert("Input value does not have enough elements.");
+                }
+            }
+        }
+
+    </script>
+    <script>
+        function SaveData() {
+            // Check if all textboxes except boxno are empty
+            var allEmptyExceptBoxNo = true;
+            if ($('#type').val() == 'Courier') {
+                // If the dispatch type is Courier, require these fields
+                requiredFields = ['#sonoId', '#extcourier', '#extawb', '#date', '#type', '#dcno', '#dcdate', '#invoiceno', '#invoicedate'];
+            } else if ($('#type').val() == 'Transport') {
+                // If the dispatch type is Transport, require these fields
+                requiredFields = ['#sonoId', '#exttransport', '#truck', '#drivernm', '#contact', '#date', '#type', '#dcno', '#dcdate', '#invoiceno', '#invoicedate'];
+            } else {
+                // If dispatch type is not selected, no fields are required
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Please select a dispatch type.',
+                    showConfirmButton: true,
+                });
+
+                return;
+            }
+            console.log("before: " + requiredFields);
+            var allFieldsFilled = true;
+            var errorMessage = "Please fill the following required fields:<br>";
+            requiredFields.forEach(function (field) {
+                if ($(field).val() == '') {
+                    errorMessage += $(field).siblings('label').text().trim() + "<br>";
+                    allFieldsFilled = false;
+                }
+            });
+            console.log("After: " + allFieldsFilled);
+            if (!allFieldsFilled) {
+                // If any required field is empty, show SweetAlert error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    html: errorMessage,
+                    showConfirmButton: true,
+                });
+                return; // exit function if any required field is empty
+            }
+
+            var tableData = [];
+            $("#DataInsert tbody tr").each(function () {
+                var row = $(this);
+                tableData.push({
+                    boxno: row.find("td:eq(0)").text(),
+                    productcode: row.find("td:eq(1)").text().toUpperCase(),
+                    batchcode: row.find("td:eq(2)").text(),
+                });
+            });
+
+            var dcnoValue = $("#dcno").val();
+            var invoicenoValue = $("#invoiceno").val();
+            var dcdateValue = $("#dcdate").val();
+            var invoicedateValue = $("#invoicedate").val();
+
+            // Now you can use these variables as needed
+            console.log("DC No:", dcnoValue);
+            console.log("Invoice No:", invoicenoValue);
+            console.log("DC Date:", dcdateValue);
+            console.log("Invoice Date:", invoicedateValue);
+
+            var formData = {
+                sono: $("#sonoId").val(),
+                couriername: $("#extcourier").val(),
+                docketno: $("#extawb").val(),
+                transportname: $("#exttransport").val(),
+                truckno: $("#truck").val(),
+                drivername: $("#drivernm").val(),
+                contactno: $("#contact").val(),
+                dispatchdate: $("#date").val(),
+                dispatchtype: $("#type").val(),
+                dcno: $("#dcno").val(),
+                invoiceno: $("#invoiceno").val(),
+                dcdate: $("#dcdate").val(),
+                invoicedate: $("#invoicedate").val(),
+            };
+
+            var postData = {
+                Loading_Dispatch_Operation: formData,
+                TableData: tableData,
+                //BatchData: batchData
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/Loading_Dispatch_Operation/SaveData",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(postData),
+                headers: {
+                    RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    console.log("AJAX Success:", response); // Log the response to see what the server is sending
+                    if (response.success) {
+                        console.log("Success:", response.message); // Log success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Dispatch Process Completed Successfully',
+                            text: response.message,
+                            showConfirmButton: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $("#boxnoDiv").hide();
+                                $("#DataInsert").hide();
+                                $("#xxtbtn").hide();
+                                //$("#dispateex").hide();
+                                $("#single").hide();
+                                $("#transportForm").hide();
+                                $("#courierForm").hide();
+                                $("#DataInsert tbody tr").remove();
+                                $("#sonoId, #extcourier, #extawb, #exttransport, #truck, #drivernm, #contact, #date").val("");
+                            }
+                            window.location.href = '/Loading_Dispatch_Operation/';
+                        });
+                    } else {
+                        /* console.log("Error:", response.message); */ // Log error message
+                        /* alert("Error"); */ // Display alert for error
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: response.message,
+                            showConfirmButton: true,
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.error("AJAX Error:", error); // Log AJAX error
+                    //alert("Error saving table data!"); // Display alert for error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: "AJAX Error:", error,
+                        showConfirmButton: true,
+                    });
+                }
+            });
+        }
+    </script>
+    <script>
+        var sonoValue;
+        $(document).ready(function () {
+            sonoValue = document.getElementById("sonotext").value.trim();
+            console.log("SONO Value: " + sonoValue);
+        });
+    </script>
+    <script>
+        // function fetchdropdownnew() {
+        //     if ($("#loadTxt").attr("aria-value-max") !== "") {
+        //         $("#loadsheetno").show();
+        //         $("#btnClear").show();
+        //         $("#multi").hide();
+
+
+        //         $("#extbtbt").hide();
+        //         var selectedOption = $("#loadTxt").val();
+
+        //         $.ajax({
+        //             url: '/Loading_Dispatch_Operation/GetMultiple',
+        //             type: 'POST',
+        //             data: {
+        //                 // optionValue: selectedOption
+        //                 optionValue: selectedOption,
+        //                 remainingScanCounter: $("#remainingScanCounterm").val(),
+        //                 scannedShipperCounter: $("#scannedShipperCounterm").val(),
+        //                 totalShipperCounter: $("#totalShipperCounterm").val(),
+        //             },
+        //             success: function (result) {
+        //                 console.log(result.data4);
+
+        //                 $('#dataCsDiv').empty();
+
+        //                 $.each(result.data4, function (i, item1) {
+        //                     var newRow = '<tr>' +
+        //                         '<td id="sonoext">' + item1.sono + '</td>' +
+        //                         '<td id="procode">' + item1.productcode + '</td>' +
+        //                         //'<td>' + item1.location + '</td>' +
+        //                         '<td id="box">' + item1.boxno + '</td>' +
+        //                         '<td id="batcode">' + item1.batchcode + '</td>' +
+        //                         '</tr>';
+
+        //                     $('#dataCsDiv').append(newRow);
+        //                 });
+
+        //                 //$("#boxnoDiv1").show();
+        //                 //$("#Desert").show();
+
+
+        //                 document.getElementById("boxext").focus();
+        //                 console.log(result.data3);
+        //                 $.each(result.data3, function (i, item) {
+        //                     var newRow = '<tr>' +
+        //                         '<td>' + item.boxno + '</td>' +
+        //                         '<td>' + item.productcode + '</td>' +
+        //                         '<td>' + item.batchcode + '</td>' +
+        //                         '</tr>';
+
+        //                     $("#Desert tbody").append(newRow);
+        //                 });
+
+        //                 var selectElement = document.getElementById("sonoTxt");
+
+        //                 console.log(result.data5);
+        //                 $.each(result.data5, function (i, item) {
+        //                     var selectedValues = item;
+        //                     for (var i = 0; i < selectElement.options.length; i++) {
+        //                         var option = selectElement.options[i];
+        //                         // Check if the option value is in the selected values array
+        //                         console.log(option);
+        //                         console.log(option.value);
+        //                         console.log(selectedValues);
+        //                         if (selectedValues == option.value) {
+        //                             // If it is, mark the option as selected
+
+        //                             console.log("true");
+        //                             option.selected = true;
+        //                         }
+        //                     }
+
+        //                     //document.getElementById("sonoTxt").value = document.getElementById("sonoTxt").value + item.sono;
+
+        //                 });
+
+        //             },
+        //             error: function (xhr, status, error) {
+        //                 console.log("An error occurred while executing the action.");
+        //             }
+        //         });
+
+        //         $.ajax({
+        //             url: '/Loading_Dispatch_Operation/Getseq',
+        //             type: 'Get',
+        //             data: { optionValue: selectedOption },
+        //             success: function (data) {
+        //                 console.log(data);
+
+        //                 $('#Table1').empty();
+
+        //                 $.each(data, function (i, item2) {
+        //                     var newRow = '<tr>' +
+        //                         '<td>' + item2.sono + '</td>' +
+        //                         '<td><input class="form-control" autocomplete="off" value="' + item2.unloadsequence + '" readonly="true"><span class="text-danger"></span></td>' +
+        //                         '</tr>';
+
+        //                     $("#Table1").append(newRow);
+        //                 });
+
+        //             },
+        //             error: function (xhr, status, error) {
+        //                 console.log("An error occurred while executing the action.");
+        //             }
+
+        //         });
+
+
+        //     }
+        // }
+        function fetchdropdownnew() {
+            if ($("#loadTxt").attr("aria-value-max") !== "") {
+                $("#loadsheetno").show();
+                $("#btnClear").show();
+                $("#multi").hide();
+                $("#remainingScanCounterm").show();
+                $("#scannedShipperCounterm").show();
+                $("#totalShipperCounterm").show();
+
+
+                $("#extbtbt").hide();
+                var selectedOption = $("#loadTxt").val();
+
+                $.ajax({
+                    url: '/Loading_Dispatch_Operation/GetMultiple',
+                    type: 'POST',
+                    data: {
+                        optionValue: selectedOption,
+                        remainingScanCounter: $("#remainingScanCounterm").val(),
+                        scannedShipperCounter: $("#scannedShipperCounterm").val(),
+                        totalShipperCounter: $("#totalShipperCounterm").val(),
+                    },
+                    success: function (result) {
+                        $("#remainingScanCounterm").val(result.remaining);
+                        $("#scannedShipperCounterm").val(result.scanned);
+                        $("#totalShipperCounterm").val(result.totalcount);
+
+                        console.log(result.data4);
+
+                        $('#dataCsDiv').empty();
+
+                        $.each(result.data4, function (i, item1) {
+                            var newRow = '<tr>' +
+                                '<td id="sonoext">' + item1.sono + '</td>' +
+                                '<td id="procode">' + item1.productcode.toUpperCase() + '</td>' +
+                                '<td id="box">' + item1.boxno + '</td>' +
+                                '<td id="batcode">' + item1.batchcode + '</td>' +
+                                '</tr>';
+                            $('#dataCsDiv').append(newRow);
+                        });
+
+                        //$("#boxnoDiv1").show();
+                        //$("#Desert").show();
+
+                        document.getElementById("boxext").focus();
+                        console.log(result.data3);
+                        $.each(result.data3, function (i, item) {
+                            var newRow = '<tr>' +
+                                '<td>' + item.boxno + '</td>' +
+                                '<td>' + item.productcode.toUpperCase() + '</td>' +
+                                '<td>' + item.batchcode + '</td>' +
+                                '</tr>';
+
+                            $("#Desert tbody").append(newRow);
+                        });
+
+                        var selectElement = document.getElementById("sonovalueform2");
+
+                        console.log(result.data5);
+                        $.each(result.data5, function (i, item) {
+                            var selectedValues = item;
+                            for (var i = 0; i < selectElement.options.length; i++) {
+                                var option = selectElement.options[i];
+                                // Check if the option value is in the selected values array
+                                console.log(option);
+                                console.log(option.value);
+                                console.log(selectedValues);
+                                if (selectedValues == option.value) {
+                                    console.log("true");
+                                    option.selected = true;
+                                }
+                            }
+
+                            //document.getElementById("sonoTxt").value = document.getElementById("sonoTxt").value + item.sono;
+
+                        });
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("An error occurred while executing the action.");
+                    }
+                });
+
+                $.ajax({
+                    url: '/Loading_Dispatch_Operation/Getseq',
+                    type: 'Get',
+                    data: { optionValue: selectedOption },
+                    success: function (data) {
+                        console.log(data);
+
+                        $('#Table1').empty();
+
+                        $.each(data, function (i, item2) {
+                            var newRow = '<tr>' +
+                                '<td>' + item2.sono + '</td>' +
+                                '<td><input class="form-control" autocomplete="off" value="' + item2.unloadsequence + '" readonly="true"><span class="text-danger"></span></td>' +
+                                '</tr>';
+
+                            $("#Table1").append(newRow);
+                        });
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("An error occurred while executing the action.");
+                    }
+
+                });
+
+
+            }
+        }
+    </script>
+    <script>
+        function unloaddata(event) {
+            if (event.key === "Enter") {
+                //event.preventDefault();
+                // Extract values from input
+                var count = 0;
+                // var pattern = /[^a-zA-Z0-9\-\/$,. ]/g;
+                var boxdata = document.getElementById("boxext").value.split(/[,|$]/);
+                //alert(boxdata);
+                console.log("boxdata" + boxdata);
+                var boxValue1 = boxdata[3].trim();
+                var boxValue2 = boxdata[0].trim();
+                var boxValue3 = boxdata[5].trim();
+                var loadValue = document.getElementById("loadTxt").value;
+                console.log("boxno       :" + boxValue1);
+                console.log("productcode :" + boxValue2.toUpperCase());
+                console.log("batchcode   :" + boxValue3);
+                console.log("loadvalue   :" + loadValue);
+
+                var flag = "0";
+                var table1Body1 = $("#dataCsDiv");
+
+                console.log("sonoValue : " + sonoValue);
+
+                $('#CodesTable tbody tr').each(function () {
+                    var rowSono = $(this).find('td:eq(0)').text().trim();
+                    var loadingSequence = $(this).find('td:eq(1)').text().trim();
+                    if (rowSono === sonoValue) {
+                        console.log("SONO: " + rowSono + ", Loading Sequence: " + loadingSequence);
+                        return false;
+                    }
+                });
+
+                //Iterate through each row in "Table1" and extract data
+                table1Body1.find("tr").each(function () {
+
+                    var prod_code = $(this).find("td").eq(1).text().trim();
+                    var box_no = $(this).find("td").eq(2).text().trim();
+                    var batch_code = $(this).find("td").eq(3).text().trim();
+
+                    console.log("table prodco : " + prod_code);
+                    console.log("Enter prodco : " + boxValue2);
+                    console.log("table box_no : " + box_no);
+                    console.log("enter box_no : " + boxValue1);
+                    console.log("table batch_ : " + batch_code);
+                    console.log("enter batch_ : " + boxValue3);
+
+                    if (boxValue2 == prod_code && boxValue1 == box_no && boxValue3 == batch_code) {
+                        flag = "1";
+                    }
+
+                });
+
+                if (flag === "1") {
+                    // Ajax call to get data
+                    $.ajax({
+                        url: '@Url.Action("GetData")',
+                        type: "GET",
+                        data: {
+                            selectedValue: boxValue1,
+                            selectedValue1: boxValue2,
+                            selectedValue2: boxValue3,
+                            selectedValue3: loadValue,
+                            sono: sonoValue,
+                            remainingScanCounter: $("#remainingScanCounterm").val(),
+                            scannedShipperCounter: $("#scannedShipperCounterm").val(),
+                            totalShipperCounter: $("#totalShipperCounterm").val(),
+                        },
+                        success: function (data) {
+                            $("#remainingScanCounterm").val(data.remaining);
+                            $("#scannedShipperCounterm").val(data.scanned);
+                            $("#totalShipperCounterm").val(data.totalcount);
+                            console.log("data.remaining : "+data.remaining);
+                            console.log("data.scanned : "+data.scanned);
+                            console.log("data.totalcount : " + data.totalcount);
+
+                            if (data.boxno && data.productcode.toUpperCase() && data.batchcode) {
+                                // Append data to new row in table
+                                var tableBody = $("#Desert tbody");
+                                var newRow = $('<tr>');
+                                newRow.append($('<td>').text(data.boxno));
+                                newRow.append($('<td>').text(data.productcode.toUpperCase()));
+                                newRow.append($('<td>').text(data.batchcode));
+                                tableBody.append(newRow);
+
+                                count = tableBody.find('tr').length;
+                                $("#count1").text("Scan Shippers: " + count);
+                                document.getElementById("boxext").value = "";
+
+                                Array.from(document.getElementById("dataCsDiv").getElementsByTagName("tr")).filter(row => row.getElementsByTagName("td")[1]?.textContent.toUpperCase() === data.productcode.toUpperCase() && row.getElementsByTagName("td")[2]?.textContent === data.boxno && row.getElementsByTagName("td")[3]?.textContent === data.batchcode).forEach(row => row.remove());
+                                updateSonotext();
+                                var remainingRowCount = $("#dataCsDiv tr").length;
+                                console.log("Remaining rows count: " + remainingRowCount);
+                                $("#count").text("Remaining Shippers: " + remainingRowCount);
+                                if (remainingRowCount == 0) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Shippers Loaded successfully !',
+                                        text: 'All shippers Loaded successfully',
+                                        showConfirmButton: true,
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $('#dispa1').show();
+                                            $('#multi').show();
+                                            showForm();
+                                        }
+                                    });
+                                }
+
+                            } else {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Incorrect Sale Order Sequence',
+                                    text: 'Please check and correct the sale order sequence.',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+
+                                $("#boxext").val("");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("An error occurred while executing the action.");
+                        }
+                    });
+                } else {
+                    // Display warning if flag is not 1
+                    // Swal.fire({
+                    //     icon: 'warning',
+                    //     title: 'Sale Order is Already Loaded!',
+                    //     text: 'Enter Valid box no !!',
+                    // });
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Wrong product or shipper scan !',
+                        text: 'Please scan correct shipper.',
+                    });
+
+                    $("#boxext").val("");
+                }
+            } else {
+                //Swal.fire({
+                //    icon: 'warning',
+                //    title: 'Invalid Sale Order!',
+                //    text: 'Enter Valid box no !!',
+                //});
+                //$("#boxext").val("");
+            }
+        }
+    </script>
+    <script>
+        function showData() {
+            var select = document.getElementById("typexxt");
+            var courierForm = document.getElementById("courierForm1");
+            var transportForm = document.getElementById("transportForm1");
+
+            if (select.value === "Courier") {
+                courierForm.style.display = "block";
+                transportForm.style.display = "none";
+            } else if (select.value === "Transport") {
+                courierForm.style.display = "none";
+                transportForm.style.display = "block";
+            } else {
+                courierForm.style.display = "none";
+                transportForm.style.display = "none";
+            }
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            toggleForms();
+            //$('#sonoext').hide();
+            //$('#sonoTxt').hide();
+            //$('#shipext').hide();
+            //$('#loadTxt').hide();
+            //$('#typeext').hide();
+            //$('#typexxt').hide();
+            //$('#detailext').hide();
+            //$('#startloadBtn').hide();
+            // Handle radio button change event
+            $('input[name="flexRadioDefault"]').change(function () {
+                toggleForms();
+            });
+
+            function toggleForms() {
+                var selectedValue = $('input[name="flexRadioDefault"]:checked').val();
+
+                // Hide all forms
+                $('#form1, #form2').hide();
+
+                // Show the selected form
+                if (selectedValue === '1') {
+                    $('#form1').show();
+
+                    document.getElementById("form2").reset();
+                    //document.getElementById("count").style.display = "none";
+
+                } else if (selectedValue === '2') {
+                    $('#form2').show();
+                    //$('#sonoext').show();
+                    //$('#sonoTxt').show();
+                    $('#shipext').show();
+                    $('#loadTxt').show();
+                    $('#typeext').show();
+                    $("#btnSave").show();
+                    $('#typexxt').show();
+                    $('#detailext').show();
+                    $('#startloadBtn').show();
+                    $('#sequenceBtn').show();
+                    $('#multi').show();
+                    $('#index').show();
+                    //$('#sonsst').show();
+                    document.getElementById("form1").reset();
+                    // document.getElementById("count").style.display = "none";
+                }
+            }
+        });
+    </script>
+    <script>
+        function MultipleLoadData() {
+          
+            var allEmptyExceptBoxNo = true;
+            if ($('#typexxt').val() == 'Courier') {
+                // If the dispatch type is Courier, require these fields
+                requiredFields = ['#sonovalueform2', '#courierxxt', '#dockxxt', '#datexxt', '#typexxt', '#dcno1', '#dcdate1', '#invoiceno1', '#invoicedate1'];
+            } else if ($('#typexxt').val() == 'Transport') {
+                // If the dispatch type is Transport, require these fields
+                requiredFields = ['#sonovalueform2', '#transportxxt', '#truckxxt', '#driverxxt', '#contactxxt', '#datexxt', '#typexxt', '#dcno1', '#dcdate1', '#invoiceno1', '#invoicedate1'];
+            } else {
+                // If dispatch type is not selected, no fields are required
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Select Dispatch Type',
+                    text: 'Please select a dispatch type.',
+                    showConfirmButton: true,
+                });
+
+                return;
+            }
+            console.log("before: " + requiredFields);
+            var allFieldsFilled = true;
+            var errorMessage = "Please fill the following required fields:<br>";
+            requiredFields.forEach(function (field) {
+                if ($(field).val() == '') {
+                    errorMessage += $(field).siblings('label').text().trim() + "<br>";
+                    allFieldsFilled = false;
+                }
+            });
+            console.log("After: " + allFieldsFilled);
+            if (!allFieldsFilled) {
+                // If any required field is empty, show SweetAlert error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    html: errorMessage,
+                    showConfirmButton: true,
+                });
+                return; // exit function if any required field is empty
+            }
+
+            var tableData = [];
+            $("#Desert tbody tr").each(function () {
+                var row = $(this);
+                tableData.push({
+                    boxno: row.find("td:eq(0)").text(),
+                    productcode: row.find("td:eq(1)").text().toUpperCase(),
+                    batchcode: row.find("td:eq(2)").text(),
+                });
+            });
+
+            var sonoValue = $("#sonovalueform2").val().join(', ');
+            var formData = {
+                sono: sonoValue,
+                couriername: $("#courierxxt").val(),
+                docketno: $("#dockxxt").val(),
+                transportname: $("#transportxxt").val(),
+                truckno: $("#truckxxt").val(),
+                drivername: $("#driverxxt").val(),
+                contactno: $("#contactxxt").val(),
+                dispatchdate: $("#datexxt").val(),
+                dispatchtype: $("#typexxt").val(),
+            };
+
+            var postData = {
+                Loading_Dispatch_Operation: formData,
+                TableData: tableData,
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/Loading_Dispatch_Operation/MultipleSave",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(postData),
+                headers: {
+                    RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function (response) {
+                    if (response.success) {
+                        console.log("Success:", response.message); // Log success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Dispatch Completed Successfully',
+                            text: response.message,
+                            showConfirmButton: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $("#Desert tbody tr").remove();
+                                $("#boxnoDiv1").hide();
+                                $("#CodesTable").hide();
+                                $("#Desert").hide();
+                                $("#multi").hide();
+                                $("#typexxt").hide();
+                                $("#transportForm1").hide();
+                                $("#courierForm1").hide();
+                                $("#sonovalueform2").val("");
+                            }
+                        });
+                    } else {
+                        //console.log("Error:", response.message);
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: response.message,
+                            showConfirmButton: true,
+                        });
+                    }
+
+                },
+                error: function (error) {
+                    alert("Error saving table data!");
+                }
+            });
+        }
+    </script>
+
+}
+
+

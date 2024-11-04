@@ -1,0 +1,192 @@
+﻿@model eros.Models.Supplier_Master
+
+@{
+    ViewData["Title"] = "CreateViewSupplier";
+    Layout = null;
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="mt-1">
+            <div class=" mb-1">
+                @* <div class="card-header bg-dark text-white">
+        <div class="d-flex align-items-baseline">
+        <h5 class="mx-auto font-weight-bolder">Supplier Master</h5>
+        </div>
+        </div> *@
+                <div class="row p-1">
+                    <div class="col-md-12">
+                        <form asp-action="CreateViewSupplier">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="row">
+                                <div class="form-group col-sm-6 mt-1">
+                                    <label asp-for="suppliercode" class="control-label">Supplier Code</label>
+                                    <input asp-for="suppliercode" id="suppliercode" readonly="true" class="form-control" />
+                                    <span asp-validation-for="suppliercode" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-1">
+                                    <label asp-for="supplier_name" class="control-label">Supplier Name</label>
+                                    <input asp-for="supplier_name" id="supplier_name" data-uppercase onchange="dropdownChanged()" class="form-control" />
+                                    <span asp-validation-for="supplier_name" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-sm-6 mt-1">
+                                    <label asp-for="brand" class="control-label">Brand Name</label>
+                                    <input asp-for="brand" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="brand" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-6 mt-1">
+                                    <label asp-for="gstno" class="control-label">GST No.</label>
+                                    <input asp-for="gstno" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="gstno" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-sm-6 mt-1">
+                                    <label asp-for="contactno" class="control-label">Contact No</label>
+                                    <input asp-for="contactno" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="contactno" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-6 mt-1">
+                                    <label asp-for="emailid" class="control-label">Email ID</label>
+                                    <input asp-for="emailid" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="emailid" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-sm-6 mt-1">
+                                    <label asp-for="address" class="control-label">Address</label>
+                                    <input asp-for="address" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="address" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-1">
+                                    <label asp-for="city" class="control-label">City</label>
+                                    <input asp-for="city" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="city" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-sm-6 mt-1">
+                                    <label asp-for="state" class="control-label">State</label>
+                                    <input asp-for="state" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="state" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-1">
+                                    <label asp-for="pincode" class="control-label">Pincode</label>
+                                    <input asp-for="pincode" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="pincode" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <input type="submit" value="Create" class="btn btn-success col-md-12" />
+                                    @*                             <button type="button" class="btn btn-secondary col-md-6" data-dismiss="modal">Close</button>
+                            *@
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+    <script>
+        function dropdownChanged() {
+
+            var value1 = document.getElementById("supplier_name").value;
+            $.ajax({
+                url: '/Supplier_Master/tidgenerate',
+                type: 'GET',
+                data: { selectedValue: value1 },
+                success: function (data) {
+                    // Update the textbox value
+
+                    document.getElementById("suppliercode").value = data;
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.log("An error occurred while executing the action.");
+                }
+            });
+
+
+            $.ajax({
+                url: '/Supplier_Master/GetMaxId',
+                type: 'GET',
+                data: { selectedValue: value1 },
+                success: function (data) {
+                    // Update the textbox value
+
+                    //document.getElementById("suppliercode").value = data;
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.log("An error occurred while executing the action.");
+                }
+            });
+        }
+    </script>
+
+
+
+
+@* Add SweetAlert2 CDN links *@
+<script src="~/sweetalert/sweetalert.js"></script>
+<link href="~/sweetalert/sweetalert.css" rel="stylesheet" />
+
+@* for js function *@
+<script src="~/js/site.js"></script>
+
+<script src="~/vendor/jquery/jquery.min.js"></script>
+
+<!-- Include Bootstrap CSS (if not already included) -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+
+<!-- Include DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.2/css/jquery.dataTables.min.css" />
+
+<!-- Include DataTables JavaScript -->
+<script src="~/js/cdn.datatables.min.js"></script>
+
+<!-- Include jQuery (if not already included) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+

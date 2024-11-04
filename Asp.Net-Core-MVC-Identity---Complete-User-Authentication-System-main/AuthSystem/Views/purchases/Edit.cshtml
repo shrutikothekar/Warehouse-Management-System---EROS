@@ -1,0 +1,595 @@
+﻿@model eros.Models.purchase
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+         "Product Code",
+        "Description",
+        "brand" ,
+        "Qty" ,
+         };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder small-heading">Purchase Order Edit</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <div class="container mt-1">
+                        <div class="row mx-lg-2 mx-md-2">
+                            <div class="col-md-12">
+                                <form action="Edit" id="CodeSbyAnizForm" onsubmit="return checkFieldsAndSubmit()">
+                                    <input type="hidden" asp-for="id" />
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="pono" class="control-label"></label>
+                                            <input asp-for="pono" data-uppercase autocomplete="off" class="form-control"  />
+                                            <span asp-validation-for="pono" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <input type="hidden" asp-for="id" />
+                                            <label asp-for="suppliername" class="control-label" oninput="validateAlphabet(this)"></label>
+                                            <input asp-for="suppliername" data-uppercase autocomplete="off" class="form-control" />
+                                            <span asp-validation-for="suppliername" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="contactno" class="control-label"></label>
+                                            <input asp-for="contactno" data-uppercase autocomplete="off" class="form-control" oninput="validateNumber(this)" />
+                                            <span asp-validation-for="contactno" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="podate" class="control-label"></label>
+                                            <input asp-for="podate" data-uppercase autocomplete="off" type="date" class="form-control" />
+                                            <span asp-validation-for="podate" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="gstinno" class="control-label"></label>
+                                            <input asp-for="gstinno" data-uppercase autocomplete="off" class="form-control" id="gstinno" oninput="validateAlphNum(this)" />
+                                            <span asp-validation-for="gstinno" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="address" class="control-label"></label>
+                                            <input asp-for="address" id="address" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphNum(this)" />
+                                            <span asp-validation-for="address" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group  col-sm-4 mt-2" style="display:none;">
+                                        <label asp-for="status" class="control-label">Change Status</label>
+                                        <select asp-for="status" id="SelectVenderId1" class="form-control">
+                                            <option value="Pending">Pending</option>
+                                            <option value="Cancel">Cancel</option>
+                                            <option value="On Hold">On Hold</option>
+                                        </select>
+                                        <span asp-validation-for="status" class="text-danger"></span>
+                                    </div>
+                                    
+                                    <div class="table-responsive col-md-12" >
+                                        <table id="CodesTable" class="table table-striped table-sm">
+                                            <thead class="bg-gray-200 ">
+                                                <tr class="small">
+                                                    @*  style="max-height: 220px; overflow-y: auto;"
+                                       <div class="table-responsive">
+                                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                                            <thead class="thead-light">
+                                                <tr class="small"> *@
+                                                    @foreach (var head in TableHeaders)
+                                                    {
+                                                        <th>
+                                                            @head
+                                                        </th>
+                                                    }
+                                                    <th style="width:100px;">
+                                                        <button id='btnAddDetailRow' type="button" class="btn btn-sm btn-secondary visible" onclick="AddItem(this)">
+                                                            Add
+                                                        </button>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="CsDiv" class="small">
+                                                @for (int i = 0; i < Model.poProduct_details.Count; i++)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <input asp-for="@Model.poProduct_details[i].productcode" class="form-control" oninput="validateAlphNum(this)" />
+                                                            <span asp-validation-for="@Model.poProduct_details[i].productcode" class="text-danger"></span>
+                                                        </td>
+                                                        @*    <td>
+                                            <input asp-for="@Model.poProduct_details[i].productname" class="form-control" />
+                                            <span asp-validation-for="@Model.poProduct_details[i].productname" class="text-danger"></span>
+                                            </td> *@
+                                                        <td>
+                                                            @* <input asp-for="@Model.poProduct_details[i].description" class="form-control" oninput="validateAlphNum(this)"> *@
+                                                            <select class="form-control descriptionn" asp-for="@Model.poProduct_details[i].description" asp-items="@ViewBag.description" onchange="handleDespChange(event, this)"></select>
+                                                        </td>
+                                                        <td>
+                                                            <input asp-for="@Model.poProduct_details[i].brand" class="form-control" oninput="validateAlphabet(this)" />
+                                                        </td>
+                                                        <td>
+                                                            <input asp-for="@Model.poProduct_details[i].quantity" class="form-control" oninput="validateNumber(this)" />
+                                                        </td>
+                                                        <td style="display:none">
+                                                            <input asp-for="@Model.poProduct_details[i].uom" class="form-control" />
+                                                            <input type="hidden" asp-for="@Model.poProduct_details[i].IsDeleted" />
+                                                        </td>
+                                                        @*    <td>
+                                            <input asp-for="@Model.poProduct_details[i].templatename" class="form-control" />
+                                            </td> *@
+                                                        <td>
+                                                            <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">
+                                                                Delete
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                        <input type="hidden" id="hdnLastIndex" value="0" />
+                                    </div>
+
+                                    <div class="row p-2">
+                                        <div class="form-group col-sm-6 mt-3">
+                                            @* <input type="submit" value="Save" class="btn btn-success col-sm-12" /> *@
+                                            <button type="button" onclick="submitFormpurchase()" class="btn btn-success col-md-12">Submit</button>
+                                        </div>
+                                        <div class="form-group col-sm-6 mt-3">
+                                            <a class="btn btn-danger col-sm-12" asp-action="Index">Back to List</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function submitFormpurchase() {
+
+            if (!checkFieldsAndSubmit()) {
+                return; // Stop further execution if fields are not valid
+            }
+
+            // Serialize the form data including the Anti-forgery token
+            var formData = $("#CodeSbyAnizForm").serialize();
+            formData += "&" + $("input[name=__RequestVerificationToken]").serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "/purchases/Edit",
+                //url: '/so_inward/Edit',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                          
+                                window.location.href = '/purchases/'; // Replace '/index' with the actual URL of your index page
+                            
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: response.message,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                          
+                                window.location.href = '/purchases/'; // Replace '/index' with the actual URL of your index page
+                            
+                        });
+                    }
+                },
+                error: function (error) {
+                    // Error SweetAlert for AJAX request failure
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'An error occurred while processing the request.',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+
+        }
+
+
+        // $('#CodeSbyAnizForm').submit(function (e) {
+        //     console.log("Submit called !");
+        //     e.preventDefault(); // Prevent default form submission behavior
+        //     var formData = $(this).serialize();
+        //     $.ajax({
+        //         url: '/purchases/Edit', // Adjusted URL to match your controller action
+        //         type: 'POST', // Assuming you want to use POST method
+        //         data: formData, // Send serialized form data
+        //         success: function (response) {
+        //             console.log("response :"+response);
+        //             alert("response :" + response);
+        //             if (response.success) {
+        //                 alert("Success");
+        //                 console.log("result :" + response);
+        //                 Swal.fire({
+        //                     icon: 'success',
+        //                     title: 'Success',
+        //                     text: response.message
+        //                 }).then((result) => {
+        //                     if (result.isConfirmed) {
+        //                         window.location.href = '/purchases/';
+        //                     }
+        //                 });
+        //             } else {
+        //                 Swal.fire({
+        //                     icon: 'warning',
+        //                     title: 'Warning',
+        //                     text: response.message,
+        //                 }).then((result) => {
+        //                     if (result.isConfirmed) {
+        //                         window.location.href = '/purchases/'; // Redirect to the index page
+        //                     }
+        //                 });
+        //             }
+        //         },
+        //         error: function (xhr, status, error) {
+        //             console.error(xhr.responseText);
+        //         }
+        //     });
+        // });
+
+        $(document).ready(function () {
+            $('#submitButton').on('click', function () {
+                // Call the function to check fields before submitting
+                if (!checkFieldsAndSubmit()) {
+                    return; // Stop further execution if fields are not valid
+                }
+                // Perform form submission via AJAX
+                // $.ajax({
+                //     url: '/purchases/Edit',
+                //     type: 'POST',
+                //     data: $('#CodeSbyAnizForm').serialize(),
+                //     success: function (response) {
+                //         console.log("Success");
+                //         if (response.success) {
+                //             console.log("Submit called success !");
+                //             Swal.fire({
+                //                 icon: 'success',
+                //                 title: 'Success',
+                //                 text: response.message
+                //             }).then((result) => {
+                //                 if (result.isConfirmed) {
+                //                     window.location.href = '/purchases/'; // Replace '/index' with the actual URL of your index page
+                //                 }
+                //             });
+                //         } else {
+                //             console.log("Submit called fails !");
+                //             Swal.fire({
+                //                 icon: 'error',
+                //                 title: 'Error',
+                //                 text: response.message
+                //             }).then((result) => {
+                //                 if (result.isConfirmed) {
+                //                     window.location.href = '/purchases/'; // Replace '/index' with the actual URL of your index page
+                //                 }
+                //             });
+                //         }
+                //     },
+                //     error: function (xhr, status, error) {
+                //         Swal.fire({
+                //             icon: 'error',
+                //             title: 'Error',
+                //             text: 'An error occurred while communicating with the server.'
+                //         });
+                //     }
+                // });
+            });
+        });
+
+
+        function checkFieldsAndSubmit() {
+            var isValid = true;
+            var emptyFields = []; // Array to store labels of empty fields
+
+            // Check form fields
+            var fieldIds = ['#pono', '#suppliernameId', '#contactnoId', '#addressId', '#gstinno', '#address'];
+            fieldIds.forEach(function (fieldId) {
+                var $field = $(fieldId);
+                if ($field.is(':visible')) { // Check if the field is visible
+                    var value = $field.val();
+                    if (!value) {
+                        isValid = false;
+                        var label = $field.siblings('label').text(); // Get the label text
+                        emptyFields.push(label);
+                    }
+                }
+            });
+
+            if (!isValid) {
+                // Display error message with empty field labels
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: 'Please fill in all required fields:<br>' + emptyFields.join('<br>')
+                });
+                return false; // Prevent form submission if any field is empty
+            }
+
+            // Check table row values
+            $('#CodesTable tbody tr').each(function () {
+                var rowEmpty = false;
+                $(this).find('input, select').each(function () {
+                    var value = $(this).val();
+                    if (!value || value == 0) {
+                        rowEmpty = true;
+                        return false; // Exit loop early if any table row value is empty or zero
+                    }
+                });
+                if (rowEmpty) {
+                    isValid = false;
+                    emptyFields.push("Table Row"); // Add a label for empty rows
+                }
+            });
+
+            if (!isValid) {
+                // Display error message with empty field labels
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: 'Please fill in all required fields:<br>' + emptyFields.join('<br>')
+                });
+                return false; // Prevent form submission if any field is empty
+            }
+
+            return isValid; // Return true if all fields and table rows are filled, else false
+        }
+
+
+        // function handleDespChange(event, selectElement) {
+        //     var product = selectElement.value;
+        //     //console.log(product);
+
+        //     if (product === "addNewPro") {
+        //         $.ajax({
+        //             type: 'GET',
+        //             url: '@Url.Action("GetProducts", "so_inward")',
+        //             success: function (response) {
+        //                 // console.log("Products fetched successfully:", response);
+        //                 $('#categoryname').empty();
+        //                 $.each(response, function (index, productName) {
+        //                     $('#categoryname').append($('<option></option>').val(productName).text(productName));
+        //                 });
+        //             },
+        //             error: function (xhr, textStatus, errorThrown) {
+        //                 // console.error("Error fetching products:", textStatus, errorThrown);
+        //             }
+        //         });
+        //         $('#form-modal').modal('show');
+        //     } else {
+
+        //         var txtProductCodeId = event.target.id.replace('description', 'productcode');
+        //         var txtbrandId = event.target.id.replace('description', 'brand');
+        //         var txtuomId = event.target.id.replace('description', 'uom');
+
+        //         var txtProductCode = $('#' + txtProductCodeId);
+        //         var txtbrand = $('#' + txtbrandId);
+        //         var txtuom = $('#' + txtuomId);
+
+        //         // Log IDs and elements for debugging
+        //         console.log('txtProductCodeId:', txtProductCodeId);
+        //         console.log('txtbrandId:', txtbrandId);
+        //         console.log('txtuomId:', txtuomId);
+        //         console.log('txtProductCode:', txtProductCode);
+        //         console.log('txtbrand:', txtbrand);
+        //         console.log('txtuom:', txtuom);
+
+        //         // Clear the values of input fields
+        //         txtProductCode.val('');
+        //         txtbrand.val('');
+        //         txtuom.val('');
+
+        //         // Make AJAX request to fetch product details
+        //         $.ajax({
+        //             url: '@Url.Action("ActionName_description", "so_inward")',
+        //             type: 'GET',
+        //             dataType: 'json',
+        //             data: { selectedValue: product },
+        //             success: function (result) {
+        //                 console.log("data:", result);
+        //                 // Populate input fields with retrieved data
+        //                 txtProductCode.val(result.modelno);
+        //                 txtbrand.val(result.brand);
+        //                 txtuom.val(result.uom);
+        //             },
+        //             error: function (xhr, textStatus, errorThrown) {
+        //                 console.error("Error fetching product details:", textStatus, errorThrown);
+        //             }
+        //         });
+        //     }
+        // }
+
+        function handleDespChange(event, selectElement) {
+
+            var product = selectElement.value;
+           // alert("product : " + product);
+            // Check if the selected product is already present in other rows
+            var selectedDescriptionExists = $('.descriptionn').filter(function () {
+                return this.value === product;
+            }).length > 1;
+
+            // If the selected description already exists, show SweetAlert and return
+            if (selectedDescriptionExists) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'This description is already selected in another row.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    // Empty the description value after user confirmation
+                    selectElement.value = '';
+                });
+                // Reset the select element to its previous value
+                selectElement.value = selectElement.dataset.previousValue;
+                console.log("selectElement.value :" + selectElement.value);
+                console.log("selectElement.dataset.previousValue : " + selectElement.dataset.previousValue);
+                return;
+            }
+
+            // Store the current selected value to use it for comparison next time
+            selectElement.dataset.previousValue = product;
+
+            //var product = selectElement.value;
+            //console.log(product);
+
+            if (product === "addNewPro") {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetProducts", "so_inward")',
+                    success: function (response) {
+                        // console.log("Products fetched successfully:", response);
+                        $('#categoryname').empty();
+                        $.each(response, function (index, productName) {
+                            $('#categoryname').append($('<option></option>').val(productName).text(productName));
+                        });
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        // console.error("Error fetching products:", textStatus, errorThrown);
+                    }
+                });
+                $('#form-modal').modal('show');
+            } else {
+
+                var txtProductCodeId = event.target.id.replace('description', 'productcode');
+                var txtbrandId = event.target.id.replace('description', 'brand');
+                var txtuomId = event.target.id.replace('description', 'uom');
+
+                var txtProductCode = $('#' + txtProductCodeId);
+                var txtbrand = $('#' + txtbrandId);
+                var txtuom = $('#' + txtuomId);
+
+                // Log IDs and elements for debugging
+                console.log('txtProductCodeId:', txtProductCodeId);
+                console.log('txtbrandId:', txtbrandId);
+                console.log('txtuomId:', txtuomId);
+                console.log('txtProductCode:', txtProductCode);
+                console.log('txtbrand:', txtbrand);
+                console.log('txtuom:', txtuom);
+
+                // Clear the values of input fields
+                txtProductCode.val('');
+                txtbrand.val('');
+                txtuom.val('');
+
+                // Make AJAX request to fetch product details
+                $.ajax({
+                    url: '@Url.Action("ActionName_description", "so_inward")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { description: product },
+                    success: function (result) {
+                        console.log("data:", result);
+                        // Populate input fields with retrieved data
+                        txtProductCode.val(result.modelno);
+                        txtbrand.val(result.brand);
+                        txtuom.val(result.uom);
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        //console.error("Error fetching product details:", textStatus, errorThrown);
+                        console.error("Error fetching product details:", textStatus, errorThrown);
+                        // Display SweetAlert for error
+                        swal({
+                            title: "Error!",
+                            text: "Failed to fetch product details.",
+                            icon: "error",
+                            button: "OK",
+                        });
+                    }
+                });
+            }
+        }
+
+        function validateAlphabet(input) {
+            var regex = /^[a-zA-Z\s._-\s]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+
+        function validateAlphNum(input) {
+            var regex = /^[a-zA-Z0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validateNumber(input) {
+            var regex = /^[0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validatePinNumber(input) {
+            var regex = /^[0-5]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+    </script>
+
+
+        }

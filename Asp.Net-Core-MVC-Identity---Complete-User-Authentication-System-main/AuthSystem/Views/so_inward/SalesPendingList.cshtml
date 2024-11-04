@@ -1,0 +1,447 @@
+﻿@model IEnumerable<eros.Models.so_inward>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+    var sortedModel = Model.OrderByDescending(item => item.sodate);
+
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div>
+            <div class="card m-2">
+
+                <div class="card-header text-white bg-dark">
+                    @* style="background-color:#FC2947;" *@
+                    <div class="d-flex align-items-baseline">
+                        <a href="/" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                        <h5 class="mx-auto text-white text-2xl font-semibold small-heading">Orders Entry</h5>
+                        <a asp-action="Create" class="btn btn-success text-white"><i class="fas fa-plus-square"></i> Add</a>
+                    </div>
+                </div>
+
+                <div class="row m-1 card-body bg-secondary text-center align-content-center justify-content-center p-2 ">
+                    <div class="col-sm-2 form-check">
+                        <input type="radio" id="radioPending" name="orderStatus" value="Pending" />
+                        <label class="form-check-label  text-white">Pending</label>
+                    </div>
+                    <div class="col-sm-2 form-check">
+                        <input type="radio" id="radioCompleted" name="orderStatus" value="Completed" />
+                        <label class="form-check-label  text-white">Completed</label>
+                    </div>
+                    <div class="col-sm-2 form-check">
+                        <input type="radio" id="radioCompleted" name="orderStatus" value="Return" />
+                        <label class="form-check-label text-white">Return</label>
+                    </div>
+                    <div class="col-sm-2 form-check">
+                        <input type="radio" id="radioOnHold" name="orderStatus" value="On Hold" />
+                        <label class="form-check-label  text-white">On Hold</label>
+                    </div>
+                    <div class="col-sm-2 form-check">
+                        <input type="radio" id="radioCancel" name="orderStatus" value="Cancel" />
+                        <label class="form-check-label  text-white">Cancel</label>
+                    </div>
+                    <div class="col-sm-2 form-check">
+                        <input type="radio" id="radioAll" name="orderStatus" value="All" />
+                        <label class="form-check-label  text-white">All</label>
+                    </div>
+                </div>
+                <div class="row mb-3 p-2 date-range-form">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="fromDate">From Date:</label>
+                            <input type="date" class="form-control" id="fromDate" />
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label for="toDate">To Date:</label>
+                            <input type="date" class="form-control" id="toDate" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group pt-4" >
+                            <button class="btn btn-danger btn-sm" onclick="exportToPdf()">
+                                <i class="fas fa-file-pdf mr-2"></i> PDF
+                            </button>
+                            <button type="button" class="btn btn-success btn-sm" id="downloadExcel"><i class="fa fa-regular fa-file-excel"></i> Excel</button>
+                        </div>
+                    </div>
+                </div>
+
+                @* <div class="export-button text-center">
+                    <button class="btn btn-danger btn-sm" onclick="exportToPdf()">
+                        <i class="fas fa-file-pdf mr-2"></i> Export to PDF
+                    </button>
+                </div> *@
+                <div id="pendingOrdersContainer">
+                    @Html.Partial("_PendingOrdersPartial", sortedModel)
+                </div>
+
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="~/js/xlsx.full.min.js"></script>
+
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+<script>
+
+
+
+    // $('#downloadExcel').click(function () {
+    //     const sheetHeading = ['EROS GENERAL AGENCIES PVT.LTD'];
+    //     const SubHeading = ['Excel generated on ' + (new Date().toLocaleDateString()) + ' at ' + (new Date().toLocaleTimeString())];
+    //     const tableHeading = ['Order Ref.No', 'Order Dt.', 'Cust. Name', 'Ord. Qty', 'Rem. Qty', 'Dispatch.Dt', 'Status'];
+
+    //     // Collecting data from all pages of the table
+    //     let wsData = [sheetHeading, SubHeading, tableHeading];
+    //     $('#dataTable').DataTable().rows().every(function () {
+    //         const rowData = [];
+    //         $(this.node()).find('td').each(function () {
+    //             rowData.push($(this).text().trim());
+    //         });
+    //         wsData.push(rowData);
+    //     });
+
+    //     const workbook = new ExcelJS.Workbook();
+    //     const worksheet = workbook.addWorksheet('Order Sheet');
+
+    //     const borderStyle = {
+    //         top: { style: 'thin' },
+    //         left: { style: 'thin' },
+    //         bottom: { style: 'thin' },
+    //         right: { style: 'thin' }
+    //     };
+
+    //     const headingRow = worksheet.addRow(sheetHeading);
+    //     headingRow.font = { bold: true, size: 14 };
+    //     worksheet.mergeCells('A1:G1'); // Merge cells A1 to G1 for main heading
+    //     headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     headingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     const headingRow1 = worksheet.addRow(SubHeading);
+    //     worksheet.mergeCells('A2:G2'); // Merge cells A2 to G2 for subheading
+    //     headingRow1.font = { size: 10 };
+    //     headingRow1.alignment = { horizontal: 'center', vertical: 'center' };
+    //     headingRow1.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     const headerRow = worksheet.addRow(tableHeading);
+    //     headerRow.eachCell((cell) => {
+    //         cell.font = { bold: true, size: 12 };
+    //         cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //         cell.border = borderStyle;
+    //     });
+
+    //     // Remove the first three rows (headings) from wsData to avoid duplication
+    //     wsData.slice(3).forEach(dataRow => {
+    //         const row = worksheet.addRow(dataRow);
+    //         for (let i = 0; i < 7; i++) { // Only first 7 columns will be bordered
+    //             const cell = row.getCell(i + 1);
+    //             cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //             cell.border = borderStyle;
+    //         }
+    //     });
+
+    //     worksheet.columns.forEach((column, index) => {
+    //         let maxLength = 10;
+    //         wsData.forEach(row => {
+    //             const cellValue = row[index];
+    //             if (cellValue) {
+    //                 maxLength = Math.max(maxLength, cellValue.toString().length);
+    //             }
+    //         });
+    //         column.width = maxLength;
+    //     });
+
+    //     workbook.xlsx.writeBuffer().then(function (buffer) {
+    //         saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Sale_Order_Sheet.xlsx');
+    //     });
+    // });
+
+    $('#downloadExcel').click(function () {
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        const now = new Date();
+        const formattedDate = formatDate(now);
+        const formattedTime = now.toLocaleTimeString();
+        const sheetHeading = ['EROS GENERAL AGENCIES PVT.LTD'];
+        const SubHeading = ['Excel generated on ' + formattedDate + ' at ' + formattedTime];
+        const tableHeading = ['Order Ref.No', 'Order Dt.', 'Cust. Name', 'Ord. Qty', 'Rem. Qty', 'Dispatch.Dt', 'Status'];
+
+
+        // const sheetHeading = ['EROS GENERAL AGENCIES PVT.LTD'];
+        // const SubHeading = ['Excel generated on ' + (new Date().toLocaleDateString()) + ' at ' + (new Date().toLocaleTimeString())];
+        // const tableHeading = ['Order Ref.No', 'Order Dt.', 'Cust. Name', 'Ord. Qty', 'Rem. Qty', 'Dispatch.Dt', 'Status'];
+
+        // Collecting data from all pages of the table
+        let wsData = [sheetHeading, SubHeading, tableHeading];
+        $('#dataTable').DataTable().rows().every(function () {
+            const rowData = [];
+            $(this.node()).find('td').each(function () {
+                rowData.push($(this).text().trim());
+            });
+            wsData.push(rowData);
+        });
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Order Sheet');
+
+        const borderStyle = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+
+        const headingRow = worksheet.addRow(sheetHeading);
+        headingRow.font = { bold: true, size: 14 };
+        worksheet.mergeCells('A1:G1'); // Merge cells A1 to G1 for main heading
+        headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        headingRow.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        const headingRow1 = worksheet.addRow(SubHeading);
+        worksheet.mergeCells('A2:G2'); // Merge cells A2 to G2 for subheading
+        headingRow1.font = { size: 10 };
+        headingRow1.alignment = { horizontal: 'center', vertical: 'center' };
+        headingRow1.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        const headerRow = worksheet.addRow(tableHeading);
+        headerRow.eachCell((cell) => {
+            cell.font = { bold: true, size: 12 };
+            cell.alignment = { horizontal: 'center', vertical: 'center' };
+            cell.border = borderStyle;
+        });
+
+        // Remove the first three rows (headings) from wsData to avoid duplication
+        wsData.slice(3).forEach(dataRow => {
+            const row = worksheet.addRow(dataRow);
+            for (let i = 0; i < 7; i++) { // Only first 7 columns will be bordered
+                const cell = row.getCell(i + 1);
+                cell.alignment = { horizontal: 'center', vertical: 'center' };
+                if (i === 2) { // Wrap text in the third column
+                    cell.alignment.wrapText = true;
+                }
+                cell.border = borderStyle;
+            }
+        });
+
+        // Set the column widths
+        const columnWidths = [15, 15, 35, 10, 10, 15, 10];
+        worksheet.columns.forEach((column, index) => {
+            column.width = columnWidths[index] || 10; // Default width if not specified
+        });
+
+        workbook.xlsx.writeBuffer().then(function (buffer) {
+            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Sale_Order_Sheet.xlsx');
+        });
+    });
+
+
+
+</script>
+<!-- Initialize DataTable -->
+<script>
+    // $(document).ready(function () {
+    //     $('#dataTable').DataTable();
+    // });
+    var status;
+    // Add a click event handler for the radio inputs
+    $("input[name='orderStatus']").click(function () {
+        status = $(this).val();
+        console.log(status);
+        loadPendingOrders(status);
+        // Clear the date inputs
+        $('#fromDate').val('');
+        $('#toDate').val('');
+        // // Check if the selected status is "Completed"
+        // if (status === "Completed") {
+        //     // Hide all "Edit" buttons with the class 'edit-button'
+        //     $(".edit-button").hide();
+        // } else {
+        //     // Show all "Edit" buttons with the class 'edit-button'
+        //     $(".edit-button").show();
+        // }
+    });
+
+    // Function to load pending orders via AJAX
+    function loadPendingOrders(status) {
+        $.ajax({
+            url: '@Url.Action("GetPendingOrders", "so_inward")',
+            type: 'GET',
+            data: { status: status },
+            success: function (result) {
+                $("#pendingOrdersContainer").html(result);
+            },
+            error: function () {
+                // Handle errors
+                console.log("An error occurred while executing the action.");
+            }
+        });
+    }
+
+    $('#fromDate, #toDate').on('change', function () {
+        var fromDate = $('#fromDate').val();
+        var toDate = $('#toDate').val();
+        console.log("Selected From Date: " + fromDate);
+        console.log("Selected To Date: " + toDate);
+
+        $.ajax({
+            url: '@Url.Action("FilterDataByDate", "so_inward")',
+            type: 'GET',
+            data: { status: status, fromDate: fromDate, toDate: toDate },
+            success: function (result) {
+                $("#pendingOrdersContainer").html(result);
+                // $('#dataTable').DataTable();
+            },
+            error: function () {
+                console.log("An error occurred while executing the action.");
+            }
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*
+
+<div class="mt-3">
+    <div class="card mb-3">
+        <div class="card-header bg-dark text-white">
+            <div class="d-flex align-items-baseline">
+                <h5 class="mx-auto font-weight-bolder">Sales Pending List</h5>
+            </div>
+        </div>
+
+        <div class="card-body container">
+
+            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <thead class="thead-light">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.orderid)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.customername)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.orderid)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.customername)
+                            </td>
+                        <td>
+                        </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable();
+    });
+    function dropdownChanged() {
+        var ReturnTypeId = document.getElementById("ReturnTypeId").value;
+        var OrderTypeId = document.getElementById("OrderTypeId").value;
+        $.ajax({
+            url: '/inwards/ActionName',
+            type: 'POST',
+            data: { optionValue: ReturnTypeId, optionValue1: OrderTypeId, },
+            success: function (result) {
+                $("#output").html(result);
+                console.log(result);
+            },
+            error: function (xhr, status, error) {
+                console.log("An error occurred while executing the action.");
+            }
+        });
+    }
+</script>
+
+*@

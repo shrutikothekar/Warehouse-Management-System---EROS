@@ -1,0 +1,18 @@
+<xpml><page quantity='0' pitch='25.0 mm'></xpml>^XA
+^SZ2^JMA
+^MCY^PMN
+^PW822^MTT
+^MNW
+^MMT
+^MD15
+~!G0
+^PR3,3,3
+^JZY
+^LH0,0^LRN
+^XZ
+<xpml></page></xpml><xpml><page quantity='1' pitch='25.0 mm'></xpml>^XA
+^FT141,143^CI0^A0N,133,136^FD<D001>^FS
+^FO445,10^BY14^BXN,14,200,10,10,3^FD<D001>^FS
+^PQ1,0,1,Y
+^XZ
+<xpml></page></xpml><xpml><end/></xpml>

@@ -1,0 +1,84 @@
+<xpml>
+	<page quantity='0' pitch='25.0 mm'>
+</xpml>^XA
+^SZ2^JMA
+^MCY^PMN
+^PW822^MTT
+^MNW
+^MMT
+^MD15
+~!G0
+^PR3,3,3
+^JZY
+^LH0,0^LRN
+^XZ
+<xpml>
+	</page>
+</xpml><xpml>
+	<page quantity='1' pitch='25.0 mm'>
+</xpml>^XA
+^FT45,143^CI0^A0N,133,136^FDH-1^FS
+^FO475,30^BY14^BXN,12,200,12,12,3^FDH-1^FS
+^PQ1,0,1,Y
+^XZ
+<xpml>
+	</page>
+</xpml><xpml>
+	<end/>
+</xpml>
+<xpml>
+	<page quantity='0' pitch='25.0 mm'>
+</xpml>^XA
+^SZ2^JMA
+^MCY^PMN
+^PW822^MTT
+^MNW
+^MMT
+^MD15
+~!G0
+^PR3,3,3
+^JZY
+^LH0,0^LRN
+^XZ
+<xpml>
+	</page>
+</xpml><xpml>
+	<page quantity='1' pitch='25.0 mm'>
+</xpml>^XA
+^FT45,143^CI0^A0N,133,136^FDH-2^FS
+^FO475,30^BY14^BXN,12,200,12,12,3^FDH-2^FS
+^PQ1,0,1,Y
+^XZ
+<xpml>
+	</page>
+</xpml><xpml>
+	<end/>
+</xpml>
+<xpml>
+	<page quantity='0' pitch='25.0 mm'>
+</xpml>^XA
+^SZ2^JMA
+^MCY^PMN
+^PW822^MTT
+^MNW
+^MMT
+^MD15
+~!G0
+^PR3,3,3
+^JZY
+^LH0,0^LRN
+^XZ
+<xpml>
+	</page>
+</xpml><xpml>
+	<page quantity='1' pitch='25.0 mm'>
+</xpml>^XA
+^FT45,143^CI0^A0N,133,136^FDH-3^FS
+^FO475,30^BY14^BXN,12,200,12,12,3^FDH-3^FS
+^PQ1,0,1,Y
+^XZ
+<xpml>
+	</page>
+</xpml><xpml>
+	<end/>
+</xpml>

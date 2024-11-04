@@ -1,0 +1,420 @@
+﻿@model List<eros.Models.SaveVariance>
+@{
+    ViewData["Title"] = "VarianceReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+
+    <form>
+        <div class="mt-3">
+            <div class="card mb-3">
+                
+
+                <div class="card-header bg-dark text-white">
+                    
+                    <div class="d-flex align-items-baseline">
+                        <h5 class="mx-auto font-weight-bolder small-heading ">Variance Report</h5>
+                        <a asp-action="Index" asp-controller="Home"  class="btn btn-success text-white btn-sm"><i class="fa fa-reply"></i> Back</a>
+                    </div>
+
+                   
+
+                </div>
+                <div class="card-body">
+                    <div class="row align-items-center mt-3">
+                        <div class="ml-auto d-flex">
+                            <div class="col-md-2">
+                                <select name="dropdownValue" id="dropdownValue" class="form-control form-control-sm" style="font-size: 0.9rem; width: 150px;" onchange="handleChange(this)">
+                                    <option value="">-- Select PST Id --</option>
+                                    @foreach (var pstId in ((List<eros.Models.SaveVariance>)ViewBag.variancereport).Select(item => item.physicalid).Distinct())
+                                    {
+                                        <option value="@pstId">@pstId</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <select name="dropdownValue1" id="dropdownValue1" class="form-control form-control-sm" style="font-size: 0.9rem; width: 150px;" onchange="download(this)">
+                                    <option value="">-- Download Excel --</option>
+                                    @foreach (var pstId in ((List<eros.Models.SaveVariance>)ViewBag.variancereport).Select(item => item.physicalid).Distinct())
+                                    {
+                                        <option value="@pstId">@pstId</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="radio" id="box" name="product" value="box" onchange="handleproduct()" checked>
+                                <label for="box">Boxes</label>
+                                <input type="radio" id="product" name="product" value="product" onchange="handleproduct()">
+                                <label for="product">Products</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" id="boxes">
+                        <div class="table-responsive mt-2">
+                            <table class="table table-bordered table-hover table-sm" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="thead-light  text-center">
+                                    <tr class="small">
+                                        <th>
+                                            PSTCode
+                                        </th>
+                                        <th>
+                                            BoxNo
+                                        </th>
+                                        <th>
+                                            LocationCode
+                                        </th>
+                                        <th>
+                                            ProductCode
+                                        </th>
+                                        <th>
+                                            BatchCode
+                                        </th>
+                                        <th>
+                                            PST BoxCount
+                                        </th>
+                                        <th>
+                                        System BoxCount
+                                        </th>
+                                        <th>
+                                            Stock Variance
+                                        </th>
+                                        <th>
+                                            Remark
+                                        </th>
+                                    </tr>
+                                </thead>
+                            <tbody class="small text-center">
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.physicalid)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.boxno)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.locationcode)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.productcode)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.batchcode)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.pstcount)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.storagecount)
+                                            </td>
+
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.stockvariance)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Remark)
+                                            </td>
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+
+                    <div class="card-body" id="products" style="display:none">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-sm" id="dataTable1" width="100%" cellspacing="0">
+                                <thead class="thead-light">
+                                    <tr class="small">
+                                        <th>
+                                            PSTCode
+                                        </th>
+                                        <th>
+                                            ProductCode
+                                        </th>
+                                        <th>
+                                            PST Qty
+                                        </th>
+                                        <th>
+                                            System Qty
+                                        </th>
+                                        <th>
+                                            Stock Variance
+                                        </th>
+                                        <th>
+                                            Remark
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody  class="small">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+
+
+    <script>
+        function handleChange(select) {
+            var selectedoption = select.value;
+            // Do something with the selected value, such as submitting a form or making an AJAX request
+            console.log('Selected value:', selectedoption);
+
+            const selectedProduct = document.querySelector('input[name="product"]:checked').value;
+            console.log("Selected product:", selectedProduct);
+            if (selectedProduct.toUpperCase() == "BOX") {
+                $.ajax({
+                    url: '/Report/searchvariance',
+                    type: 'POST',
+                    data: { selectedValue: selectedoption, selectedProduct: selectedProduct },
+                    // data: JSON.stringify({ selectedValue: selectedoption }),
+                    success: function (response) {
+
+                        // Clear existing table data
+                        $('#dataTable tbody').empty();
+
+                        // Check if the request was successful
+                        if (response) {
+                            // Iterate over the data array and update the table
+                            $.each(response, function (index, item) {
+                                var newRow = '<tr>' +
+                                    '<td>' + item.physicalid + '</td>' +
+                                    '<td>' + item.boxno + '</td>' +
+                                    '<td>' + item.locationcode + '</td>' +
+                                    '<td>' + item.productcode + '</td>' +
+                                    '<td>' + item.batchcode + '</td>' +
+                                    '<td>' + item.pstcount + '</td>' +
+                                    '<td>' + item.storagecount + '</td>' +
+                                    '<td>' + item.stockvariance + '</td>' +
+                                    '<td>' + item.remark + '</td>' +
+                                    // Add more columns as needed
+                                    '</tr>';
+                                $('#dataTable tbody').append(newRow);
+                            });
+                            //console.log('Data saved', item.pstid);
+
+                            console.log('Data saved', response)
+                        }
+                        else {
+                            console.error('Error:', response.message);
+                        }
+                        // console.log('Data saved successfully' + response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error saving data:', error);
+                    }
+                });
+            }
+            else {
+                $.ajax({
+                    url: '/Report/searchvariance',
+                    type: 'POST',
+                    data: { selectedValue: selectedoption, selectedProduct: selectedProduct },
+                    // data: JSON.stringify({ selectedValue: selectedoption }),
+                    success: function (response) {
+
+                        // Clear existing table data
+                        $('#dataTable1 tbody').empty();
+
+                        // Check if the request was successful
+                        if (response) {
+                            // Iterate over the data array and update the table
+                            $.each(response, function (index, item) {
+                                var newRow = '<tr>' +
+                                    '<td>' + item.physicalid + '</td>' +
+                                    '<td>' + item.productcode + '</td>' +
+                                    '<td>' + item.pstcount + '</td>' +
+                                    '<td>' + item.storagecount + '</td>' +
+                                    '<td>' + item.stockvariance + '</td>' +
+                                    '<td>' + item.remark + '</td>' +
+                                    '</tr>';
+                                // Add more columns as needed
+                                $('#dataTable1 tbody').append(newRow);
+                            });
+                            //console.log('Data saved', item.pstid);
+
+                            console.log('Data saved', response)
+                        }
+                        else {
+                            console.error('Error:', response.message);
+                        }
+                        // console.log('Data saved successfully' + response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error saving data:', error);
+                    }
+                });
+            }
+
+        }
+
+        function download(select) {
+            var selectedoption = select.value;
+            // Do something with the selected value, such as submitting a form or making an AJAX request
+            console.log('Selected value:', selectedoption);
+            const selectedProduct = document.querySelector('input[name="product"]:checked').value;
+            console.log("Selected product:", selectedProduct);
+            if (selectedProduct.toUpperCase() == "BOX") {
+                $.ajax({
+                    url: '/Report/downloadexcel',
+                    type: 'POST',
+                    data: { selectedValue: selectedoption, selectedProduct: selectedProduct },
+                    xhrFields: {
+                        responseType: 'blob' // Set response type to blob
+                    },
+                    success: function (response) {
+                        var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = 'PST_Report.xlsx'; // Set the filename for download
+                        link.click();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+
+                });
+
+            }
+            else {
+                $.ajax({
+                    url: '/Report/downloadexcel',
+                    type: 'POST',
+                    data: { selectedValue: selectedoption, selectedProduct: selectedProduct },
+                    xhrFields: {
+                        responseType: 'blob' // Set response type to blob
+                    },
+                    success: function (response) {
+                        var blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = 'PST_Report.xlsx'; // Set the filename for download
+                        link.click();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+
+                });
+            }
+
+
+        }
+
+        function handleproduct() {
+            // const selectedProduct = document.querySelector('input[name="product"]:checked').value;
+            // console.log("Selected product:", selectedProduct);
+            // var pstid = $("#dropdownValue").val();
+        
+            const selectedProduct = document.querySelector('input[name="product"]:checked').value;
+            console.log("Selected product:", selectedProduct);
+            var pstid = $("#dropdownValue").val();
+            if (!pstid) {
+                console.log("PST ID is not selected.");
+                Swal.fire({
+                    title: 'Warning!',
+                    text: 'Please select a PST ID before proceeding.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return; // Prevent further execution if pstid is not selected
+            }
+
+            console.log(pstid);
+            if (selectedProduct.toUpperCase() == "BOX") {
+                $.ajax({
+                    url: '/Report/Box',
+                    type: 'POST',
+                data: { selectedValue: selectedProduct, pstid: pstid },
+                    success: function (variancereport) {
+                        console.log(variancereport);
+                        $('#dataTable tbody').empty();
+
+                        // // Iterate over the comparisonresult and create table rows
+                        $.each(variancereport, function (index, item) {
+                            // Create a new table row
+                            var newRow = $('<tr></tr>');
+                            // Create table cells and append data
+
+                            newRow.append($('<td></td>').text(item.physicalid));
+                            newRow.append($('<td></td>').text(item.boxno));
+                            newRow.append($('<td></td>').text(item.locationcode));
+                            newRow.append($('<td></td>').text(item.productcode));
+                            newRow.append($('<td></td>').text(item.batchcode));
+                            newRow.append($('<td></td>').text(item.pstcount));
+                            newRow.append($('<td></td>').text(item.storagecount));
+                            newRow.append($('<td></td>').text(item.stockvariance));
+                            newRow.append($('<td></td>').text(item.remark));
+                            // Append the new row to the table body
+                            $('#dataTable tbody').append(newRow);
+                        });
+                        $('#boxes').show();
+                        $('#products').hide();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+
+                });
+            }
+            else {
+                $.ajax({
+                    url: '/Report/Box',
+                    type: 'POST',
+                data: { selectedValue: selectedProduct, pstid: pstid },
+                    success: function (variancereport) {
+                        //console.log(variancereport);
+                        $('#dataTable1 tbody').empty();
+
+                        // // Iterate over the comparisonresult and create table rows
+                        $.each(variancereport, function (index, item) {
+                            // Create a new table row
+                            var newRow = $('<tr></tr>');
+                            // Create table cells and append data
+
+                            newRow.append($('<td></td>').text(item.physicalid));
+                            newRow.append($('<td></td>').text(item.productcode));
+                            newRow.append($('<td></td>').text(item.pstcount));
+                            newRow.append($('<td></td>').text(item.storagecount));
+                            newRow.append($('<td></td>').text(item.stockvariance));
+                            newRow.append($('<td></td>').text(item.remark));
+
+                            // Append the new row to the table body
+                            $('#dataTable1 tbody').append(newRow);
+                        });
+                        $('#products').show();
+                        $('#boxes').hide();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+
+                });
+            }
+
+        }
+    </script>

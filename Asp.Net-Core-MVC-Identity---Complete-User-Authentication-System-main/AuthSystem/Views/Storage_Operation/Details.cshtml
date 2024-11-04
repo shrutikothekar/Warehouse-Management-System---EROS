@@ -1,0 +1,90 @@
+﻿@model eros.Models.Storage_Operation
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <h1>Details</h1>
+
+        <div>
+            <h4 class="small-heading">Storage_Operation</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.productcode)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.productcode)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.boxno)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.boxno)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.batchcode)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.batchcode)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.locationcode)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.locationcode)
+                </dd>
+
+            </dl>
+        </div>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model?.id">Edit</a> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<style>
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+

@@ -1,0 +1,117 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|d:\\project\\eros system - new -19-10-24\\databasebackupservice\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|d:\\project\\eros system - new -19-10-24\\databasebackupservice\\controllers\\backup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|solutionrelative:controllers\\backup.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|d:\\project\\eros system - new -19-10-24\\databasebackupservice\\data\\backupdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|solutionrelative:data\\backupdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|d:\\project\\eros system - new -19-10-24\\databasebackupservice\\models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|solutionrelative:models\\errorviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|d:\\project\\eros system - new -19-10-24\\databasebackupservice\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|solutionrelative:controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|d:\\project\\eros system - new -19-10-24\\databasebackupservice\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{60EC4C23-D577-464C-AB90-0A6821DB7E84}|DatabaseBackupService.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Controllers\\HomeController.cs",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Controllers\\HomeController.cs",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAQwAsAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-23T07:42:41.243Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "backup.cs",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\Controllers\\backup.cs",
+              "RelativeDocumentMoniker": "Controllers\\backup.cs",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\Controllers\\backup.cs",
+              "RelativeToolTip": "Controllers\\backup.cs",
+              "ViewState": "AQIAAGYAAAAAAAAAAAAIwHIAAAAoAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-23T07:39:27.412Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BackUpDbContext.cs",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\data\\BackUpDbContext.cs",
+              "RelativeDocumentMoniker": "data\\BackUpDbContext.cs",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\data\\BackUpDbContext.cs",
+              "RelativeToolTip": "data\\BackUpDbContext.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAkAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-23T07:39:22.525Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ErrorViewModel.cs",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\Models\\ErrorViewModel.cs",
+              "RelativeDocumentMoniker": "Models\\ErrorViewModel.cs",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\Models\\ErrorViewModel.cs",
+              "RelativeToolTip": "Models\\ErrorViewModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-23T07:39:17.307Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAQwAkAAABNAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-10-23T07:38:29.018Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\DatabaseBackupService\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-23T07:38:19.251Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

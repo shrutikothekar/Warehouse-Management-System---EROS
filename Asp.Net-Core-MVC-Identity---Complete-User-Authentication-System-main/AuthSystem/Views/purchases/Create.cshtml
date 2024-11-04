@@ -1,0 +1,1679 @@
+﻿@model eros.Models.purchase
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+        "Pro. Code",
+        "Pro. Description",
+        "Brand" ,
+        "Qty" ,
+        "UOM" ,
+        //"SC",
+         };
+
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@{
+    // Assuming you have some data in the ViewBag
+    var description7Options = ViewBag.description;
+    var description7Json = Newtonsoft.Json.JsonConvert.SerializeObject(description7Options);
+}
+
+<style>
+    .select2-10gd-container {
+        width: 350px;
+    }
+
+    element.style {
+        width: 350px;
+    }
+
+    .select2-container {
+        width: 350px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+        height: 38px; /* Adjust the height as needed */
+    }
+
+</style>
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container-field">
+            <div class="mt-3">
+                <div class="card mb-3 p-1">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder small-heading">Purchase Order Entry</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <div class=" mt-2">
+                        <div class="row mx-lg-2 mx-md-2 ">
+                            <form asp-action="Create" class="p-3" id="CodeSbyAnizForm" onsubmit="return checkFieldsAndSubmit()">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="row">
+                                    @*  <div class="form-group col-sm-6 mt-3">
+                            <label asp-for="pono" class="control-label"></label>
+                            <input asp-for="pono" id="pono" data-uppercase autocomplete="off" class="form-control"  />
+                            <span asp-validation-for="pono" class="text-danger"></span>
+                            </div> *@
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="pono" class="control-label"></label>
+                                        <input asp-for="pono" id="pono" data-uppercase autocomplete="off" onchange="checkPono()" class="form-control" />
+                                        @* onchange="checkPono()" *@
+                                        <span asp-validation-for="pono" class="text-danger"></span>
+                                    </div>
+                                    @*  <div class="form-group col-sm-6 mt-3">
+                            <label asp-for="suppliername" class="control-label"></label>
+                            <select class="form-control" asp-for="suppliername" id="suppliernameId" asp-items="@ViewBag.suppliername" onchange="dropdownChanged_suppliername()" readonly></select>
+                            <span asp-validation-for="suppliername" class="text-danger"></span>
+                            </div> *@
+                                    <div class="form-group col-sm-6 mt-3">
+                                        <label asp-for="suppliername" class="control-label"></label>
+                                        <select class="form-control" asp-for="suppliername" id="suppliernameId" asp-items="@ViewBag.suppliername" onchange="dropdownChanged_suppliername()"></select>
+                                        <span asp-validation-for="suppliername" class="text-danger"></span>
+                                    </div>
+
+                                   
+
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-4 mt-3">
+                                        <label asp-for="gstinno" class="control-label"></label>
+                                        <input asp-for="gstinno" id="gstnoId" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphNum(this)" />
+                                        <span asp-validation-for="gstinno" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-3">
+                                        <label asp-for="contactno" class="control-label"></label>
+                                        <input asp-for="contactno" id="contactnoId" data-uppercase autocomplete="off" class="form-control" oninput="validateNumber(this)" />
+                                        <span asp-validation-for="contactno" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-3">
+                                        <label asp-for="address" class="control-label"></label>
+                                        <input asp-for="address" id="addressId" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphNum(this)" />
+                                        <span asp-validation-for="address" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                @* <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="form-modal"> *@
+                                <div class="row">
+
+                                    <div class="form-group col-sm-6 mt-3" style="display:none;">
+                                        <label asp-for="podate" class="control-label"></label>
+                                        <input asp-for="podate" id="podateId" type="date" data-uppercase autocomplete="off" type="date" class="form-control" />
+                                        <span asp-validation-for="podate" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group  col-sm-6 mt-3" style="display:none;">
+                                        @* style="display:none;" *@
+                                        <label asp-for="status" class="control-label">Change Status</label>
+                                        <select asp-for="status" id="SelectVenderId1" class="form-control" required readonly>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Cancel">Cancel</option>
+                                            <option value="On Hold">On Hold</option>
+                                        </select>
+                                        <span asp-validation-for="status" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                @* <div class="table-responsive col-md-12 p-0">
+                        <table class="table divide-gray-200" id="CodesTable">
+                        <thead class="bg-gray-200"> *@
+                                <div class="table-responsive col-md-12" >
+                                    @* style="max-height: 600px; overflow-y: auto;" *@
+                                    <table id="CodesTable" class="table table-striped table-sm">
+                                        <thead class="bg-gray-200">
+                                             @* sticky-top *@
+                                            <tr>
+                                                @foreach (var head in TableHeaders)
+                                                {
+                                                    <th>
+                                                        @head
+                                                    </th>
+                                                }
+                                                <th>
+                                                    <button id='btnAddDetailRow' type="button" class="btn btn-sm btn-secondary visible" onclick="addNewRow(this)">
+                                                        Add
+                                                    </button>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="CsDiv">
+                                            @for (int i = 0; i < Model.poProduct_details.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input asp-for="@Model.poProduct_details[i].productcode" style="width:250px;" class="form-control  product-code-input" />
+                                                        <span asp-validation-for="@Model.poProduct_details[i].productcode" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control description-dropdown" id="descriptiondropdown" asp-for="@Model.poProduct_details[i].description"
+                                                                asp-items="@ViewBag.description" onchange="handleDespChange(this)" ></select>
+                                                        <span asp-validation-for="@Model.poProduct_details[i].description" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.poProduct_details[i].brand" class="form-control brand-input" style="width:150px;" readonly>
+                                                        <span asp-validation-for="@Model.poProduct_details[i].brand" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.poProduct_details[i].quantity" class="form-control quantity-input"
+                                                               onchange="checkQuantity(this)" style="width:150px;" />
+                                                        <span asp-validation-for="@Model.poProduct_details[i].quantity" class="text-danger"></span>
+                                                        <input type="hidden" asp-for="@Model.poProduct_details[i].IsDeleted" />
+                                                    </td>
+                                                    <td style="width:80px;">
+                                                        <input asp-for="@Model.poProduct_details[i].uom" class="form-control uom-input" style="width:150px;" readonly />
+                                                        <span asp-validation-for="@Model.poProduct_details[i].uom" class="text-danger"></span>
+                                                    </td>
+                                                    <td style="display:none">
+                                                        <a id="editDetail-@i" class="btn text-white btn-sm btn-warning edit-button"
+                                                           data-quantity="@Model.poProduct_details[i].quantity"
+                                                           data-productcode="@Model.poProduct_details[i].productcode"
+                                                           data-description="@Model.poProduct_details[i].description">
+                                                            @* <i class="fas fa-pencil-alt"></i>  *@
+                                                            View
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">Delete</button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" id="hdnLastIndex" value="0" />
+
+                                    @* ADD NEW SUPPLIER *@
+                                    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="form-modalc">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header p-2">
+                                                    <h4 class="modal-title">Add New Supplier Name</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mt-3">
+                                                        <div class="card mb-3">
+                                                            <div class="row row mx-lg-2 mx-md-2 mx-sm-2">
+                                                                <div class="col-md-12">
+                                                                    <div>
+                @*<div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+                                                                         <div class="row">
+                                                                            <div class="form-group col-sm-4 mt-1">
+                                                                                <label class="control-label">Supplier Code</label>
+                                                                                <input id="suppliercode" readonly="true" class="form-control" />
+                                                                                <span class="text-success"></span>
+                                                                            </div>
+                                                                            <div class="form-group col-sm-4 mt-1">
+                                                                                <label class="control-label">Supplier Name</label>
+                                                                                <input id="supplier_name" data-uppercase onchange="dropdownChanged()" class="form-control" />
+                                                                                <span class="text-success"></span>
+                                                                            </div>
+                                                                            <div class="form-group col-sm-4 mt-1">
+                                                                                <label class="control-label">Brand Name</label>
+                                                                                <input id="brand" data-uppercase autocomplete="off" class="form-control" />
+                                                                                <span class="text-danger"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group col-sm-4 mt-1">
+                                                                                <label class="control-label">GST No.</label>
+                                                                                <input id="gstno" data-uppercase autocomplete="off" class="form-control" />
+                                                                                <span class="text-success"></span>
+                                                                            </div>
+                                                                            <div class="form-group col-sm-4 mt-1">
+                                                                                <label asp-for="contactno" class="control-label">Contact No.</label>
+                                                                                <input id="contactno" data-uppercase autocomplete="off" oninput="validateNumber(this)" class="form-control" />
+                                                                                <small><span class="text-success">Phone number should have a maximum of 10 digits.</span></small>
+                                                                            </div>
+                                                                            <div class="form-group col-sm-4 mt-2">
+                                                                                <label class="control-label">Pincode</label>
+                                                                                <input id="pincode" data-uppercase autocomplete="off" class="form-control" oninput="validatePinNumber(this)" />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group col-sm-6 mt-1">
+                                                                                <label class="control-label">Address</label>
+                                                                                <input id="address" data-uppercase autocomplete="off" class="form-control" />
+                                                                                <span class="text-success"></span>
+                                                                            </div>
+                                                                            <div class="form-group col-sm-6 mt-1">
+                                                                                <label class="control-label">Email ID</label>
+                                                                                <input id="emailid" data-uppercase autocomplete="off" class="form-control" />
+                                                                                <span><small style="color:green">Email should be in correct formate or null also.</small></span>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="row">
+                                                                            <div class="form-group col-sm-4 mt-2">
+                                                                                <label class="control-label">Country</label>
+                                                                                <select data-uppercase autocomplete="off" class="form-control" id="country"></select>
+                                                                            </div>
+                                                                            <div class="form-group col-sm-4 mt-2">
+                                                                                <label class="control-label">State</label>
+                                                                                <select data-uppercase autocomplete="off" class="form-control" id="state"></select>
+                                                                            </div>
+                                                                            <div class="form-group col-sm-4 mt-2">
+                                                                                <label class="control-label">City</label>
+                                                                                <select data-uppercase autocomplete="off" class="form-control" id="city"></select>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <button type="button" onclick="submitFormc()" class="btn btn-success col-md-12">Submit</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @* ADD NEW PRODUCT *@
+                                    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="form-modal">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header p-2">
+                                                    <h4 class="modal-title">Add New Product</h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="mt-3">
+                                                        <div class="card mb-3">
+                                                            <div class="row row mx-lg-2 mx-md-2 mx-sm-2">
+                                                                <div class="col-md-12">
+                                                                    <div>
+                                                                        <div class="row">
+                                                                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                                                                <label class="control-label">Category Code</label>
+                                                                                <input id="categorycode" readonly class="form-control" />
+                                                                            </div>
+                                                                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                                                                <label class="control-label">Category Name</label>
+                                                                                <select class="form-control" id="categoryname" onchange="changeCategory()">
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                                                                <label class="control-label">Sub-CategoryName</label>
+                                                                                <select id="subcategoryIddata" class="form-control" onchange="dropdownChangedSubcategory()"></select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                                                                <label class="control-label">Product Code</label>
+                                                                                <input id="productcode" data-uppercase autocomplete="off" onchange="checkProductCode()" class="form-control" />
+                                                                            </div>
+                                                                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2" id="descriptionField">
+                                                                                <label class="control-label">Description</label>
+                                                                                <input id="productdescription" data-uppercase autocomplete="off"  class="form-control" />
+                                                                            </div>
+                                                                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                                                                <label class="control-label">Brand</label>
+                                                                                <input id="brandp" data-uppercase autocomplete="off" class="form-control" />
+                                                                            </div>
+                                                                            <div class="form-group">
+                                                                                <input type="button" class="btn btn-success" value="Insert" hidden="hidden" id="btnInsert" />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row">
+                                                                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                                                                <label class="control-label">HSN</label>
+                                                                                <input id="hsnid" data-uppercase autocomplete="off" class="form-control" />
+                                                                            </div>
+                                                                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                                                                <label class="control-label">UOM</label>
+                                                                                <input id="uom" data-uppercase autocomplete="off" class="form-control" />
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="row multipleblock" style="display:none">
+                                                                            <div class="col-sm-2">
+                                                                                <label class="control-label">Type Of Product</label>
+                                                                            </div>
+                                                                            <div class="col-sm-3">
+                                                                                <label>
+                                                                                    <input type="radio" id="rbIndividual" name="TypeOfProduct" value="Individual" /> Individual
+                                                                                </label>
+                                                                                <label>
+                                                                                    <input style="font-weight: 700;" type="radio" id="rbMultiple" name="TypeOfProduct" value="Multiple" /> Multiple
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group col-sm-12 mt-3">
+                                                                            <div style="display:none;" id="_partialBOMId"></div>
+                                                                            <div style="display:none;" id="_partialSCId"></div>
+                                                                        </div>
+
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <button type="button" onclick="submitForm()" class="btn btn-success col-md-12">Submit</button>
+                                                                            </div>
+                                                                            @*  <div class="col-md-6">
+                                                                    <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                                                    </div> *@
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <input type="button" value="Submit" onclick="saveTableData()" class="btn btn-primary col-md-12" />
+                                        </div>
+                                        @* value="Create" *@
+                                        <div class="col-md-6">
+                                            <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+@*     else if (role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+ *@    
+ else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+@*<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>*@
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initialize Select2 on the dropdown
+        $('#suppliernameId').select2({
+            placeholder: "Select supplier name", // Placeholder text
+            allowClear: true // Allow clearing the selection
+        });
+    });
+</script>
+<script>
+    function saveTableData() {
+        // Check if all fields are filled
+        var isValid = checkFieldsAndSubmit();
+        if (!isValid) {
+            return; // Stop submission if any field is empty
+        } else{
+            var tableData = [];
+            // Iterate over table rows and push data to tableData array
+            $("#CodesTable tbody tr").each(function () {
+                var row = $(this);
+                tableData.push({
+                    productcode: $(this).find('.product-code-input').val().toUpperCase(),
+                    description: $(this).find('.description-dropdown').val().toUpperCase(),
+                    brand: $(this).find('.brand-input').val(),
+                    quantity: $(this).find('.quantity-input').val(),
+                    uom: $(this).find('.uom-input').val(),
+                });
+            });
+            var formData = {
+                pono: $("#pono").val(),
+                suppliername: $("#suppliernameId").val(),
+                gstinno: $("#gstnoId").val(),
+                contactno: $("#contactnoId").val(),
+                address: $("#addressId").val(),
+                podate: $("#podateId").val(),
+                status: $("#SelectVenderId1").val(),
+                state: $("#stateId").val(),
+            };
+            var postData = {
+                purchase: formData,
+                TableData: tableData,
+            };
+            console.log("tableData" + tableData);
+            console.log("formData" + formData);
+            //alert(postData);
+            $.ajax({
+                type: "POST",
+                url: "/purchases/MultipleSave",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(postData),
+                dataType: "json",
+                // JavaScript Success and Error Handling
+                success: function (response) {
+                    if (response.success) {
+                        console.log("Success:", response.message); // Log success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Purchase Order Created Successfully',
+                            text: response.message,
+                            showConfirmButton: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/purchases/Index';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: response.message,
+                            showConfirmButton: true,
+                        });
+                    }
+                },
+                error: function (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Error saving table data!',
+                        showConfirmButton: true,
+                    });
+                }
+            });
+
+        }
+     
+    }
+    function checkFieldsAndSubmit() {
+        console.log("Check validation.....");
+        var isValid = true;
+
+        // Check form fields
+        var fieldIds = ['#pono', '#suppliernameId', '#gstnoId', '#contactnoId', '#addressId'];
+        fieldIds.forEach(function (fieldId) {
+            var value = $(fieldId).val();
+            if (!value) {
+                isValid = false;
+                // Display error message for empty field
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please fill in all required fields.',
+                });
+                return false; // Exit loop early if any field is empty
+            }
+        });
+
+        if (!isValid) {
+            return false; // Prevent form submission if any field is empty
+        }
+
+        // Check table row values
+        var rowEmpty = false;
+        $('#CodesTable tbody tr').each(function () {
+            $(this).find('input, select').each(function () {
+                var value = $(this).val();
+                if (!value || value == 0) {
+                    rowEmpty = true;
+                    return false; // Exit loop early if any table row value is empty or zero
+                }
+            });
+            if (rowEmpty) {
+                isValid = false;
+                // Display error message for empty row
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please fill in all values in the table rows.',
+                });
+                return false; // Exit loop early if any row is empty
+            }
+        });
+
+        return isValid; // Return true if all fields and table rows are filled, else false
+    }
+
+</script>
+<script>
+    var description7Options = @Html.Raw(description7Json);
+
+    // Function to add a new row
+    function addNewRow() {
+        var tableBody = document.querySelector('#CodesTable tbody');
+        var newRow = document.createElement('tr');
+        var invalidQuantity = false;
+        var quantityInputs = document.querySelectorAll('.quantity-input');
+        quantityInputs.forEach(function (input) {
+            var enteredQuantity = parseFloat(input.value);
+            if (enteredQuantity <= 0 || isNaN(enteredQuantity)) {
+                invalidQuantity = true;
+                return;
+            }
+        });
+
+        if (invalidQuantity) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Quantity',
+                text: 'Quantity should be greater than 0 for all rows!',
+            });
+            return;
+        }
+        // Add cells for each column
+        newRow.innerHTML =
+            `
+                                                    <td><input class="form-control product-code-input" style="width:250px;"/></td>
+                                        <td>
+                                                        <select class="form-control description-dropdown"   id="descriptiondropdown"  onchange="handleDespChange(this)"  ></select>
+                                            <span class="text-danger"></span>
+                                        </td>
+                                            <td><input class="form-control brand-input" style="width:150px;"/></td>
+
+                                            <td><input type="number" class="form-control quantity-input" value="0" style="width:150px;" /></td>
+                                          <td>
+                                                     <input class="form-control uom-input" style="width:150px;"/>
+
+                                            </td>
+
+
+
+                                            <td style="display:none;">
+                                            <a id="editDetail-1" class="btn text-white btn-sm btn-warning poedit3-button"
+                                               data-id="packet.id"
+                                               data-quantity="packet.quantity"
+                                               data-productcode="packet.productcode">
+                                                View
+                                            </a>
+                                        </td>
+                                        <td style="display:none;">
+                                            <a id="addserial-1" class="btn text-white btn-sm btn-warning addserial1-button"
+                                               data-id="packet.id"
+                                               data-quantity="packet.quantity"
+                                               data-productcode="packet.productcode"
+                                               data-warranty="packet.Warranty">
+                                                Add
+                                            </a>
+                                        </td>
+                                        <td><button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button></td>
+                                    `;
+
+        // Append the new row to the table
+        tableBody.appendChild(newRow);
+
+        // Populate the dropdown options
+        var dropdownSelect = newRow.querySelector('select');
+        if (Array.isArray(description7Options)) {
+            description7Options.forEach(function (option) {
+                var optionElement = document.createElement('option');
+                optionElement.text = option.Text;
+                optionElement.value = option.Value;
+                dropdownSelect.appendChild(optionElement);
+            });
+
+            // Initialize Select2 plugin for the new dropdown
+            //$(dropdownSelect).select2('select2');
+            $(dropdownSelect).addClass('select2').select2({
+                width: '350px' // Set a fixed width for the dropdown
+            });
+
+            //var uomSelect = newRow.querySelector('.uom-input');
+            //if (Array.isArray(uomOptions)) {
+            //    uomOptions.forEach(function (option) {
+            //        var optionElement = document.createElement('option');
+            //        optionElement.text = option.Text;
+            //        optionElement.value = option.Value;
+            //        uomSelect.appendChild(optionElement);
+            //    });
+
+            //    // Initialize Select2 plugin for the new uom dropdown
+            //    $(uomSelect).addClass('uom-input');
+            //} else {
+            //    console.error("UOM dropdown options are not in the expected format.");
+            //}
+            $(dropdownSelect).on('change', function () {
+                var selectedValue = $(this).val(); // Use jQuery to get the selected value
+                var selectedDescription = $(this).find(':selected').text(); // Get the selected description text
+                var element = this; // Added to reference the select element
+                var selectedDescriptions = [];
+
+                // Loop through existing rows to check for duplicate descriptions
+                $('#CodesTable tbody tr').each(function () {
+                    if (this !== newRow) {
+                        var descriptionInRow = $(this).find('select').val();
+                        if (descriptionInRow === selectedValue) {
+                            selectedDescriptions.push(selectedDescription);
+                        }
+                    }
+                });
+
+                // Check if the selected description already exists in other rows
+                if (selectedDescriptions.length > 0) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'This description is already selected in another row.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        // Empty the description value after user confirmation
+                        $(element).val('').trigger('change');
+                    });
+                    return; // Exit the function
+                }
+                // Make AJAX request
+                $.ajax({
+                    url: '/purchases/ActionName_description',
+                    type: 'GET',
+                    data: { description: selectedValue },
+                    success: function (data) {
+                        // Update other fields with fetched data
+                        $(newRow).find('.product-code-input').val(data.modelno);
+                        $(newRow).find('.uom-input').val(data.uom);
+                        $(newRow).find('.brand-input').val(data.brand);
+                        // $(newRow).find('.quantity-input').val(data.qty);
+                        // $(newRow).find('.totalsubassembly-input').val(data.totalsubassembly);
+                        // Update other fields as needed
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                        // Handle error appropriately
+                    }
+                });
+            });
+
+        } else {
+            console.error("Dropdown options are not in the expected format.");
+        }
+        var quantityInput = document.querySelectorAll('.quantity-input');
+        quantityInput.forEach(function (input) {
+            input.addEventListener('change', function () {
+                var enteredQuantity = parseFloat(this.value);
+                // alert("Checked...");
+                if (enteredQuantity <= 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Quantity',
+                        text: 'Quantity cannot be less than 0 or Equal to 0 :)',
+                    });
+                    this.value = '0';
+                }
+            });
+        });
+    }
+
+    function deleteRow(btn) {
+        var row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    $(document).ready(function () {
+        // Initialize Select2 for searchable dropdown
+        $('.description-dropdown').select2();
+
+        // // Function to handle dropdown change event
+        // $('.description-dropdown').change(function () {
+        //     handleDespChange(this);
+        // });
+    });
+    $(document).on('change', '.description-dropdown', function () {
+        handleDespChange(this);
+    });
+
+    function handleDespChange(element) {
+        var selectedDescription = $(element).val();
+        var rowData = $(element).closest('tr');  // Get the current row
+
+        if (selectedDescription === "addNewPro") {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetProducts", "so_inward")',
+                success: function (response) {
+                    // console.log("Products fetched successfully:", response);
+                    $('#categoryname').empty();
+                    $.each(response, function (index, productName) {
+                        $('#categoryname').append($('<option></option>').val(productName).text(productName));
+                    });
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    // console.error("Error fetching products:", textStatus, errorThrown);
+                }
+            });
+            $('#form-modal').modal('show');
+        }
+        else {
+            // var rowData = $(element).closest('tr');
+
+            // Perform AJAX request to fetch additional data
+            $.ajax({
+                url: '/purchases/ActionName_description',
+                type: 'GET',
+                data: { description: selectedDescription },
+                success: function (data) {
+                    // Update other fields with fetched data
+                    // $(rowData).find('.quantity-input').val(data.quantity);
+                    $(rowData).find('.product-code-input').val(data.modelno);
+                    $(rowData).find('.uom-input').val(data.uom);
+                    $(rowData).find('.brand-input').val(data.brand);
+
+                    // Update other fields as needed
+                },
+                error: function () {
+                    alert('Error occurred while fetching data.');
+                }
+            });
+        }
+
+    }
+
+    $(document).ready(function () {
+
+        // // Function to generate PONO using AJAX
+        // function generatePono() {
+        //     $.ajax({
+        //         url: '/inwards/GeneratePono', // Replace with your controller and action method to generate PONO
+        //         type: 'GET',
+        //         success: function (response) {
+        //             // Update the input field with the generated PONO
+        //             $("#pono").val(response.pono);
+        //         },
+        //         error: function (xhr, status, error) {
+        //             console.error(xhr.responseText);
+        //         }
+        //     });
+        // }
+
+        // // Call the function initially to generate and set PONO on document ready
+        // generatePono();
+    });
+
+    // function checkFieldsAndSubmit() {
+    //     console.log("Check fields and submit call ....");
+    //     var fieldIds = [
+    //         { id: '#pono', label: 'Purchase Order No.' },
+    //         { id: '#suppliernameId', label: 'Supplier Name' },
+    //         { id: '#gstnoId', label: 'GST No' },
+    //         { id: '#contactnoId', label: 'Contact' },
+    //         { id: '#addressId', label: 'Address' },
+    //     ];
+
+    //     var isAnyFieldNull = false;
+    //     var emptyFieldLabels = [];
+
+    //     // Check input fields
+    //     fieldIds.forEach(function (field) {
+    //         var value = $(field.id).val();
+    //         if (!value) {
+    //             isAnyFieldNull = true;
+    //             emptyFieldLabels.push(field.label);
+    //             console.log("Field '" + field.label + "' is empty."); // Print empty field label to console
+    //         }
+    //     });
+
+    //     // Check table rows for empty cells
+    //     $('#CodesTable tbody tr').each(function (index, row) {
+    //         var rowEmpty = false;
+    //         $(row).find('input, select').each(function () {
+    //             if (!$(this).val() || $(this).val() == 0) {
+    //                 rowEmpty = true;
+    //                 return false; // Exit the loop if an empty cell is found in the row
+    //             }
+    //         });
+    //         if (rowEmpty) {
+    //             isAnyFieldNull = true;
+    //             emptyFieldLabels.push("Table Row " + (index + 1)); // Add a label for empty rows
+    //         }
+    //     });
+
+    //     if (isAnyFieldNull) {
+    //         // Display error message with empty field labels
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Oops...',
+    //             html: 'Please fill in all required fields:<br>' + emptyFieldLabels.join('<br>')
+    //         });
+    //     } else {
+    //         // Submit the form if all fields are filled
+    //         $('#CodeSbyAnizForm').off('submit').submit();
+    //     }
+    // }
+
+
+    // function checkPono11() {
+    //     // Get the value of the sono field
+    //     var sonoValue = document.getElementById('pono').value;
+
+    //     // Check if sonoValue is null or empty
+    //     if (!sonoValue.trim()) {
+    //         // Show SweetAlert indicating that sono is required
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Oops...',
+    //             text: 'Purchase order number field is required!',
+    //         });
+    //         return false; // Prevent form submission
+    //     }
+    //     // Make AJAX request to check if sono exists
+    //     $.ajax({
+    //         url: '/purchases/PoCheck',
+    //         type: 'POST',
+    //         data: { pono: sonoValue },
+    //         success: function (response) {
+    //             if (!response.success) {
+    //                 // Show SweetAlert indicating that sono already exists
+    //                 Swal.fire({
+    //                     title: 'Warning!',
+    //                     text: response.message,
+    //                     icon: 'warning',
+    //                     confirmButtonText: 'OK'
+    //                 }).then((result) => {
+    //                     $('#pono').val('');
+    //                 });
+    //                 return false; // Prevent form submission
+    //             }
+    //             // If sono does not exist, allow form submission
+    //             return true;
+    //         },
+    //         error: function (xhr, textStatus, errorThrown) {
+    //             console.error("Error:", textStatus, errorThrown);
+    //             // Show error message
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Oops...',
+    //                 text: 'An error occurred while checking sono existence!',
+    //             });
+    //             return false; // Prevent form submission
+    //         }
+    //     });
+    //     // If sono is not null, proceed with form submission
+    //     return true;
+    // }
+
+    function checkProductCode() {
+        var productcode = $('#productcode').val().trim().toUpperCase(); // Get the value of productcode input field
+
+        $.ajax({
+            url: '/Product_Master/ProductMasterCheck', // Correct URL path
+            type: 'POST',
+            data: { productcode: productcode },
+            success: function (response) {
+                if (response.success) {
+                    console.log("Response: " + response.message);
+                } else {
+                    Swal.fire({
+                        title: 'Warning!',
+                        text: response.message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#productcode').val(''); // Clear the product code input field if the user confirms
+                        }
+                    });
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error("Error:", textStatus, errorThrown);
+                // Handle error - for example, show an error message to the user
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred while checking the product code.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
+
+    // function validateAlphabet(input) {
+    //     var regex = /^[a-zA-Z\s._-\s]+$/;
+    //     var value = input.value;
+
+    //     if (!regex.test(value)) {
+    //         input.value = value.slice(0, -1);
+    //     }
+    // }
+
+    // function validateAlphNum(input) {
+    //     var regex = /^[a-zA-Z0-9]+$/;
+    //     var value = input.value;
+
+    //     if (!regex.test(value)) {
+    //         input.value = value.slice(0, -1);
+    //     }
+    // }
+
+    function validateNumber(input) {
+        var value = input.value;
+        var numericValue = value.replace(/\D/g, '');
+        if (numericValue.length > 10) {
+            numericValue = numericValue.slice(0, 10);
+        }
+        input.value = numericValue;
+    }
+
+    function validatePinNumber(input) {
+        var value = input.value;
+        var numericValue = value.replace(/\D/g, '');
+        if (numericValue.length > 6) {
+            numericValue = numericValue.slice(0, 6);
+        }
+        input.value = numericValue;
+    }
+
+    function showTooltip(event, value, tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.innerText = value;
+            tooltip.style.top = (event.clientY + 10) + 'px';
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.display = 'block';
+        }
+    }
+
+    function hideTooltip(tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.style.display = 'none';
+        }
+    }
+
+    $(document).ready(function () {
+        $('#pono').change(checkPono);
+        // if ($('#pono').val() === '') {
+        //     If sono is empty
+        //     Swal.fire({
+        //         icon: 'info',
+        //         title: 'Info',
+        //         text: 'Please Enter the Purchase Order Number first!',
+        //     });
+        // }
+    });
+
+    function checkPono() {
+        var ponoValue = $('#pono').val().trim(); // Get the value of pono input field
+        $.ajax({
+            url: '/purchases/PoCheck', // Correct URL path
+            type: 'POST',
+            data: { pono: ponoValue },
+            success: function (response) {
+                if (response.success) {
+                    console.log("Response: " + response.message);
+                } else {
+                    Swal.fire({
+                        title: 'Warning!',
+                        text: response.message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        $('#pono').val('');
+                    });
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error("Error:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    // function dropdownChanged() {
+
+    //     var value1 = document.getElementById("supplier_name").value;
+    //     $.ajax({
+    //         url: '/Supplier_Master/tidgenerate',
+    //         type: 'GET',
+    //         data: { selectedValue: value1 },
+    //         success: function (data) {
+    //             // Update the textbox value
+
+    //             document.getElementById("suppliercode").value = data;
+    //         },
+    //         error: function (xhr, status, error) {
+    //             // Handle the error response
+    //             console.log("An error occurred while executing the action.");
+    //         }
+    //     });
+
+
+    //     $.ajax({
+    //         url: '/Supplier_Master/GetMaxId',
+    //         type: 'GET',
+    //         data: { selectedValue: value1 },
+    //         success: function (data) {
+    //             // Update the textbox value
+
+    //             //document.getElementById("suppliercode").value = data;
+    //         },
+    //         error: function (xhr, status, error) {
+    //             // Handle the error response
+    //             console.log("An error occurred while executing the action.");
+    //         }
+    //     });
+    // }
+    function dropdownChanged() {
+
+        var value1 = document.getElementById("supplier_name").value.trim();
+
+        $.ajax({
+            url: '/Supplier_Master/tidgenerate',
+            type: 'GET',
+            data: { selectedValue: value1 },
+            success: function (data) {
+                console.log("data: ", data);
+                if (data.success) {
+                    // Update the textbox value with the generated supplier code
+                    document.getElementById("suppliercode").value = data.num;  // Use 'num' from the response
+                }
+                else {
+                    Swal.fire({
+                        title: 'Warning!',
+                        text: data.message, // Use 'data.message' instead of 'response.message'
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        $('#supplier_name').val(''); // Clear supplier name input
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle the error response
+                console.log("An error occurred while executing the action: ", error);
+            }
+        });
+
+        // Second AJAX request to get the max ID (if needed)
+        $.ajax({
+            url: '/Supplier_Master/GetMaxId',
+            type: 'GET',
+            data: { selectedValue: value1 },
+            success: function (data) {
+                console.log("Max ID data: ", data);
+                // You can handle this if needed
+            },
+            error: function (xhr, status, error) {
+                // Handle the error response
+                console.log("An error occurred while fetching max ID: ", error);
+            }
+        });
+    }
+
+
+    function submitFormc() {
+        console.log("Click...");
+        var suppliercode = $('#suppliercode').val();
+        var supplier_name = $('#supplier_name').val();
+        var brand = $('#brand').val();
+        var gstno = $('#gstno').val();
+        var contactno = $('#contactno').val();
+        var emailid = $('#emailid').val();
+        var address = $('#address').val();
+        var country = $('#country').val();
+        var city = $('#city').val();
+        var state = $('#state').val();
+        var pincode = $('#pincode').val();
+
+        // Construct the data object
+        var formData = {
+            suppliercode: suppliercode,
+            supplier_name: supplier_name,
+            brand: brand,
+            gstno: gstno,
+            contactno: contactno,
+            emailid: emailid,
+            address: address,
+            city: city,
+            country: country,
+            state: state,
+            pincode: pincode,
+        };
+
+        console.log("formData : " + formData);
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Getsuppliers", "purchases")',
+            data: formData,
+            success: function (response) {
+                console.log("Form submitted successfully:", response);
+                if (response.success) {
+                    console.log("Form submitted successfully", response);
+                    $('#suppliernameId').empty();
+                    $('#suppliernameId').append($('<option>').text("--Select Supplier--").val("--Select Supplier--"));
+                    $.each(response.descriptions, function (index, item) {
+                        $('#suppliernameId').append($('<option>').text(item).val(item));
+                    });
+                    $('#suppliernameId').append($('<option>').text("--- Add New Supplier --- ").val("addNewSup"));
+
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'The customer has been added successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#form-modalc').modal('hide');
+                } else {
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error("Error submitting form:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    function changeCategory() {
+        if (document.getElementById("categoryname").value != "") {
+            var selectedValue = document.getElementById("categoryname").value;
+            var categoryCodeInput = $("#categorycode");
+            $.ajax({
+                url: '/Product_Master/GETCategory_CODE',
+                type: 'GET',
+                data: { selectedValue: selectedValue },
+                success: function (data) {
+                    //console.log("categoryname : " + data);
+                    categoryCodeInput.val(data);
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action: " + error);
+                }
+            });
+            //END
+            //for category and subcategory
+            var studentSelect = $('#subcategoryIddata');
+            $.ajax({
+                url: '@Url.Action("ChangeCategory", "Product_Master")',
+                type: 'GET',
+                dataType: 'json',
+                data: { selectedvalue: selectedValue },
+                success: function (data) {
+                    //console.log("subcategoryIddata : " + data);
+                    // Set the values in the textboxes
+                    $('#subcategoryIddata').empty();
+                    $('#subcategoryIddata').append($('<option>').text("--Select SubCategory--").val("--Select SubCategory--"));
+                    $.each(data, function (index, item) {
+                        $('#subcategoryIddata').append($('<option>').text(item.value).val(item.value));
+                    });
+                }
+            });
+        }
+    }
+
+    function dropdownChangedSubcategory() {
+        var selectedOption = document.getElementById("subcategoryId").value;  //sub-category
+        var selectedOption1 = document.getElementById("categoryname").value;      //category
+
+        $.ajax({
+            url: '/Product_Master/ActionName',
+            type: 'POST',
+            data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+            success: function (result) {
+                // console.log("result : " + result);
+                // console.log("result.data : " + result.data);
+                // console.log("result.categoryname : " + data.categoryname);
+            },
+            error: function (xhr, status, error) {
+                console.log("An error occurred while executing the action.");
+            }
+        });
+    }
+
+    function submitForm() {
+        event.preventDefault();
+
+        var categoryCode = $('#categorycode').val();
+        var categoryName = $('#categoryname').val();
+        var subCategoryId = $('#subcategoryIddata').val();
+        var productCode = $('#productcode').val().toUpperCase();
+        var productDescription = $('#productdescription').val().toUpperCase();
+        var brand = $('#brandp').val();
+        var hsn = $('#hsnid').val(); // Get HSN value
+        var uom = $('#uom').val(); // Get UOM value
+        var typeOfProduct = $("input[name='TypeOfProduct']:checked").val(); // Get the selected radio button value
+
+        var formData = {
+            categoryCode: categoryCode,
+            categoryName: categoryName,
+            subcategory: subCategoryId,
+            productCode: productCode,
+            productDescription: productDescription,
+            brand: brand,
+            hsncode: hsn,
+            uom: uom,
+            typeOfProduct: typeOfProduct
+        };
+        var rowData = $(event.target).closest('tr');  // This will capture the current row of the form submit event
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Getdess", "so_inward")',
+            data: formData,
+            success: function (response) 
+            {
+                if (response.success) {
+                    console.log("Form submitted successfully", response);
+                    console.log("NEW ID : " + response.descriptions);
+
+                    $('#descriptiondropdown').empty();
+                    $('#descriptiondropdown').append($('<option>').text("--Select Product--").val("--Select Product--"));
+
+                    // Check if response.descriptions is an array or string
+                    if (Array.isArray(response.descriptions)) {
+                        response.descriptions.sort();  // For descending order, use .sort().reverse()
+                        $.each(response.descriptions, function (index, item) {
+                            $('#descriptiondropdown').append($('<option>').text(item).val(item));
+                        });
+                    } else {
+                        // If it's a string, handle it as a single option
+                        $('#descriptiondropdown').append($('<option>').text(response.descriptions).val(response.descriptions));
+                    }
+
+                    $('#descriptiondropdown').append($('<option>').text("--- Add New Product Name--- ").val("addNewPro"));
+
+                    // // Assuming 'this' refers to the current row or element that triggered the event
+                    // var $currentDropdown = $(this).closest('tr').find('.description-dropdown');
+
+                    // // Clear the current dropdown
+                    // $currentDropdown.empty();
+                    // $currentDropdown.append($('<option>').text("--Select Product--").val("--Select Product--"));
+
+                    // // Check if response.descriptions is an array or string
+                    // if (Array.isArray(response.descriptions)) {
+                    //     response.descriptions.sort();  // For descending order, use .sort().reverse()
+                    //     $.each(response.descriptions, function (index, item) {
+                    //         $currentDropdown.append($('<option>').text(item).val(item));
+                    //     });
+                    // } else {
+                    //     // If it's a string, handle it as a single option
+                    //     $currentDropdown.append($('<option>').text(response.descriptions).val(response.descriptions));
+                    // }
+
+                    // // Append the option for adding a new product
+                    // $currentDropdown.append($('<option>').text("--- Add New Product Name---").val("addNewPro"));
+
+
+                    // Show success message
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'The item has been added successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#form-modal').modal('hide');
+                } 
+                else 
+                {
+                    // Handle if the response is not successful
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                // Handle error
+                console.error("Error submitting form", textStatus, errorThrown);
+            }
+        });
+
+    }
+
+    var quantityInputs = document.querySelectorAll('.quantity-input');
+    quantityInputs.forEach(function (input) {
+        // alert("Quantity changes....");
+        input.addEventListener('change', function () {
+            var enteredQuantity = parseFloat(this.value);
+
+            if (enteredQuantity <= 0) { // Check if quantity is less than zero
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Quantity',
+                    text: 'Quantity cannot be less than 0 :)',
+                });
+                this.value = '0'; // Reset value to 0
+            }
+        });
+    });
+
+    var object = { status: false, ele: null };
+
+    function checkqty(ev) {
+        if (object.status) { return true; }
+        // FOR QUANTITY CHECK
+        var quantityInputs = document.querySelectorAll('.quantity-input');
+        var isValid = true;
+        quantityInputs.forEach(function (input) {
+            var enteredQuantity = parseFloat(input.value);
+            if (enteredQuantity <= 0 || isNaN(enteredQuantity)) {
+                isValid = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Quantity',
+                    text: 'Please enter a valid quantity greater than 0!',
+                });
+            }
+        });
+        if (!isValid) {
+            // If any quantity is invalid, prevent form submission
+            return false;
+        }
+        return true; // Allow form submission if all quantities are valid
+    }
+
+    $('#templates').change(function () {
+        var selectedValue = $(this).val();
+        var currentRow = $(this).closest('tr');
+        var productcode = currentRow.find('input[name*="productcode"]').val().toUpperCase();
+
+        if (selectedValue !== "" && productcode !== undefined) {
+            //alert("productcode: " + productcode + ", selectedValue: " + selectedValue);
+
+            // Rest of your code remains the same
+            $.ajax({
+                url: '/purchases/GetTemplateData',
+                type: 'GET',
+                data: { templateName: selectedValue, productcode: productcode },
+                success: function (data) {
+                    console.log("Success...");
+                    // populateTemplateTable(data);
+                    // $('#form-modal').modal('show');
+                    // showInModal(data); // Show data in modal
+                },
+                error: function (xhr, status, error) {
+                    console.error("An error occurred while executing the action: " + error);
+                }
+            });
+        }
+    });
+
+    $(document).on('click', '.edit-button', function () {
+        var currentRow = $(this).closest('tr');
+        var description = currentRow.find('select[name*="description"]').val().toUpperCase();
+        var productcode = currentRow.find('input[name*="productcode"]').val().toUpperCase();
+        var Warranty = currentRow.find('input[name*="Warranty"]').val();
+        var quantity = currentRow.find('input[name*="quantity"]').val();
+        // var quantity = currentRow.find('input[id="qty"]').val();
+
+        console.log(productcode + " - " + description + " - " + quantity + " - " + Warranty);
+        showProductDetails1(productcode, description, quantity);
+    });
+
+    function showProductDetails1(productcode, description, quantity) {
+        var editUrl = '/purchases/_partialSubComponent?productcode=' + productcode + '&description=' + description + '&quantity=' + quantity;
+        $('#form-modal').modal('show');
+        showInPopup(editUrl, 'Subcomponent Details');
+    }
+
+    $('#country').change(function () {
+        var countryId = $(this).val();
+        if (countryId) {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetStatesByCountry", "Supplier_Master")',
+                data: { countryId: countryId },
+                success: function (states) {
+                    $('#state').empty();
+                    $('#city').empty();
+                    $('#state').append('<option value="">Select State</option>');
+                    $.each(states, function (i, state) {
+                        $('#state').append('<option value="' + state.value + '">' + state.text + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#state').empty();
+            $('#city').empty();
+        }
+    });
+
+    $('#state').change(function () {
+        var stateId = $(this).val();
+        if (stateId) {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetCitiesByState", "Supplier_Master")',
+                data: { stateId: stateId },
+                success: function (cities) {
+                    $('#city').empty();
+                    $('#city').append('<option value="">Select City</option>');
+                    $.each(cities, function (i, city) {
+                        $('#city').append('<option value="' + city.value + '">' + city.text + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#cityDropdown').empty();
+        }
+    });
+
+    function dropdownChanged_suppliername() {
+        if (document.getElementById("suppliernameId").value != "") {
+            var selectedValue = document.getElementById("suppliernameId").value;
+            // console.log("Supplier name click")
+            if (selectedValue == "addNewSup") {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("Getcountry11", "Supplier_Master")',
+                    success: function (response) {
+                        // console.log("response : " + response);
+                        // $('#country').empty();
+                        // $.each(response, function (index, productName) {
+                        //     $('#country').append($('<option></option>').val(productName).text(productName));
+                        // });
+
+                        console.log("response : ", response); // Log the response as an object
+                        $('#country').empty(); // Clear existing options
+
+                        // Iterate over the response
+                        $.each(response, function (index, item) {
+                            // Access the properties of SelectListItem
+                            $('#country').append($('<option></option>').val(item.value).text(item.text));
+                        });
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.error("Error fetching products:", textStatus, errorThrown);
+                    }
+                });
+
+                $('#form-modalc').modal('show');
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("ActionName_suppliername", "purchases")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { selectedvalue: selectedValue },
+                    success: function (data) {
+                        // console.log(data.address + " " + data.contactno + " " + data.gstno);
+                        document.getElementById("addressId").value = data.address;
+                        document.getElementById("gstnoId").value = data.gstno;
+                        document.getElementById("contactnoId").value = data.contactno;
+                    }
+                });
+            }
+            // if (selectedValue == "addNewSup") {
+            //     showInPopup('@Url.Action("CreateViewSupplier", "Supplier_Master", null, Context.Request.Scheme)', 'Add New Supplier');
+            // }
+        }
+    }
+
+        //function handleDespChange(event, selectElement) {
+
+        //    var product = selectElement.value;
+
+        //    // Check if the selected product is already present in other rows
+        //    var selectedDescriptionExists = $('.descriptionn').filter(function () {
+        //        return this.value === product;
+        //    }).length > 1;
+
+        //    // If the selected description already exists, show SweetAlert and return
+        //    if (selectedDescriptionExists) {
+        //        Swal.fire({
+        //            title: 'Error!',
+        //            text: 'This description is already selected in another row.',
+        //            icon: 'error',
+        //            confirmButtonText: 'OK'
+        //        }).then((result) => {
+        //            // Empty the description value after user confirmation
+        //            selectElement.value = '';
+        //        });
+        //        // Reset the select element to its previous value
+        //        selectElement.value = selectElement.dataset.previousValue;
+        //        console.log("selectElement.value :" + selectElement.value);
+        //        console.log("selectElement.dataset.previousValue : " + selectElement.dataset.previousValue);
+        //        return;
+        //    }
+
+        //    // Store the current selected value to use it for comparison next time
+        //    selectElement.dataset.previousValue = product;
+
+        //    //var product = selectElement.value;
+        //    //console.log(product);
+
+        //    if (product === "addNewPro") {
+        //        $.ajax({
+        //            type: 'GET',
+        //            url: '@Url.Action("GetProducts", "so_inward")',
+        //            success: function (response) {
+        //                // console.log("Products fetched successfully:", response);
+        //                $('#categoryname').empty();
+        //                $.each(response, function (index, productName) {
+        //                    $('#categoryname').append($('<option></option>').val(productName).text(productName));
+        //                });
+        //            },
+        //            error: function (xhr, textStatus, errorThrown) {
+        //                // console.error("Error fetching products:", textStatus, errorThrown);
+        //            }
+        //        });
+        //        $('#form-modal').modal('show');
+        //    } else {
+
+        //        var txtProductCodeId = event.target.id.replace('description', 'productcode');
+        //        var txtbrandId = event.target.id.replace('description', 'brand');
+        //        var txtuomId = event.target.id.replace('description', 'uom');
+
+        //        var txtProductCode = $('#' + txtProductCodeId);
+        //        var txtbrand = $('#' + txtbrandId);
+        //        var txtuom = $('#' + txtuomId);
+
+        //        // Log IDs and elements for debugging
+        //        console.log('txtProductCodeId:', txtProductCodeId);
+        //        console.log('txtbrandId:', txtbrandId);
+        //        console.log('txtuomId:', txtuomId);
+        //        console.log('txtProductCode:', txtProductCode);
+        //        console.log('txtbrand:', txtbrand);
+        //        console.log('txtuom:', txtuom);
+
+        //        // Clear the values of input fields
+        //        txtProductCode.val('');
+        //        txtbrand.val('');
+        //        txtuom.val('');
+
+        //        // Make AJAX request to fetch product details
+        //        $.ajax({
+        //            url: '@Url.Action("ActionName_description", "so_inward")',
+        //            type: 'GET',
+        //            dataType: 'json',
+        //            data: { selectedValue: product },
+        //            success: function (result) {
+        //                console.log("data:", result);
+        //                // Populate input fields with retrieved data
+        //                txtProductCode.val(result.modelno);
+        //                txtbrand.val(result.brand);
+        //                txtuom.val(result.uom);
+        //            },
+        //            error: function (xhr, textStatus, errorThrown) {
+        //                //console.error("Error fetching product details:", textStatus, errorThrown);
+        //                console.error("Error fetching product details:", textStatus, errorThrown);
+        //                // Display SweetAlert for error
+        //                swal({
+        //                    title: "Error!",
+        //                    text: "Failed to fetch product details.",
+        //                    icon: "error",
+        //                    button: "OK",
+        //                });
+        //            }
+        //        });
+        //    }
+        //}
+
+        // function handleDespChange(selectElement) {
+        //     var product = selectElement.value;
+
+        //     if (product === "addNewPro") {
+
+        //         var url = '@Url.Action("CreateViewProduct_p", "Product_Master")';
+        //         $('#form-modal').modal('show');
+        //         showInPopup(url, 'Add New Product');
+        //     } else {
+        //         var tid = event.target.id;
+        //         var product = document.getElementById(tid).value;
+        //         console.log(product);
+
+        //         var txtProductCodeId = tid.replaceAll('description', 'productcode');
+        //         var txtbrandId = tid.replaceAll('description', 'brand');
+        //         var txtuomId = tid.replaceAll('description', 'uom');
+
+        //         var txtProductCode = document.getElementById(txtProductCodeId);
+        //         var txtbrand = document.getElementById(txtbrandId5);
+        //         var txtuom = document.getElementById(txtuomId);
+
+        //         txtProductCode.value = null;
+        //         $.ajax({
+        //             url: '@Url.Action("ActionName_description", "purchases")',
+        //             type: 'GET',
+        //             dataType: 'json',
+        //             data: { selectedvalue: product },
+        //             success: function (data) {
+        //                 console.log(data)
+        //                 txtProductCode.value = data.modelno;
+        //                 txtbrand.value = data.brand;
+        //                 txtuom.value = data.uom;
+
+
+
+        //             }
+        //         });
+
+        //     }
+        // }
+
+</script>

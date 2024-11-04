@@ -1,0 +1,46 @@
+﻿@model eros.Models.state_master
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="mt-3">
+        <div class="card mb-3">
+            <div class="card-header bg-dark text-white">
+                <div class="d-flex align-items-baseline">
+                    <h5 class="mx-auto font-weight-bolder">State Master Delete</h5>
+                    @* <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>*@
+                </div>
+            </div>
+            <form asp-action="Delete" id="CodeSbyAnizForm">
+                <div>
+                    <dl class="row mx-lg-5 mt-lg-4">
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.statecode)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.statecode)
+                        </dd>
+                        <dt class="col-sm-2">
+                            @Html.DisplayNameFor(model => model.statename)
+                        </dt>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(model => model.statename)
+                        </dd>
+                    </dl>
+                </div>
+                <div class="row mt-lg-3 mb-lg-3 mb-3">
+                    <div class="col-sm-5 mx-lg-5 mx-sm-5 mx-md-5">
+                        <input type="hidden" asp-for="state_id" />
+                        <input type="submit" value="Delete" class="btn btn-primary col-md-12 col-sm-12" />
+                    </div>
+                    <div class="col-sm-5 mx-lg-4 mx-sm-4 mx-md-4">
+                        <a asp-action="Index" class="btn btn-danger col-md-12 col-sm-12">Back to List</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

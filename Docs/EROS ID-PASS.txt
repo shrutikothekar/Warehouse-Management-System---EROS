@@ -1,0 +1,8 @@
+ultraviewer:
+
+78924264
+pass@1234
+
+ANYDESK:
+
+pass@1234

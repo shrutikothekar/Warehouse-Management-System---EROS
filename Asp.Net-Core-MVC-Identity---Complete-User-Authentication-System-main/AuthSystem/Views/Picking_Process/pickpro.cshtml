@@ -1,0 +1,56 @@
+﻿@model eros.Models.Picking_Process
+
+@{
+    Layout = null;
+    string[] TableHeaders = new string[] {
+        "Product Code",
+        "Product Name" ,
+        // "In Stock Qty" ,
+        "SO Qty" ,
+        "Picking Qty" ,
+        };
+}
+
+
+<div class="table-responsive col-md-12 p-0">
+    <table class="table divide-gray-200" id="data-table">
+        <thead class="bg-gray-200 sticky top-0">
+            <tr>
+                @foreach (var head in TableHeaders)
+                {
+                    <th>
+                        @head
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                HashSet<string> uniqueCombinations = new HashSet<string>();
+            }
+
+            @for (int i = 0; i < Model.Picking_Packet.Count; i++)
+            {
+                var combination = $"{Model.Picking_Packet[i].productcode}_{Model.Picking_Packet[i].productname}";
+                if (uniqueCombinations.Add(combination))
+                {
+                    <tr>
+                        <td>
+                            <input asp-for="Picking_Packet[i].productcode" class="form-control" />
+                        </td>
+                        <td>
+                            <input asp-for="Picking_Packet[i].productname" class="form-control" />
+                        </td>
+                        <td>
+                            <input asp-for="Picking_Packet[i].soqty" class="form-control" />
+                        </td>
+                        <td>
+                            <input asp-for="Picking_Packet[i].pickingqty" class="form-control" />
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+

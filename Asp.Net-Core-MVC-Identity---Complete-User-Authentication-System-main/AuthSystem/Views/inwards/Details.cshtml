@@ -1,0 +1,641 @@
+﻿
+@model eros.Models.inward
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+        "Pro.Code",
+        "Pro.Desc",
+        "Qty",
+                "No. Set/Pro." ,
+        "No. set/shp" ,
+        "No. Shp/Qty" ,
+        "UOM",
+        //"No.set/pro." ,
+        //"No.pkt",
+        //"No.Qty/Shp" ,
+        //"No.Shp/Qty" ,
+        // "Total Shp." ,
+        //  "Total Sub.",
+         };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+<style>
+    .product {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+</style>
+<style>
+    .status-complete {
+        color: green;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    .status-pending {
+        color: red;
+        font-weight: 600;
+        font-size: 18px;
+    }
+</style>
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="container" id="pdfContent">
+            <div class="mt-3">
+                <div class="card mb-3">
+           
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder small-heading">Inward Details</h5>
+                                <a id="pdfbtn" style="display:none;" class="btn btn-danger btn-sm text-white mr-1 download-btn">
+                                <i class="fas fa-file-pdf mr-2"></i> PDF
+                            </a>
+                            <a id="printbtn" style="display:none;" onclick="printContent()" class="btn btn-primary btn-sm text-white mr-1">
+                                <i class="fas fa-print"></i> Print
+                            </a>
+                            <a asp-action="Index" asp-controller="inwards" style="display:none;" id="backbtn" class="btn btn-success text-white btn-sm mr-1"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <form asp-action="Details" id="CodeSbyAnizForm">
+                        <div class="row p-2">
+                            <dl class="row  ml-3">
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.status)
+                                </dt>
+                                @* <dd class="col-sm-10">
+                                    @{
+                                        var status = Model.status;
+                                        var statusClass = status == "Completed" ? "status-complete" : status == "Pending" ? "status-pending" : "";
+                                    }
+                                    <span class="@statusClass">@Html.DisplayFor(model => model.status)</span>
+                                </dd> *@
+                                <dd class="col-sm-10">
+                                    @{
+                                        var status = Model.status;
+                                        var displayStatus = status == "Completed" ? "Completed" : status;
+                                        var statusClass = status == "Completed" ? "status-complete" : status == "Pending" ? "status-pending" : "";
+                                    }
+                                    <span class="@statusClass">@displayStatus</span>
+                                </dd>
+
+                                @* <dt class="col-sm-2">
+                                   Ref Odr.No
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.pono)
+                                </dd> *@
+                                <dt class="col-sm-2">
+                                   Reference No.
+                                </dt>
+                                <dd class="col-sm-10"  class="col-sm-10" style="color:black; font-weight:600;">
+                                    @if (Model.pono == "-")
+                                    {
+                                        @Model.sono
+                                    }
+                                    else
+                                    {
+                                        @Model.pono
+                                    }
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.ordertype)
+                                </dt>
+                                <dd class="col-sm-10" style="color:green; font-weight:600;">
+                                    @Html.DisplayFor(model => model.ordertype)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.vendername)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.vendername)
+                                </dd>
+                               @*  <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.typeofreturn)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.typeofreturn)
+                                </dd> *@
+                               @*  <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.dcno)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.dcno)
+                                </dd> *@
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.partyname)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.partyname)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.gstinno)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.gstinno)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.contactno)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.contactno)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.address)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.address)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.grnno)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.grnno)
+                                </dd>
+                              @*   <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.grndate)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.grndate)
+                                </dd> *@
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.grndate)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @{
+                                        var formattedDate = DateTime.Parse(Model.grndate).ToString("dd-MM-yyyy");
+                                    }
+                                    @formattedDate
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.batchcode)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.batchcode)
+                                </dd>
+                               @*  <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.date)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.date)
+                                </dd> *@
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.date)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @{
+                                        var formattedDate1 = DateTime.Parse(Model.date).ToString("dd-MM-yyyy");
+                                    }
+                                    @formattedDate1
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.time)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.time)
+                                </dd>
+                                @*<dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.status)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.status)
+                                </dd> *@
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.remarks)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.remarks)
+                                </dd>
+                            </dl>
+                            <div class="table-responsive col-md-12">
+                                <table id="PrdTable" class="table table-striped table-sm">
+                                    <thead class="bg-gray-200 sticky top-0">
+                                        <tr>
+                                            @foreach (var head in TableHeaders)
+                                            {
+                                                <th>
+                                                    @head
+                                                </th>
+                                            }
+
+                                        </tr>
+                                    </thead>
+                                    <tbody id="CsDiv">
+                                        @for (int i = 0; i < Model.inwardPacket.Count; i++)
+                                        {
+                                            <tr>
+                                               
+                                                <td style="width:300px;">
+                                                    <input asp-for="@Model.inwardPacket[i].productcode" class="form-control" readonly required
+                                                           title="@Model.inwardPacket[i].productcode"
+                                                           onmouseover="showTooltip(event, '@Model.inwardPacket[i].productcode', 'tooltip-productcode')"
+                                                           onmouseout="hideTooltip('tooltip-productcode')" />
+                                                    <div id="tooltip-productcode" class="product"></div>
+                                                    <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:400px;">
+                                                    <input asp-for="@Model.inwardPacket[i].description" class="form-control" readonly required
+                                                           title="@Model.inwardPacket[i].description"
+                                                           onmouseover="showTooltip(event, '@Model.inwardPacket[i].description', 'tooltip-description')"
+                                                           onmouseout="hideTooltip('tooltip-description')" />
+                                                    <div id="tooltip-description" class="product"></div>
+                                                    <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                                                </td>
+                                               
+                                                <td style="width:80px;">
+                                                    <input asp-for="@Model.inwardPacket[i].quantity" class="form-control" readonly />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].quantity" class="text-danger"></span>
+                                                </td>
+
+                                                <td style="width:80px;">
+                                                    <input asp-for="@Model.inwardPacket[i].setofsub_assemb" class="form-control" readonly />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].setofsub_assemb" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:80px;">
+                                                    <input asp-for="@Model.inwardPacket[i].noofpackets" class="form-control" readonly />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].noofpackets" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:80px;">
+                                                    <input asp-for="@Model.inwardPacket[i].qtyperpkt" class="form-control" readonly />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].qtyperpkt" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:80px;">
+                                                    <input asp-for="@Model.inwardPacket[i].uom" class="form-control" readonly />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].uom" class="text-danger"></span>
+                                                </td>
+                                                @* <td>
+                                                    <input asp-for="@Model.inwardPacket[i].totalpacket" class="form-control" readonly />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].totalpacket" class="text-danger"></span>
+                                                </td>
+
+                                                <td>
+                                                    <input asp-for="@Model.inwardPacket[i].totalsubassmbly" id="totalsubassembly" readonly class="form-control totalsubassembly" />
+                                                    <span asp-validation-for="@Model.inwardPacket[i].totalsubassmbly" class="text-danger"></span>
+                                                </td> *@
+                                                <td>
+                                                   
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                                <input type="hidden" id="hdnLastIndex" value="0" />
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+
+@* 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+ *@
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="~/js/site.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspsdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script>
+    // $('.download-btn').on('click', function (event) {
+    //     event.preventDefault();
+
+    //     // Get the selected template name
+    //     const selectedTemplate = $('#templates option:selected').text();
+
+    //     // Get the current date and time
+    //     const currentDate = new Date();
+    //     const formattedDate = currentDate.toLocaleDateString();
+    //     const formattedTime = currentDate.toLocaleTimeString();
+    //     const dateTimeString = `Generated on: ${formattedDate} at ${formattedTime}`;
+
+    //     // Clone the content to include in the PDF
+    //     const contentToClone = document.getElementById('pdfContent').cloneNode(true);
+
+    //     // Create the main heading for the company name
+    //     const mainHeading = document.createElement('h5');
+    //     mainHeading.textContent = 'EROS AGENCY PVT LTD';
+    //     mainHeading.style.textAlign = 'center'; // Optional: Center align the heading
+
+    //     // Create the subheading for the order details
+    //     const subHeading = document.createElement('h6');
+    //     subHeading.textContent = `Order Detail: ${selectedTemplate} (${dateTimeString})`;
+    //     subHeading.style.textAlign = 'center'; // Optional: Center align the heading
+
+    //     // Insert the main heading and subheading into the cloned content
+    //     contentToClone.insertBefore(subHeading, contentToClone.firstChild);
+    //     contentToClone.insertBefore(mainHeading, subHeading);
+
+    //     // Remove the last column before exporting
+    //     const rows = contentToClone.querySelectorAll('tr');
+    //     rows.forEach(row => {
+    //         if (row.cells.length > 4) { // Ensure we have more than 4 columns before deleting
+    //             row.deleteCell(-1); // Delete the last cell (column) of each row
+    //         }
+    //     });
+
+    //     // Adjust font size to make all data fit in the PDF
+    //     const allElements = contentToClone.querySelectorAll('*');
+    //     allElements.forEach(element => {
+    //         element.style.fontSize = '10px'; // Adjust font size as needed
+    //         element.style.margin = '0'; // Remove any margins
+    //         element.style.padding = '2px'; // Adjust padding for better fitting
+    //     });
+
+    //     // Generate PDF from the modified content (with the selected template heading and without the last column)
+    //     html2pdf()
+    //         .from(contentToClone)
+    //         .set({
+    //             margin: [10, 5, 10, 5], // top, left, bottom, right margins
+    //             filename: 'OrderDetails.pdf',
+    //             image: { type: 'jpeg', quality: 1.0 }, // High-quality image settings
+    //             html2canvas: { scale: 2, useCORS: true }, // Increase scale for better quality
+    //             jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' } // Use points for better precision
+    //         })
+    //         .save();
+    // });
+    
+
+    // $(document).ready(function () {
+    //     alert("call");
+    //     $("#pdfbtn").show();
+    //     $("#printbtn").show();
+    //     $("#backbtn").show();
+    // });
+    // function pdfonclick() {
+    //    // alert("Call");
+    //     event.preventDefault();
+    //     $("#pdfbtn").hide();
+    //     $("#printbtn").hide();
+    //     $("#backbtn").hide();
+    //     // Get the selected template name
+    //     const selectedTemplate = $('#templates option:selected').text();
+
+    //     // Get the current date and time
+    //     const currentDate = new Date();
+    //     const formattedDate = currentDate.toLocaleDateString();
+    //     const formattedTime = currentDate.toLocaleTimeString();
+    //     const dateTimeString = `Generated on: ${formattedDate} at ${formattedTime}`;
+
+    //     // Clone the content to include in the PDF
+    //     const contentToClone = document.getElementById('pdfContent').cloneNode(true);
+
+    //     // Create the main heading for the company name
+    //     const mainHeading = document.createElement('h5');
+    //     mainHeading.textContent = 'EROS AGENCY PVT LTD';
+    //     mainHeading.style.textAlign = 'center'; // Optional: Center align the heading
+
+    //     // Create the subheading for the order details
+    //     const subHeading = document.createElement('h6');
+    //     subHeading.textContent = `Order Detail: ${selectedTemplate} (${dateTimeString})`;
+    //     subHeading.style.textAlign = 'center'; // Optional: Center align the heading
+
+    //     // Insert the main heading and subheading into the cloned content
+    //     contentToClone.insertBefore(subHeading, contentToClone.firstChild);
+    //     contentToClone.insertBefore(mainHeading, subHeading);
+
+    //     // Remove the last column before exporting
+    //     const rows = contentToClone.querySelectorAll('tr');
+    //     rows.forEach(row => {
+    //         if (row.cells.length > 4) { // Ensure we have more than 4 columns before deleting
+    //             row.deleteCell(-1); // Delete the last cell (column) of each row
+    //         }
+    //     });
+
+    //     // Adjust font size to make all data fit in the PDF
+    //     const allElements = contentToClone.querySelectorAll('*');
+    //     allElements.forEach(element => {
+    //         element.style.fontSize = '10px'; // Adjust font size as needed
+    //         element.style.margin = '0'; // Remove any margins
+    //         element.style.padding = '2px'; // Adjust padding for better fitting
+    //     });
+
+    //     // Generate PDF from the modified content (with the selected template heading and without the last column)
+    //     html2pdf()
+    //         .from(contentToClone)
+    //         .set({
+    //             margin: [10, 5, 10, 5], // top, left, bottom, right margins
+    //             filename: 'OrderDetails.pdf',
+    //             image: { type: 'jpeg', quality: 1.0 }, // High-quality image settings
+    //             html2canvas: { scale: 2, useCORS: true }, // Increase scale for better quality
+    //             jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' } // Use points for better precision
+    //         })
+    //         .save(); 
+    //     $("#pdfbtn").show();
+    //     $("#printbtn").show();
+    //     $("#backbtn").show();
+    // }
+
+    $(document).ready(function () {
+        $("#pdfbtn").show();
+        $("#printbtn").show();
+        $("#backbtn").show();
+    });
+
+    $('.download-btn').on('click', function (event) {
+        event.preventDefault();
+        $("#pdfbtn").hide();
+        $("#printbtn").hide();
+        $("#backbtn").hide();
+        // Get the selected template name
+        const selectedTemplate = $('#templates option:selected').text();
+
+        // Get the current date and time
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString();
+        const formattedTime = currentDate.toLocaleTimeString();
+        const dateTimeString = `Generated on: ${formattedDate} at ${formattedTime}`;
+
+        // Clone the content to include in the PDF
+        const contentToClone = document.getElementById('pdfContent').cloneNode(true);
+
+        // Create the main heading for the company name
+        const mainHeading = document.createElement('h5');
+        mainHeading.textContent = 'EROS GENERAL AGENCIES PVT LTD.';
+        mainHeading.style.textAlign = 'center'; // Optional: Center align the heading
+
+        // Create the subheading for the order details
+        const subHeading = document.createElement('h6');
+        subHeading.textContent = `Order Detail: ${selectedTemplate} (${dateTimeString})`;
+        subHeading.style.textAlign = 'center'; // Optional: Center align the heading
+
+        // Insert the main heading and subheading into the cloned content
+        contentToClone.insertBefore(subHeading, contentToClone.firstChild);
+        contentToClone.insertBefore(mainHeading, subHeading);
+
+        // Remove the last column before exporting
+        const rows = contentToClone.querySelectorAll('tr');
+        rows.forEach(row => {
+            if (row.cells.length > 4) { // Ensure we have more than 4 columns before deleting
+                row.deleteCell(-1); // Delete the last cell (column) of each row
+            }
+        });
+
+        // Adjust font size to make all data fit in the PDF
+        const allElements = contentToClone.querySelectorAll('*');
+        allElements.forEach(element => {
+            element.style.fontSize = '10px'; // Adjust font size as needed
+            element.style.margin = '0'; // Remove any margins
+            element.style.padding = '2px'; // Adjust padding for better fitting
+        });
+
+        // Generate PDF from the modified content (with the selected template heading and without the last column)
+        html2pdf()
+            .from(contentToClone)
+            .set({
+                margin: [10, 5, 10, 5], // top, left, bottom, right margins
+                filename: 'InwardOrderDetails.pdf',
+                image: { type: 'jpeg', quality: 1.0 }, // High-quality image settings
+                html2canvas: { scale: 2, useCORS: true }, // Increase scale for better quality
+                jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' } // Use points for better precision
+            })
+            .save();
+        $("#pdfbtn").show();
+        $("#printbtn").show();
+        $("#backbtn").show();
+    });
+
+    function printContent() {
+        const printArea = document.querySelector('.container').innerHTML;
+        const originalContent = document.body.innerHTML;
+
+        document.body.innerHTML = printArea;
+        window.print();
+        document.body.innerHTML = originalContent;
+        location.reload();
+    }
+
+</script>
+<script>
+    function showTooltip(event, value, tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.innerText = value;
+            tooltip.style.top = (event.clientY + 10) + 'px';
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.display = 'block';
+        }
+    }
+
+    function hideTooltip(tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.style.display = 'none';
+        }
+    }
+
+    // $(document).on('click', '.poiedit-button', function () {
+    //     var productCode = $(this).data('productcode');
+    //     var pono = $(this).data('pono');
+    //     var quantity = $(this).data('quantity');
+    //     console.log(productCode + " - " + pono + " - " + quantity);
+    //     // Call the function to show product details in the modal
+    //     showProductDetails2(productCode, pono, quantity);
+    // });
+
+    // function showProductDetails2(productCode, pono, quantity) {
+    //     console.log(" data : " + productCode + pono + quantity);
+    //     var editUrl = '/inwards/_partialSubComponent?productCode=' + productCode + '&pono=' + pono + '&quantity=' + quantity;
+    //     console.log(editUrl);
+    //     showInPopup(editUrl, 'SubComponents Details');
+    // }
+    // Attach the click event to the edit buttons
+    // $(document).on('click', '.poiedit-button', function () {
+    //     var productCode = $(this).data('productcode');
+    //     var pono = $(this).data('pono');
+    //     var quantity = $(this).data('quantity');
+    //     console.log(productCode + " - " + pono + " - " + quantity);
+    //     showProductDetails3(productCode, pono, quantity);
+    // });
+
+    // function showProductDetails3(productCode, pono, quantity) {
+    //     console.log(" data : " + productCode + pono + quantity);
+    //     var editUrl = '/inwards/_partialSubComponent?productCode=' + productCode + '&pono=' + pono + '&quantity=' + quantity;
+    //     console.log(editUrl);
+    //     // Assuming showInPopup is defined and works as expected
+    //     showInPopup(editUrl, 'SubComponents Details');
+    // }
+</script>
+
+@* <script>
+    $(document).ready(function () {
+        $(document).on('click', '.poiedit-button', function () {
+            console.log("Click on edit ...........");
+            
+        });
+
+        function showProductDetails3(productCode, pono, quantity) {
+            console.log(" data : " + productCode + pono + quantity);
+            var editUrl = '/inwards/_partialSubComponent?productCode=' + productCode + '&pono=' + pono + '&quantity=' + quantity;
+            console.log(editUrl);
+            $('#myModal').modal('show'); // replace #myModal with the ID of your modal
+            $('#myModal .modal-content').load(editUrl);
+        }
+    });
+
+</script>
+ *@
+
+
+
+
+
+
+
+

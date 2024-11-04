@@ -1,0 +1,97 @@
+﻿@*@model eros.Models.picklistgeneration
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string[] TableHeaders = new string[] {
+        "Product Code",
+        "Product Name" ,
+        "In Stock Qty" ,
+        "SO Qty" ,
+        "Picking Qty" ,
+        };
+}
+
+<div class="container">
+    <div class="mt-3">
+        <div class="card mb-3">
+            <div class="card-header bg-dark text-white">
+                <div class="d-flex align-items-baseline">
+                    <h5 class="mx-auto font-weight-bolder">Picklist Generation Details</h5>
+                    <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                </div>
+            </div>
+            <form asp-action="Details" id="CodeSbyAnizForm">
+                <dl class="row">
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.sono)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.sono)
+                    </dd>
+                </dl>
+
+                <div class="table-responsive col-md-12 p-0">
+                    <table class="table divide-gray-200" id="data-table">
+                        <thead class="bg-gray-200 sticky top-0">
+                            <tr>
+                                @foreach (var head in TableHeaders)
+                                {
+                                    <th>
+                                        @head
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.picklistgnerateprds.Count; i++)
+                            {
+                                <tr>
+
+                                    <td>
+                                        <input asp-for="picklistgnerateprds[i].prdcode" class="form-control" />
+                                        <span asp-validation-for="@Model.picklistgnerateprds[i].prdcode" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="picklistgnerateprds[i].prdname" class="form-control" />
+                                        <span asp-validation-for="@Model.picklistgnerateprds[i].prdname" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="picklistgnerateprds[i].instockqty" class="form-control" />
+                                        <span asp-validation-for="@Model.picklistgnerateprds[i].instockqty" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="picklistgnerateprds[i].soqty" class="form-control" />
+                                        <span asp-validation-for="@Model.picklistgnerateprds[i].soqty" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="picklistgnerateprds[i].pickingqty" class="form-control" />
+                                        <span asp-validation-for="@Model.picklistgnerateprds[i].pickingqty" class="text-danger"></span>
+                                    </td>
+
+                                    <td>
+                                        <button id="showDetailsButton" onclick="showAllDetails()">Select</button>
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <div class="row mt-lg-3 mb-lg-3 mb-3">
+                        <div class="col-sm-5 mx-lg-5 mx-sm-5 mx-md-5">
+                            <input type="hidden" asp-for="gen_id" />
+                            <input type="submit" value="Edit" class="btn btn-primary col-md-12 col-sm-12" />
+                        </div>
+                        <div class="col-sm-5 mx-lg-4 mx-sm-4 mx-md-4">
+                            <a asp-action="Index" class="btn btn-danger col-md-12 col-sm-12">Back to List</a>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+*@

@@ -1,0 +1,145 @@
+﻿@model eros.Models.inward
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+<main class="page payment-page">
+    <section class="payment-form mt-4 ">
+        <div class="container">
+        <form asp-action="Edit">
+                <h3 class="title">Outward Entry Edit</h3>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="inward_id" />
+            <div class="row">
+                    <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="vendername" class="control-label"></label>
+                        <input asp-for="vendername" data-uppercase autocomplete="off"class="form-control" />
+                        <span asp-validation-for="vendername" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="typeofreturn" class="control-label"></label>
+                        <input asp-for="typeofreturn" data-uppercase autocomplete="off"class="form-control" />
+                        <span asp-validation-for="typeofreturn" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+             @*        <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="referenceno" class="control-label"></label>
+                        <input asp-for="referenceno" data-uppercase autocomplete="off"class="form-control" />
+                        <span asp-validation-for="referenceno" class="text-danger"></span>
+                    </div> *@
+                    <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="partyname" class="control-label"></label>
+                        <input asp-for="partyname" data-uppercase autocomplete="off"class="form-control" />
+                        <span asp-validation-for="partyname" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="gstinno" class="control-label"></label>
+                        <input asp-for="gstinno" data-uppercase autocomplete="off" class="form-control" />
+                        <input asp-for="ordertype" class="form-control" hidden />
+                        <span asp-validation-for="gstinno" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="contactno" class="control-label"></label>
+                        <input asp-for="contactno" data-uppercase autocomplete="off" class="form-control" />
+                        <span asp-validation-for="contactno" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="address" class="control-label"></label>
+                        <input asp-for="address" data-uppercase autocomplete="off" class="form-control" />
+                        <span asp-validation-for="address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="dcno" class="control-label"></label>
+                        <input asp-for="dcno" data-uppercase autocomplete="off" class="form-control" />
+                        <span asp-validation-for="dcno" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="dcdate" class="control-label"></label>
+                        <input asp-for="dcdate" data-uppercase autocomplete="off" class="form-control" />
+                        <span asp-validation-for="dcdate" class="text-danger"></span>
+                    </div>
+                </div>
+                
+                <div class="row ">
+                    <div class="form-group col-sm-6 ">
+                        <input type="submit" value="Save"  class="btn btn-success col-sm-12" />
+                    </div>
+                    <div class="form-group col-sm-6 ">
+                        <a asp-action="Index" class="btn btn-danger col-sm-12">Back to List</a>
+                    </div>
+                </div>
+
+        </form>
+        </div>
+    </section>
+</main>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,2377 @@
+﻿@model eros.Models.so_inward
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+        "Pro. Code",
+        "Pro. Description",
+        "Brand" ,
+        "Qty" ,
+        "UOM" ,
+        //"SC",
+        "Stock",
+        };
+
+    string[] TableHeaders12 = new string[] {
+    "Consignee Name",
+    "Consignee Contact No." ,
+    "Consignee Contact Person" ,
+    "Consignee Address" ,
+    "Consignee Email ID",
+    "Consignee City",
+    "Consignee State",
+    "Consignee Pincode"
+    };
+
+
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@{
+    // Assuming you have some data in the ViewBag
+    var description8Options = ViewBag.description;
+    var description8Json = Newtonsoft.Json.JsonConvert.SerializeObject(description8Options);
+}
+
+<style>
+    .select2-10gd-container {
+        width: 320px;
+    }
+
+    element.style {
+        width: 320px;
+    }
+
+    .select2-container {
+        width: 320px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+        height: 38px; /* Adjust the height as needed */
+    }
+
+</style>
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container-field">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder small-heading">Customer Order Entry</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <div class=" mt-2">
+                        <div class="row mx-lg-2 mx-md-2 ">
+                            <form asp-action="Create" class="p-3" id="CodeSbyAnizForm" onsubmit="return checkFieldsAndSubmit()">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="row">
+                                    <input asp-for="id" class="form-control" hidden />
+
+                                    <div class="form-group col-sm-4 mt-2">
+                                        <label for="orderType" class="control-label">Order Entry Type</label>
+                                        <select id="orderType" class="form-control" onchange="toggleInputFields()">
+                                            <option value="">--- Select Order Entry Type ---</option>
+                                            <option value="sono">Sale Order </option>
+                                            <option value="dono">Direct Order </option>
+                                        </select>
+                                        <span class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-2" id="sonoField">
+                                        <label asp-for="sono" class="control-label"></label>
+                                        <input asp-for="sono" onchange="checkSono()" id="sonoInput" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="sono" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-2" id="donoField" style="display:none">
+                                        <label asp-for="dono" class="control-label"></label>
+                                        <input asp-for="dono" onchange="checkDono()" id="donoInput" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="dono" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-2">
+                                        <label>
+                                            <input type="radio" name="customerType" id="btbRadio" onclick="showDiv()"> B2B
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="customerType" id="btcRadio" onclick="showDiv()"> B2C
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-4 mt-2" id="btcDiv" style="display: none;">
+                                        <label asp-for="dcustomername" class="control-label "></label>
+                                        <input asp-for="dcustomername" id="customernameId1" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="dcustomername" class="text-danger"></span>
+                                    </div>
+                                    <div id="btbDiv" style="display: none;" class="form-group col-sm-4 mt-2">
+                                        <label asp-for="customername" class="control-label "></label>
+                                        <select class="form-control" asp-for="customername" id="customernameId" asp-items="@ViewBag.customername" onchange="dropdownChanged_customernames()">
+                                        </select>
+                                        <span asp-validation-for="customername" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-2">
+                                        <label asp-for="contactno" for="contactno" class="control-label"></label>
+                                        <input type="text" id="contactnoId" oninput="validateNumber(this)" data-uppercase autocomplete="off" id="contactno" name="contactno" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-2">
+                                        <label asp-for="emailid" class="control-label"></label>
+                                        <input asp-for="emailid" id="emailId" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="emailid" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-group col-sm-4 mt-2" style="display:none;">
+                                        <label asp-for="status" class="control-label"></label>
+                                        <select asp-for="status" id="SelectVenderId1" class="form-control" required readonly>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Cancel">Cancel</option>
+                                            <option value="On Hold">On Hold</option>
+                                        </select>
+                                        <span asp-validation-for="status" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-2">
+                                        <label asp-for="address" class="control-label"></label>
+                                        <input asp-for="address" id="addressId" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="address" class="text-danger"></span>
+                                    </div>
+                                    @*  <div class="form-group col-sm-4 mt-2">
+                            <label asp-for="city" class="control-label"></label>
+                            <input asp-for="city" id="cityId" data-uppercase autocomplete="off" class="form-control" />
+                            <span asp-validation-for="city" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-sm-4 mt-2">
+                            <label asp-for="state" class="control-label"></label>
+                            <input asp-for="state" id="stateId" data-uppercase autocomplete="off" class="form-control" />
+                            <span asp-validation-for="state" class="text-danger"></span>
+                            </div> *@
+                                    <div class="form-group col-sm-2 mt-2">
+                                        <label asp-for="Country" class="control-label">Country</label>
+                                        <select asp-for="Country" data-uppercase autocomplete="off" class="form-control" id="countryId" asp-items="@ViewBag.country"></select>
+                                        <span asp-validation-for="Country" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-2 mt-2">
+                                        <label asp-for="state" class="control-label">State</label>
+                                        <select asp-for="state" data-uppercase autocomplete="off" class="form-control" id="stateId" asp-items="@ViewBag.state"></select>
+                                        <span asp-validation-for="state" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-2 mt-2">
+                                        <label asp-for="city" class="control-label">City</label>
+                                        <select asp-for="city" data-uppercase autocomplete="off" class="form-control" id="cityId" asp-items="@ViewBag.city"></select>
+                                        <span asp-validation-for="city" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-2" style="display:none">
+                                        <label asp-for="dispatchdate" class="control-label"></label>
+                                        <input asp-for="dispatchdate" id="dispatchdate" type="date" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="dispatchdate" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                @*   <div class="table-responsive">
+                        <table class="table divide-gray-200" id="CodesTable">
+                        <thead class="bg-gray-200 sticky top-0"> *@
+                                <input type="hidden" name="data" id="data" />
+                                <input type="hidden" id="hdnLastIndex2" value="0" />
+                                <div class="table-responsive col-md-12">
+                                    <table id="CodesTable" class="table table-striped table-sm">
+                                        @* style="max-height: 600px; overflow-y: auto;" *@
+                                        <thead class="bg-gray-200 ">
+                                            @* sticky-top *@
+                                            <tr>
+                                                @foreach (var head in TableHeaders)
+                                                {
+                                                    <th>
+                                                        @head
+                                                    </th>
+                                                }
+                                                <th style="width:100px;">
+                                                    <button id='btnAddDetailRow' type="button" class="btn btn-sm btn-success visible" onclick="addNewRow(this)">
+                                                        Add
+                                                    </button>
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="CsDiv">
+                                            @for (int i = 0; i < Model.soProduct_details.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input asp-for="@Model.soProduct_details[i].productcode" class="form-control product-code-input" style="width:240px;" />
+                                                        <span asp-validation-for="@Model.soProduct_details[i].productcode" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control description-dropdown" asp-for="@Model.soProduct_details[i].description"
+                                                                asp-items="@ViewBag.description" id="descriptiondropdown" onchange="handleDespChange(event, this)"></select>
+                                                        <span asp-validation-for="@Model.soProduct_details[i].description" class="text-danger"></span>
+                                                    </td>
+                                                    <td style="width:80px;">
+                                                        <input asp-for="@Model.soProduct_details[i].brand" class="form-control brand-input" style="width:120px;" readonly>
+                                                        <span asp-validation-for="@Model.soProduct_details[i].brand" class="text-danger"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input asp-for="@Model.soProduct_details[i].quantity" class="form-control quantity-input" style="width:150px;" />
+                                                        <span asp-validation-for="@Model.soProduct_details[i].quantity" class="text-danger"></span>
+                                                        <input type="hidden" asp-for="@Model.soProduct_details[i].IsDeleted" />
+                                                    </td>
+                                                    <td style="width:100px;">
+                                                        <input asp-for="@Model.soProduct_details[i].uom" class="form-control uom-input" style="width:150px;" readonly />
+                                                        <span asp-validation-for="@Model.soProduct_details[i].uom" class="text-danger"></span>
+                                                    </td>
+                                                    <td style="display:none">
+                                                        <a id="editDetail-@i" class="btn text-white btn-sm btn-warning edits-button"
+                                                           data-id="@Model.soProduct_details[i].id"
+                                                           data-quantity="@Model.soProduct_details[i].quantity"
+                                                           data-productcode="@Model.soProduct_details[i].productcode"
+                                                           data-description="@Model.soProduct_details[i].description">
+                                                            @* <i class="fas fa-pencil-alt"></i> *@  View
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-warning btn-sm editid" onclick="openStockModal(this)"><i class="fa fa-eye"></i></button>
+                                                    </td>
+                                                    <td>
+                                                        <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">Delete</button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="button" value="Submit" onclick="saveTableData()" class="btn btn-primary col-md-12" />
+                                        @* onclick="return checkqty(this);" *@
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    @*  else if (role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    } *@
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+
+    }
+}
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="form-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-2">
+                <h4 class="modal-title">In Stock </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mt-3">
+                    <div class="card mb-3">
+                        <div class="row row mx-lg-2 mx-md-2 mx-sm-2">
+                            <div class="col-md-12">
+                                <div>
+                                    <div class="row">
+                                        <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                            <label class="control-label">Category Code</label>
+                                            <input id="categorycode" readonly class="form-control" />
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                            <label class="control-label">Category Name</label>
+                                            <select class="form-control" id="categoryname" onchange="changeCategory()">
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                            <label class="control-label">Sub-CategoryName</label>
+                                            <select id="subcategoryIddata" class="form-control" onchange="dropdownChangedSubcategory()"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                            <label class="control-label">Product Code</label>
+                                            <input id="productcode" data-uppercase autocomplete="off" onchange="checkProductCode()" class="form-control" />
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2" id="descriptionField">
+                                            <label class="control-label">Description</label>
+                                            <input id="productdescription" data-uppercase autocomplete="off" onchange="GetProCode()" class="form-control" />
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                            <label class="control-label">Brand</label>
+                                            <input id="brand" data-uppercase autocomplete="off" class="form-control" />
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="button" class="btn btn-success" value="Insert" hidden="hidden" id="btnInsert" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                            <label class="control-label">HSN</label>
+                                            <input id="hsnid" data-uppercase autocomplete="off" class="form-control" />
+                                        </div>
+                                        <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                            <label class="control-label">UOM</label>
+                                            <input id="uom" data-uppercase autocomplete="off" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <div class="row multipleblock" style="display:none">
+                                        <div class="col-sm-2">
+                                            <label class="control-label">Type Of Product</label>
+                                        </div>
+                                        <div class="col-sm-3" style="display:none;">
+                                            <label>
+                                                <input type="radio" id="rbIndividual" name="TypeOfProduct" value="Individual" /> Individual
+                                            </label>
+                                            <label>
+                                                <input style="font-weight: 700;" type="radio" id="rbMultiple" name="TypeOfProduct" value="Multiple" /> Multiple
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-12 mt-3">
+                                        <div style="display:none;" id="_partialBOMId"></div>
+                                        <div style="display:none;" id="_partialSCId"></div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <button type="button" onclick="submitForm()" class="btn btn-success col-md-12">Submit</button>
+                                        </div>
+                                        @*  <div class="col-md-6">
+                                        <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                        </div> *@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="form-modalc">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header p-2">
+                <h4 class="modal-title">Add New Customer</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-1">
+                    <div class="row p-1">
+                        <div class="col-md-12">
+                            <div id="CodeSbyAnizForm">
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label class="control-label">Customer Name</label>
+                                        <input id="customername" data-uppercase autocomplete="off" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label class="control-label">Contact Person</label>
+                                        <input id="contactperson" data-uppercase autocomplete="off" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label class="control-label">Address</label>
+                                        <input id="address" data-uppercase autocomplete="off" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-sm-6 mt-1">
+                                        <label class="control-label">Pincode</label>
+                                        <input id="pincode" oninput="validatePinNumber(this)" data-uppercase autocomplete="off" class="form-control" />
+                                        <span><small style="color:green">Pincode should have a maximum of 6 digits.</small></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-4 mt-2">
+                                        <label class="control-label">Country</label>
+                                        <select data-uppercase autocomplete="off" class="form-control" id="country"></select>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-2">
+                                        <label class="control-label">State</label>
+                                        <select data-uppercase autocomplete="off" class="form-control" id="state"></select>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-2">
+                                        <label class="control-label">City</label>
+                                        <select data-uppercase autocomplete="off" class="form-control" id="city"></select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-sm-4 mt-1">
+                                        <label class="control-label">Contact No</label>
+                                        <input id="contactno" oninput="validateNumber(this)" data-uppercase autocomplete="off" class="form-control" />
+                                        <span><small style="color:green">Phone number should have a maximum of 10 digits.</small></span>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-1">
+                                        <label class="control-label">Email Id</label>
+                                        <input id="emailid" type="email" data-uppercase autocomplete="off" class="form-control" />
+                                        <span><small style="color:green">Email should be in correct formate or null also.</small></span>
+                                    </div>
+                                    <div class="form-group col-sm-4 mt-1">
+                                        <label class="control-label">GST NO</label>
+                                        <input id="gstno" data-uppercase autocomplete="off" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive col-md-12">
+                                    <table class="table divide-gray-200 table-bordered" id="CodesTable11">
+                                        <thead class="bg-gray-200 sticky top-0">
+                                            <tr>
+                                                @foreach (var head in TableHeaders12)
+                                                {
+                                                    <th>
+                                                        @head
+                                                    </th>
+
+                                                }
+                                            </tr>
+                                        </thead>
+                                        <tbody id="CsDiv11">
+                                            <tr>
+                                                <td>
+                                                    <input id="cname" class="form-control">
+                                                </td>
+                                                <td>
+                                                    <input id="ccontact" oninput="validateNumber(this)" class="form-control">
+                                                </td>
+                                                <td>
+                                                    <input id="ccontactperson" class="form-control">
+                                                </td>
+                                                <td>
+                                                    <input id="caddress" class="form-control">
+                                                </td>
+                                                <td>
+                                                    <input id="cemail" class="form-control">
+                                                </td>
+                                                <td>
+                                                    <input id="ccity" class="form-control">
+                                                </td>
+                                                <td>
+                                                    <input id="cstate" class="form-control">
+                                                </td>
+                                                <td>
+                                                    <input id="cpin" oninput="validatePinNumber(this)" class="form-control">
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" id="hdnLastIndex" value="0" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        @* <input type="submit" value="Create" class="btn btn-primary col-md-12" /> *@
+                                        <button type="button" onclick="submitFormc()" class="btn btn-success col-md-12">Submit</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+
+    .select2 {
+    }
+</style>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script>
+
+    function showDiv() {
+        var btbRadio = document.getElementById('btbRadio');
+        var btbDiv = document.getElementById('btbDiv');
+        var btcRadio = document.getElementById('btcRadio');
+        var btcDiv = document.getElementById('btcDiv');
+
+        if (btbRadio.checked) {
+            btbDiv.style.display = 'block';
+            btcDiv.style.display = 'none';
+
+            $("#contactnoId").val("");
+            $("#emailId").val("");
+            $("#addressId").val("");
+            $("#cityId").val("");
+            $("#stateId").val("");
+
+        } else if (btcRadio.checked) {
+            btbDiv.style.display = 'none';
+            btcDiv.style.display = 'block';
+
+
+            $("#contactnoId").val("");
+            $("#emailId").val("");
+            $("#addressId").val("");
+            $("#cityId").val("");
+            $("#stateId").val("");
+        }
+    }
+
+    function saveTableData() {
+        // Check if all fields are filled
+        var isValid = checkFieldsAndSubmit();
+        if (!isValid) {
+            return; // Stop submission if any field is empty
+        } else {
+            var tableData = [];
+            // Iterate over table rows and push data to tableData array
+            $("#CodesTable tbody tr").each(function () {
+                var row = $(this);
+                tableData.push({
+                    productcode: $(this).find('.product-code-input').val().toUpperCase(),
+                    description: $(this).find('.description-dropdown').val().toUpperCase(),
+                    brand: $(this).find('.brand-input').val(),
+                    quantity: $(this).find('.quantity-input').val(),
+                    uom: $(this).find('.uom-input').val(),
+                });
+            });
+            var formData = {
+                sono: $("#sonoInput").val(),
+                dono: $("#donoInput").val(),
+                dcustomername: $("#customernameId1").val(),
+                customername: $("#customernameId").val(),
+                contactno: $("#contactnoId").val(),
+                emailid: $("#emailId").val(),
+                address: $("#addressId").val(),
+                status: $("#SelectVenderId1").val(),
+                city: $("#cityId").val(),
+                state: $("#stateId").val(),
+                Country: $("#countryId").val(),
+                dispatchdate: $("#dispatchdate").val(),
+            };
+            var postData = {
+                so_inward: formData,
+                TableData: tableData,
+            };
+
+            console.log("tableData" + tableData);
+            console.log("formData" + formData);
+            $.ajax({
+                type: "POST",
+                url: "/so_inward/MultipleSave",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(postData),
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        console.log("Success:", response.message); // Log success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Order Create Successfully',
+                            text: response.message,
+                            showConfirmButton: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/so_inward/Index';
+                            }
+
+                        });
+                    } else {
+                        /* console.log("Error:", response.message); */ // Log error message
+                        /* alert("Error"); */ // Display alert for error
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: response.message,
+                            showConfirmButton: true,
+                        });
+                    }
+                },
+                error: function (error) {
+                    alert("Error saving table data!");
+                }
+            });
+        }
+    }
+
+    function checkFieldsAndSubmit() {
+        console.log("Check validation.....");
+        var isValid = true;
+
+        // Check form fields
+        var fieldIds = ['#orderType', '#emailId', '#contactnoId', '#addressId', '#cityId', '#stateId'];
+        fieldIds.forEach(function (fieldId) {
+            var value = $(fieldId).val();
+            if (!value) {
+                isValid = false;
+                // Display error message for empty field
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please fill in all required fields.',
+                });
+                return false; // Exit loop early if any field is empty
+            }
+        });
+
+        if (!isValid) {
+            return false; // Prevent form submission if any field is empty
+        }
+
+        // Check table row values
+        var rowEmpty = false;
+        $('#CodesTable tbody tr').each(function () {
+            $(this).find('input, select').each(function () {
+                var value = $(this).val();
+                if (!value || value == 0) {
+                    rowEmpty = true;
+                    return false; // Exit loop early if any table row value is empty or zero
+                }
+            });
+            if (rowEmpty) {
+                isValid = false;
+                // Display error message for empty row
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Please fill in all values in the table rows.',
+                });
+                return false; // Exit loop early if any row is empty
+            }
+        });
+
+        return isValid; // Return true if all fields and table rows are filled, else false
+    }
+
+    var description8Options = @Html.Raw(description8Json);
+
+    // Function to add a new row
+    function addNewRow() {
+        var tableBody = document.querySelector('#CodesTable tbody');
+        //var currentIndex = parseInt($("#data").val());
+        var currentIndex = parseInt($("#hdnLastIndex").val());
+        //                // Increment the index for the new row
+        var newIndex = currentIndex + 1;
+
+        var newRow = document.createElement('tr');
+        var invalidQuantity = false;
+        var quantityInputs = document.querySelectorAll('.quantity-input');
+        quantityInputs.forEach(function (input) {
+            var enteredQuantity = parseFloat(input.value);
+            if (enteredQuantity <= 0 || isNaN(enteredQuantity)) {
+                invalidQuantity = true;
+                return;
+            }
+        });
+
+        if (invalidQuantity) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Quantity',
+                text: 'Quantity should be greater than 0 for all rows!',
+            });
+            return;
+        }
+        //// Add cells for each column
+
+        //newRow = '<td><input  asp-for="soProduct_details[' + newIndex + '].productcode" class="form-control product-code-input" style="width:160px;"/></td>' +
+        //    '<td><select asp-for="soProduct_details[' + newIndex + '].description" class="form-control description-dropdown"></select><span class="text-danger"></span></td>' +
+        //    '<td><input asp-for="soProduct_details[' + newIndex + '].brand" class="form-control brand-input" /></td>' +
+        //    '<td><input type="number" asp-for="soProduct_details[' + newIndex + '].quantity" class="form-control quantity-input" value="0" /></td>' +
+        //    '<td><input asp-for="soProduct_details[' + newIndex + '].uom" class="form-control uom-input"/></td>' +
+        //    '<td style="display:none;">' +
+        //    '<a class="btn text-white btn-sm btn-warning poedit3-button">View </a></td>' +
+        //    '<td style="display:none;">'+
+        //                    '<a class="btn text-white btn-sm btn-warning addserial1-button">'+
+        //                        'Add</a></td>'+
+        //                        '<td><button type="button" class="btn btn-warning btn-sm editid" onclick="openStockModal(this)"><i class="fa fa-eye"></i></button></td>'+
+        //                        '<td><button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button></td>';
+        newRow.innerHTML =
+            `
+                                                   <td><input  asp-for="soProduct_details[' + newIndex + '].productcode" class="form-control product-code-input" style="width:240px;"/></td>
+                                            <td>
+                                                            <select asp-for="soProduct_details[' + newIndex + '].description"  class="form-control description-dropdown" ></select>
+                                            <span class="text-danger"></span>
+                                        </td>
+                                            <td><input asp-for="soProduct_details[' + newIndex + '].brand" class="form-control brand-input" style="width:120px;" /></td>
+                                                <td><input type="number" asp-for="soProduct_details[' + newIndex + '].quantity" class="form-control quantity-input" style="width:150px;" value="0" /></td>
+                                                    <td><input asp-for="soProduct_details[' + newIndex + '].uom" class="form-control uom-input" style="width:150px;"/></td>
+                                        <td style="display:none;">
+                                           <a class="btn text-white btn-sm btn-warning poedit3-button">
+                                              View
+                                            </a>
+                                        </td>
+                                        <td style="display:none;">
+                                            <a class="btn text-white btn-sm btn-warning addserial1-button">
+                                                Add
+                                            </a>
+                                        </td>
+                                        <td>
+                                           <button type="button" class="btn btn-warning btn-sm editid" onclick="openStockModal(this)"><i class="fa fa-eye"></i></button>
+                                        </td>
+                                        <td><button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button></td>
+                                    `;
+        //tableBody.append(newRow);
+        tableBody.appendChild(newRow);
+        // Update the hidden input with the new inde
+        $("#data").val(newIndex);
+        $("#hdnLastIndex").val(newIndex);
+
+
+
+
+        // Append the new row to the table
+
+        //.find('select')
+        // Populate the dropdown options
+        var dropdownSelect = newRow.querySelector('select');
+        //var dropdownSelect = newRow.find('select');
+        if (Array.isArray(description8Options)) {
+            description8Options.forEach(function (option) {
+                var optionElement = document.createElement('option');
+                optionElement.text = option.Text;
+                optionElement.value = option.Value;
+                dropdownSelect.appendChild(optionElement);
+            });
+
+            // Initialize Select2 plugin for the new dropdown
+            //$(dropdownSelect).select2('select2');
+            $(dropdownSelect).addClass('select2').select2({
+                width: '400px', // Set a fixed width for the dropdown
+            });
+
+            //var uomSelect = newRow.querySelector('.uom-input');
+            //if (Array.isArray(uomOptions)) {
+            //    uomOptions.forEach(function (option) {
+            //        var optionElement = document.createElement('option');
+            //        optionElement.text = option.Text;
+            //        optionElement.value = option.Value;
+            //        uomSelect.appendChild(optionElement);
+            //    });
+
+            //    // Initialize Select2 plugin for the new uom dropdown
+            //    $(uomSelect).addClass('uom-input');
+            //} else {
+            //    console.error("UOM dropdown options are not in the expected format.");
+            //}
+            //var selectedDescriptions = [];
+
+            $(dropdownSelect).on('change', function () {
+                var description = $(this).val(); // Use jQuery to get the selected value
+                var selectedDescription = $(this).find(':selected').text(); // Get the selected description text
+                var element = this; // Added to reference the select element
+                var selectedDescriptions = [];
+
+                // Loop through existing rows to check for duplicate descriptions
+                $('#CodesTable tbody tr').each(function () {
+                    if (this !== newRow) {
+                        var descriptionInRow = $(this).find('select').val();
+                        if (descriptionInRow === description) {
+                            selectedDescriptions.push(selectedDescription);
+                        }
+                    }
+                });
+
+                // Check if the selected description already exists in other rows
+                if (selectedDescriptions.length > 0) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'This description is already selected in another row.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        // Empty the description value after user confirmation
+                        $(element).val('').trigger('change');
+                    });
+                    return; // Exit the function
+                }
+                // Make AJAX request
+                $.ajax({
+                    url: '/so_inward/ActionName_description',
+                    type: 'GET',
+                    data: { description: selectedDescription },
+                    success: function (data) {
+                        // Update other fields with fetched data
+                        $(newRow).find('.product-code-input').val(data.modelno);
+                        $(newRow).find('.uom-input').val(data.uom);
+                        $(newRow).find('.brand-input').val(data.brand);
+                        // $(newRow).find('.quantity-input').val(data.qty);
+                        // $(newRow).find('.totalsubassembly-input').val(data.totalsubassembly);
+                        // Update other fields as needed
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        //console.error("Error fetching product details:", textStatus, errorThrown);
+                        console.error("Error fetching product details:", textStatus, errorThrown);
+                        // Display SweetAlert for error
+                        swal({
+                            title: "Error!",
+                            text: "Failed to fetch product details.",
+                            icon: "error",
+                            button: "OK",
+                        });
+                    }
+
+                });
+            });
+
+        } else {
+            console.error("Dropdown options are not in the expected format.");
+        }
+        var quantityInput = document.querySelectorAll('.quantity-input');
+        quantityInput.forEach(function (input) {
+            input.addEventListener('change', function () {
+                var enteredQuantity = parseFloat(this.value);
+                // alert("Checked...");
+                if (enteredQuantity <= 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Quantity',
+                        text: 'Quantity cannot be less than 0 or Equal to 0 :)',
+                    });
+                    this.value = '0';
+                }
+            });
+        });
+    }
+
+    function deleteRow(btn) {
+        var row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    $(document).ready(function () {
+        // Initialize Select2 for searchable dropdown
+        $('.description-dropdown').select2();
+
+        // Function to handle dropdown change event
+        $('.description-dropdown').change(function () {
+            handleDespChange(this);
+        });
+    });
+
+    function handleDespChange(element) {
+        var selectedDescription = $(element).val();
+
+        var product = selectedDescription;
+        var selectedDescriptionExists = $('.descriptionn').filter(function () {
+            return this.value === product;
+        }).length > 1;
+
+        // If the selected description already exists, show SweetAlert and return
+        if (selectedDescriptionExists) {
+            Swal.fire({
+                title: 'Error!',
+                text: 'This description is already selected in another row.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                // Empty the description value after user confirmation
+                selectElement.value = '';
+            });
+            // Reset the select element to its previous value
+            selectElement.value = selectElement.dataset.previousValue;
+            console.log("selectElement.value :" + selectElement.value);
+            console.log("selectElement.dataset.previousValue : " + selectElement.dataset.previousValue);
+            return;
+        }
+
+        //var productCode = $(element).closest('tr').find('.product-code-input').val(); // Get product code
+        var rowData = $(element).closest('tr');
+
+        if (product === "addNewPro") {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetProducts", "so_inward")',
+                success: function (response) {
+                    // Handle success response
+                    console.log("Products fetched successfully:", response);
+                    // Populate the dropdown with fetched data
+                    var dropdown = $('#categoryname');
+                    dropdown.empty();
+                    $.each(response, function (index, productName) {
+                        dropdown.append($('<option></option>').val(productName).text(productName));
+                    });
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    // Handle error
+                    console.error("Error fetching products:", textStatus, errorThrown);
+                }
+            });
+            $('#form-modal').modal('show');
+        }
+        else {
+            $.ajax({
+                url: '/so_inward/ActionName_description',
+                type: 'GET',
+                data: { description: selectedDescription },
+                success: function (data) {
+                    // Update other fields with fetched data
+                    // $(rowData).find('.quantity-input').val(data.quantity);
+                    $(rowData).find('.product-code-input').val(data.modelno);
+                    $(rowData).find('.uom-input').val(data.uom);
+                    $(rowData).find('.brand-input').val(data.brand);
+
+                    // Update other fields as needed
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    //console.error("Error fetching product details:", textStatus, errorThrown);
+                    console.error("Error fetching product details:", textStatus, errorThrown);
+                    // Display SweetAlert for error
+                    swal({
+                        title: "Error!",
+                        text: "Failed to fetch product details.",
+                        icon: "error",
+                        button: "OK",
+                    });
+                }
+            });
+
+        }
+    }
+
+
+    // function checkFieldsAndSubmit() {
+    //     var isValid = true;
+    //     var emptyFieldName = ""; // Variable to store the name of the empty field
+
+    //     // Check form fields
+    //     var fieldIds = ['#orderType', '#emailId', '#contactnoId', '#addressId', '#cityId', '#stateId'];
+    //     fieldIds.forEach(function (fieldId) {
+    //         var value = $(fieldId).val();
+    //         if (!value) {
+    //             isValid = false;
+    //             emptyFieldName = $(fieldId).siblings('label').text(); // Get the label text of the empty field
+    //             // Display error message for empty field
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Oops...',
+    //                 text: 'Please fill all the required fields. ',
+    //             });
+    //             return false; // Exit loop early if any field is empty
+    //         }
+    //     });
+
+    //     if (!isValid) {
+    //         return false; // Prevent form submission if any field is empty
+    //     }
+
+    //     // Check table row values
+    //     var rowEmpty = false;
+    //     $('#CodesTable tbody tr').each(function () {
+    //         $(this).find('input, select').each(function () {
+    //             var value = $(this).val();
+    //             if (!value && value !== "0") { // Check for empty or zero value
+    //                 rowEmpty = true;
+    //                 return false; // Exit loop early if any table row value is empty or zero
+    //             }
+    //         });
+    //         if (rowEmpty) {
+    //             isValid = false;
+    //             // Display error message for empty row
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Oops...',
+    //                 text: 'Please fill in all values in the table rows.',
+    //             });
+    //             return false; // Exit loop early if any row is empty
+    //         }
+    //     });
+
+    //     return isValid; // Return true if all fields and table rows are filled, else false
+    // }
+
+
+    function checkSono11() {
+        console.log("Check fields and submit call ....");
+
+        // Get the selected value for customer name
+        var customerNameValue;
+        if ($('#customernameId').is(':visible')) {
+            customerNameValue = $('#customernameId').val();
+        } else {
+            customerNameValue = $('#newCustomerName').val();
+        }
+
+        // Set the value to both the select dropdown and the hidden input field
+        $('#customernameId').val(customerNameValue);
+        $('#newCustomerName').val(customerNameValue);
+
+        var fieldIds = [
+            { id: '#orderType', label: 'Order Entry Type' },
+            { id: '#newCustomerName', label: 'Customer Name' },
+            { id: '#contactnoId', label: 'Contact Number' },
+            { id: '#emailId', label: 'Email ID' },
+            { id: '#addressId', label: 'Address' },
+            { id: '#cityId', label: 'City' },
+            { id: '#stateId', label: 'State' },
+            // { id: '#dispatchdate', label: 'Dispatch Date' }
+        ];
+
+        var isAnyFieldNull = false;
+        var emptyFieldLabels = [];
+
+        fieldIds.forEach(function (field) {
+            var value = $(field.id).val();
+            if (!value) {
+                isAnyFieldNull = true;
+                emptyFieldLabels.push(field.label);
+                console.log("Field '" + field.label + "' is empty."); // Print empty field label to console
+            }
+        });
+
+        if (isAnyFieldNull) {
+            // Display error message with empty field labels
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                html: 'Please fill in all required fields:<br>' + emptyFieldLabels.join('<br>')
+            });
+            return false; // Prevent form submission
+        } else {
+            // Proceed with form submission if all fields are filled
+            return true;
+        }
+    }
+    // var isAddingCustomer = false;
+
+    // var isAddingCustomer = false;
+
+    // function checkSono11() {
+    //     console.log("Check fields and submit call ....");
+
+    //     // Get the selected value for customer name
+    //     var customerNameValue;
+    //     if ($('#customernameId').is(':visible')) {
+    //         customerNameValue = $('#customernameId').val();
+    //     } else {
+    //         customerNameValue = $('#newCustomerName').val();
+    //     }
+
+    //     // Set the value to both the select dropdown and the hidden input field
+    //     $('#customernameId').val(customerNameValue);
+    //     $('#newCustomerName').val(customerNameValue);
+
+    //     var fieldIds = [
+    //         { id: '#orderType', label: 'Order Entry Type' },
+    //         { id: '#newCustomerName', label: 'Customer Name' },
+    //         { id: '#contactnoId', label: 'Contact Number' },
+    //         { id: '#emailId', label: 'Email ID' },
+    //         { id: '#addressId', label: 'Address' },
+    //         { id: '#cityId', label: 'City' },
+    //         { id: '#stateId', label: 'State' }
+    //     ];
+
+    //     var isAnyFieldNull = false;
+    //     var emptyFieldLabels = [];
+
+    //     fieldIds.forEach(function (field) {
+    //         var value = $(field.id).val();
+    //         if (!value) {
+    //             isAnyFieldNull = true;
+    //             emptyFieldLabels.push(field.label);
+    //             console.log("Field '" + field.label + "' is empty."); // Print empty field label to console
+    //         }
+    //     });
+
+    //     if (isAnyFieldNull) {
+    //         // Display error message with empty field labels
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Oops...',
+    //             html: 'Please fill in all required fields:<br>' + emptyFieldLabels.join('<br>')
+    //         });
+    //         return false; // Prevent form submission
+    //     } else {
+    //         // Proceed with form submission if all fields are filled
+
+    //         // Check if the customer name exists in the customer master table
+    //         $.ajax({
+    //             url: '/so_inward/CheckCustomerExit',
+    //             method: 'POST',
+    //             data: { customerName: customerNameValue },
+    //             success: function (data) {
+    //                 if (data === true) {
+    //                     // Customer exists, proceed with form submission
+    //                     $('#CodeSbyAnizForm').submit();
+    //                 } else {
+    //                     // Customer doesn't exist, add it first
+    //                     addCustomer(customerNameValue);
+    //                 }
+    //             },
+    //             error: function () {
+    //                 // Error handling
+    //                 console.error('Error occurred while checking customer existence.');
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Oops...',
+    //                     text: 'An error occurred while checking customer existence. Please try again later.'
+    //                 });
+    //             }
+    //         });
+
+    //         return false; // Prevent default form submission
+    //     }
+    // }
+
+    // function addCustomer(customerName) {
+    //     // Check if the customer addition process is already ongoing
+    //     if (isAddingCustomer) {
+    //         // If already adding, return without doing anything
+    //         return;
+    //     }
+
+    //     // Set the flag to indicate that customer addition is in progress
+    //     isAddingCustomer = true;
+
+    //     // Get the values of additional customer information
+    //     var contactNumber = $('#contactnoId').val();
+    //     var email = $('#emailId').val();
+    //     var address = $('#addressId').val();
+    //     var city = $('#cityId').val();
+    //     var state = $('#stateId').val();
+
+    //     // Implement AJAX call to add customer
+    //     $.ajax({
+    //         url: '/so_inward/AddCustomer',
+    //         method: 'POST',
+    //         data: {
+    //             customerName: customerName,
+    //             contactNumber: contactNumber,
+    //             email: email,
+    //             address: address,
+    //             city: city,
+    //             state: state
+    //         },
+    //         success: function (data) {
+    //             console.log("data" + data);
+    //             if (data.success) {
+    //                 // Customer added successfully, now submit the form
+    //                 $('#CodeSbyAnizForm').submit();
+    //             } else {
+    //                 // Error adding customer
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Oops...',
+    //                     text: 'Failed to add customer. Please try again.'
+    //                 });
+    //             }
+
+    //             // Reset the flag after completing the addition process
+    //             isAddingCustomer = false;
+    //         },
+    //         error: function () {
+    //             // Error handling
+    //             console.error('Error occurred while adding customer.');
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Oops...',
+    //                 text: 'An error occurred while adding customer. Please try again later.'
+    //             });
+
+    //             // Reset the flag after encountering an error
+    //             isAddingCustomer = false;
+    //         }
+    //     });
+    // }
+
+
+    // document.getElementById("addCustomerBtn").addEventListener("click", function () {
+    //         // Hide the customer name dropdown and show the input field
+    //         var customerSelect = document.getElementById("customernameId");
+    //         var newCustomerInput = document.getElementById("newCustomerName");
+
+    //         if (customerSelect.style.display !== "none") {
+    //             customerSelect.style.display = "none";
+    //             newCustomerInput.style.display = "block";
+    //         } else {
+    //             customerSelect.style.display = "block";
+    //             newCustomerInput.style.display = "none";
+    //         }
+    //     });
+
+    function toggleInputFields() {
+        var orderType = document.getElementById("orderType").value;
+        if (orderType === "sono") {
+            document.getElementById("sonoField").style.display = "block";
+            document.getElementById("donoField").style.display = "none";
+        } else if (orderType === "dono") {
+            document.getElementById("donoField").style.display = "block";
+            document.getElementById("sonoField").style.display = "none";
+        } else {
+            document.getElementById("sonoField").style.display = "none";
+            document.getElementById("donoField").style.display = "none";
+        } fetchOrderData(); // Call fetchOrderData() after changing order type
+
+    }
+
+    // function fetchOrderData() {
+    //     var orderType = document.getElementById("orderType").value;
+    //     if (orderType === "sono") {
+    //         $.get("/so_inward/getSonoData?orderType=sono", function (data) {
+    //             $("#sonoInput").val(data);
+    //             $("#sonoField").show();
+    //             $("#donoField").hide();
+    //         });
+    //     } else if (orderType === "dono") {
+    //         $.get("/so_inward/getSonoData?orderType=dono", function (data) {
+    //             $("#donoInput").val(data);
+    //             $("#donoField").show();
+    //             $("#sonoField").hide();
+    //         });
+    //     } else {
+    //         $("#sonoField").hide();
+    //         $("#donoField").hide();
+    //     }
+    // }
+
+    // Trigger fetchOrderData on change event of orderType dropdown
+
+
+    // // $('#sono').on('keypress blur', function (e) {
+    $(document).ready(function () {
+        // $('#orderType').change(fetchOrderData);
+
+        $('#sonoInput').change(checkSono);
+        // event.preventDefault();
+        // if ($('#sono').val() === '') {
+        //     // If sono is empty
+        //     Swal.fire({
+        //         icon: 'info',
+        //         title: 'Info',
+        //         text: 'Please Enter the Sale Order Number first!',
+        //     });
+        // }
+    });
+
+    function checkProductCode() {
+        var productcode = $('#productcode').val().toUpperCase().trim(); // Get the value of pono input field
+        $.ajax({
+            url: '/Product_Master/ProductMasterCheck', // Correct URL path
+            type: 'POST',
+            data: { productcode: productcode },
+            success: function (response) {
+                if (response.success) {
+                    console.log("Response: " + response.message);
+                } else {
+                    Swal.fire({
+                        title: 'Warning!',
+                        text: response.message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        $('#productcode').val('');
+                    });
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error("Error:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    // function checkSono11() {
+    //     console.log("Check fields and submit call ....");
+
+    //     var fieldIds = [
+    //         { id: '#orderType', label: 'Order Entry Type' },
+    //         { id: '#customernameId', label: 'Customer Name' },
+    //         { id: '#contactnoId', label: 'Contact Number' },
+    //         { id: '#emailId', label: 'Email ID' },
+    //         { id: '#addressId', label: 'Address' },
+    //         { id: '#cityId', label: 'City' },
+    //         { id: '#stateId', label: 'State' },
+    //         // { id: '#dispatchdate', label: 'Dispatch Date' }
+    //     ];
+
+    //     var isAnyFieldNull = false;
+    //     var emptyFieldLabels = [];
+
+    //     fieldIds.forEach(function (field) {
+    //         var value = $(field.id).val();
+    //         if (!value) {
+    //             isAnyFieldNull = true;
+    //             emptyFieldLabels.push(field.label);
+    //             console.log("Field '" + field.label + "' is empty."); // Print empty field label to console
+    //         }
+    //     });
+
+    //     if (isAnyFieldNull) {
+    //         // Display error message with empty field labels
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Oops...',
+    //             html: 'Please fill in all required fields:<br>' + emptyFieldLabels.join('<br>')
+    //         });
+    //         return false; // Prevent form submission
+    //     } else {
+    //         // Proceed with form submission if all fields are filled
+    //         return true;
+    //     }
+    // }
+
+    function checkSono() {
+        var ponoValue = $('#sonoInput').val().trim(); // Get the value of pono input field
+        $.ajax({
+            url: '/so_inward/SoCheck', // Correct URL path
+            type: 'POST',
+            data: { sono: ponoValue },
+            success: function (response) {
+                if (response.success) {
+                    console.log("Response: " + response.message);
+                } else {
+                    Swal.fire({
+                        title: 'Warning!',
+                        text: response.message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        $('#sonoInput').val('');
+                    });
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error("Error:", textStatus, errorThrown);
+            }
+        });
+    }
+    function checkDono() {
+        var ponoValue = $('#donoInput').val().trim(); // Get the value of pono input field
+        $.ajax({
+            url: '/so_inward/SoCheck', // Correct URL path
+            type: 'POST',
+            data: { sono: ponoValue },
+            success: function (response) {
+                if (response.success) {
+                    console.log("Response: " + response.message);
+                } else {
+                    Swal.fire({
+                        title: 'Warning!',
+                        text: response.message,
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        $('#donoInput').val('');
+                    });
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error("Error:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    function openStockModal(button) {
+        var productcode = $(button).closest('tr').find('.product-code-input').val().toUpperCase();
+        //alert("openStockModal : " + productcode)
+        $.ajax({
+            url: '/Picklist_Generation/InStockQty',
+            type: 'GET',
+            data: { productcode: productcode },
+            success: function (data) {
+                if (data.message === "Please select the product first !") {
+                    // Product code is null, show SweetAlert2 warning
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Oops...',
+                        text: data.message,
+                        showConfirmButton: false,
+                        timer: 2000 // Auto close after 2 seconds
+                    });
+                } else {
+                    $('.modal-body').html(data);
+                    $('#form-modal').modal('show');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching content:", error);
+            }
+        });
+    }
+
+    $('#country').change(function () {
+        var countryId = $(this).val();
+        if (countryId) {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetStatesByCountry", "Supplier_Master")',
+                data: { countryId: countryId },
+                success: function (states) {
+                    $('#state').empty();
+                    $('#city').empty();
+                    $('#state').append('<option value="">Select State</option>');
+                    $.each(states, function (i, state) {
+                        $('#state').append('<option value="' + state.value + '">' + state.text + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#state').empty();
+            $('#city').empty();
+        }
+    });
+
+    $('#state').change(function () {
+        var stateId = $(this).val();
+        if (stateId) {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetCitiesByState", "Supplier_Master")',
+                data: { stateId: stateId },
+                success: function (cities) {
+                    $('#city').empty();
+                    $('#city').append('<option value="">Select City</option>');
+                    $.each(cities, function (i, city) {
+                        $('#city').append('<option value="' + city.value + '">' + city.text + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#cityId').empty();
+        }
+    });
+
+    // $(document).ready(function () {
+    //     // Fetch countries
+    //     $.ajax({
+    //         url: 'https://restcountries.com/v3.1/all',
+    //         type: 'GET',
+    //         success: function (data) {
+    //             console.log("country data : " + data);
+    //             $.each(data, function (index, country) {
+    //                 $('#country').append($('<option>').text(country.name.common).attr('value', country.cca2));
+    //             });
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error('Error fetching countries:', error);
+    //         }
+    //     });
+
+    //     // When a country is selected, fetch states
+    //     $('#country').on('change', function () {
+    //         var countryCode = $(this).val();
+    //         $('#state').empty().append($('<option>').text('--Select State--').attr('value', ''));
+    //         $('#city').empty().append($('<option>').text('--Select City--').attr('value', ''));
+    //         if (countryCode) {
+    //             $.ajax({
+    //                 url: 'https://countriesnow.space/api/v0.1/countries/state/' + countryCode,
+    //                 type: 'GET',
+    //                 success: function (data) {
+    //                     console.log("country state : " + data);
+    //                     $.each(data.data.states, function (index, state) {
+    //                         $('#state').append($('<option>').text(state.name).attr('value', state.code));
+    //                     });
+    //                 },
+    //                 error: function (xhr, status, error) {
+    //                     console.error('Error fetching states:', error);
+    //                 }
+    //             });
+    //         }
+    //     });
+
+    //     // When a state is selected, fetch cities
+    //     $('#state').on('change', function () {
+    //         var stateCode = $(this).val();
+    //         $('#city').empty().append($('<option>').text('--Select City--').attr('value', ''));
+    //         if (stateCode) {
+    //             $.ajax({
+    //                 url: 'https://countriesnow.space/api/v0.1/countries/state/cities/' + stateCode,
+    //                 type: 'GET',
+    //                 success: function (data) {
+    //                     console.log("city data : " + data);
+    //                     $.each(data.data, function (index, city) {
+    //                         $('#city').append($('<option>').text(city).attr('value', city));
+    //                     });
+    //                 },
+    //                 error: function (xhr, status, error) {
+    //                     console.error('Error fetching cities:', error);
+    //                 }
+    //             });
+    //         }
+    //     });
+    // });
+
+    function submitFormc() {
+        console.log("Click...");
+        var customername = $('#customername').val();
+        var contactperson = $('#contactperson').val();
+        var address = $('#address').val();
+        var city = $('#city').val();
+        var state = $('#state').val();
+        var country = $('#country').val();
+        var pincode = $('#pincode').val();
+        var contactno = $('#contactno').val();
+        var emailid = $('#emailid').val();
+        var gstno = $('#gstno').val();
+
+        // Construct the data object
+        var formData = {
+            customername: customername,
+            contactperson: contactperson,
+            address: address,
+            city: city,
+            state: state,
+            country: country,
+            pincode: pincode,
+            contactno: contactno,
+            emailid: emailid,
+            gstno: gstno,
+            Consignee_masters: []
+        };
+        // Iterate through table rows
+        $('#CodesTable11 tbody tr').each(function () {
+            var row = $(this);
+            var cname = row.find('#cname').val();
+            var ccontact = row.find('#ccontact').val();
+            var ccontactperson = row.find('#ccontactperson').val();
+            var caddress = row.find('#caddress').val();
+            var cemail = row.find('#cemail').val();
+            var ccity = row.find('#ccity').val();
+            var cstate = row.find('#cstate').val();
+            var cpin = row.find('#cpin').val();
+
+            // Create an object for each row and push it to the formData array
+            var rowData = {
+                consigneename: cname,
+                consigneecontact: ccontact,
+                consigneeperson: ccontactperson,
+                consigneeaddress: caddress,
+                consigneeemail: cemail,
+                consigneecity: ccity,
+                consigneestate: cstate,
+                consigneepincode: cpin
+            };
+            console.log("JSON.stringify(rowData) : " + JSON.stringify(rowData));
+            console.log("rowData : " + rowData);
+            formData.Consignee_masters.push(rowData);
+        });
+
+        console.log("formData:", JSON.stringify(formData));
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Getcuss", "so_inward")',
+            data: formData,
+            success: function (response) {
+                console.log("Form submitted successfully:", response);
+                if (response.success) {
+                    console.log("Form submitted successfully", response);
+                    $('#customernameId').empty();
+                    $('#customernameId').append($('<option>').text("--Select Customer--").val("--Select Customer--"));
+                    $.each(response.descriptions, function (index, item) {
+                        $('#customernameId').append($('<option>').text(item).val(item));
+                    });
+                    $('#customernameId').append($('<option>').text("--- Add New Customer Name--- ").val("addNewCus"));
+
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'The supplier has been  added successfully',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#form-modalc').modal('hide');
+                } else {
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.error("Error submitting form:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    function changeCategory() {
+        if (document.getElementById("categoryname").value != "") {
+            var selectedValue = document.getElementById("categoryname").value;
+            var categoryCodeInput = $("#categorycode");
+            $.ajax({
+                url: '/Product_Master/GETCategory_CODE',
+                type: 'GET',
+                data: { selectedValue: selectedValue },
+                success: function (data) {
+                    //console.log("categoryname : " + data);
+                    categoryCodeInput.val(data);
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action: " + error);
+                }
+            });
+            //END
+            //for category and subcategory
+            var studentSelect = $('#subcategoryIddata');
+            $.ajax({
+                url: '@Url.Action("ChangeCategory", "Product_Master")',
+                type: 'GET',
+                dataType: 'json',
+                data: { selectedvalue: selectedValue },
+                success: function (data) {
+                    //console.log("subcategoryIddata : " + data);
+                    // Set the values in the textboxes
+                    $('#subcategoryIddata').empty();
+                    $('#subcategoryIddata').append($('<option>').text("--Select SubCategory--").val("--Select SubCategory--"));
+                    $.each(data, function (index, item) {
+                        $('#subcategoryIddata').append($('<option>').text(item.value).val(item.value));
+                    });
+                }
+            });
+        }
+    }
+
+    function dropdownChangedSubcategory() {
+        var selectedOption = document.getElementById("subcategoryId").value;  //sub-category
+        var selectedOption1 = document.getElementById("categoryname").value;      //category
+
+        $.ajax({
+            url: '/Product_Master/ActionName',
+            type: 'POST',
+            data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+            success: function (result) {
+                // console.log("result : " + result);
+                // console.log("result.data : " + result.data);
+                // console.log("result.categoryname : " + data.categoryname);
+            },
+            error: function (xhr, status, error) {
+                console.log("An error occurred while executing the action.");
+            }
+        });
+    }
+
+    // function submitForm() {
+    //     event.preventDefault();
+
+    //     var categoryCode = $('#categorycode').val();
+    //     var categoryName = $('#categoryname').val();
+    //     var subCategoryId = $('#subcategoryIddata').val();
+    //     var productCode = $('#productcode').val().toUpperCase();
+    //     var productDescription = $('#productdescription').val().toUpperCase();
+    //     var brand = $('#brand').val();
+    //     var hsn = $('#hsnid').val(); // Get HSN value
+    //     var uom = $('#uom').val(); // Get UOM value
+    //     var typeOfProduct = $("input[name='TypeOfProduct']:checked").val(); // Get the selected radio button value
+
+    //     var formData = {
+    //         categoryCode: categoryCode,
+    //         categoryName: categoryName,
+    //         subcategory: subCategoryId,
+    //         productCode: productCode,
+    //         productDescription: productDescription,
+    //         brand: brand,
+    //         hsncode: hsn,
+    //         uom: uom,
+    //         typeOfProduct: typeOfProduct
+    //     };
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: '@Url.Action("Getdess", "so_inward")',
+    //         data: formData,
+    //         success: function (response) {
+    //             if (response.success) {
+    //                 //console.log("Form submitted successfully", response);
+
+    //                 $('.descriptionn').empty();
+    //                 $('.descriptionn').append($('<option>').text("--Select Description--").val("--Select Description--"));
+    //                 $.each(response.descriptions, function (index, item) {
+
+    //                     $('.descriptionn').append($('<option>').text(item).val(item));
+    //                 });
+    //                 $('.descriptionn').append($('<option>').text("--- Add New Product--- ").val("addNewCus"));
+    //                 Swal.fire({
+    //                     title: 'Success!',
+    //                     text: 'The item has been added successfully.',
+    //                     icon: 'success',
+    //                     confirmButtonText: 'OK'
+    //                 });
+    //                 //$('#form-modal').modal('hide');
+    //             } else {
+    //                 // Handle if the response is not successful
+    //             }
+    //         },
+    //         error: function (xhr, textStatus, errorThrown) {
+    //             // Handle error
+    //             console.error("Error submitting form", textStatus, errorThrown);
+    //         }
+    //     });
+
+    // }
+    function submitForm() {
+        event.preventDefault();
+
+        var categoryCode = $('#categorycode').val();
+        var categoryName = $('#categoryname').val();
+        var subCategoryId = $('#subcategoryIddata').val();
+        var productCode = $('#productcode').val().toUpperCase();
+        var productDescription = $('#productdescription').val().toUpperCase();
+        var brand = $('#brand').val();
+        var hsn = $('#hsnid').val(); // Get HSN value
+        var uom = $('#uom').val(); // Get UOM value
+        var typeOfProduct = $("input[name='TypeOfProduct']:checked").val(); // Get the selected radio button value
+
+        var formData = {
+            categoryCode: categoryCode,
+            categoryName: categoryName,
+            subcategory: subCategoryId,
+            productCode: productCode,
+            productDescription: productDescription,
+            brand: brand,
+            hsncode: hsn,
+            uom: uom,
+            typeOfProduct: typeOfProduct
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("Getdess", "so_inward")',
+            data: formData,
+            success: function (response) {
+                if (response.success) {
+
+                    console.log("Form submitted successfully", response);
+                    console.log("NEW ID : " + response);
+
+                    $('#descriptiondropdown').empty();
+                    $('#descriptiondropdown').append($('<option>').text("--Select Product--").val("--Select Product--"));
+
+                    // Check if response.descriptions is an array or string
+                    if (Array.isArray(response.descriptions)) {
+                        // Sort the array (alphabetically in ascending order)
+                        response.descriptions.sort();  // For descending order, use .sort().reverse()
+
+                        $.each(response.descriptions, function (index, item) {
+                            $('#descriptiondropdown').append($('<option>').text(item).val(item));
+                        });
+                    } else {
+                        // If it's a string, handle it as a single option
+                        $('#descriptiondropdown').append($('<option>').text(response.descriptions).val(response.descriptions));
+                    }
+
+                    $('#descriptiondropdown').append($('<option>').text("--- Add New Product Name--- ").val("addNewPro"));
+
+
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'The item has been added successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    $('#form-modal').modal('hide');
+                } else {
+                    // Handle if the response is not successful
+                }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                // Handle error
+                console.error("Error submitting form", textStatus, errorThrown);
+            }
+        });
+
+    }
+
+
+    // var quantityInputs = document.querySelectorAll('.quantity-input');
+    // quantityInputs.forEach(function (input) {
+    //     // alert("Quantity changes....");
+    //     console.log("Qauntity")
+    //     input.addEventListener('change', function () {
+    //         var enteredQuantity = parseFloat(this.value);
+
+    //         if (enteredQuantity <= 0) { // Check if quantity is less than zero
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Invalid Quantity',
+    //                 text: 'Quantity cannot be less than 0 :)',
+    //             });
+    //             this.value = '0';
+    //         }
+    //     });
+    // });
+
+    function checkQuantity(input) {
+        if (!input) {
+            console.error('Input element is undefined.');
+            return;
+        }
+        var enteredQuantity = parseInt(input.value.trim());
+
+        if (enteredQuantity > 0) {
+            var selectElement = input.closest('tr').querySelector('.productcode').toUpperCase(); // Get the select element in the same row
+
+            var productdesc = selectElement.toUpperCase() ? selectElement.value.toUpperCase() : null;
+            console.log("productdesc:-" + productdesc)
+            if (!productdesc) {
+                console.error('Product description not found.');
+                return;
+            }
+            console.log('Select element is:-' + selectElement.value);
+            var url = '/so_inward/checkquantity'; // Replace with your actual URL
+            var data = {
+                productcode: productdesc,
+                quantity: enteredQuantity
+            };
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                success: function (response) {
+                    if (response.isQuantityAvailable == false) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: 'Not Enough Quantity Available in stock !, Current Stock is ' + response.currentqty + ' only !',
+                        });
+                        input.value = ''; // Clear invalid value
+                    }
+                    else if (response.isQuantityAvailable == true) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: ' Product is not in stock !',
+                            text: 'No Stock found of that product in storage !',
+                        });
+                        input.value = ''; // Clear invalid value
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr, status, error);
+                }
+            });
+        }
+        else {
+
+        }
+
+    }
+
+    // function checkQuantity(input) {
+    //     if ($('#sono').val() === '') {
+    //         //if sono is empty
+    //         Swal.fire({
+    //             icon: 'warning',
+    //             title: 'Warning',
+    //             text: 'Please Enter the Sale Order Number first!',
+    //         });
+    //     }
+
+    //     if (!input) {
+    //         console.error('Input element is undefined.');
+    //         return;
+    //     }
+    //     var enteredQuantity = parseInt(input.value.trim());
+
+    //     if (enteredQuantity > 0) {
+    //         var selectElement = input.closest('tr').querySelector('.productcode'); // Get the select element in the same row
+
+    //         var productdesc = selectElement ? selectElement.value : null;
+    //         //console.log("productdesc:-" + productdesc)
+    //         if (!productdesc) {
+    //            // console.error('Product description not found.');
+    //             return;
+    //         }
+    //         //console.log('Select element is:-' + selectElement.value);
+    //         var url = '/so_inward/checkquantity'; // Replace with your actual URL
+    //         var data = {
+    //             productcode: productdesc,
+    //             quantity: enteredQuantity
+    //         };
+
+    //         $.ajax({
+    //             url: url,
+    //             type: 'POST',
+    //             data: data,
+    //             success: function (response) {
+    //                 if (response.isQuantityAvailable == false) {
+    //                     Swal.fire({
+    //                         icon: 'warning',
+    //                         title: 'Warning',
+    //                         text: 'Not Enough Quantity Available in stock !, Current Stock is ' + response.currentqty +' only !',
+    //                     });
+    //                     input.value = '';
+    //                 }
+    //                 else if (response.isQuantityAvailable == true) {
+    //                     Swal.fire({
+    //                         icon: 'warning',
+    //                         title: 'No Stock found of ' + product + ' in storage !',
+    //                         text: product+ ' Product is not in stock !',
+    //                     });
+    //                     input.value = '';
+    //                 }
+
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 console.error(xhr, status, error);
+    //             }
+    //         });
+    //     }
+    //     else {
+
+    //     }
+
+    // }
+
+    var object = { status: false, ele: null };
+
+    function checkqty(ev) {
+        if (object.status) { return true; }
+        // FOR QUANTITY CHECK
+        var quantityInputs = document.querySelectorAll('.quantity-input');
+        var isValid = true;
+        quantityInputs.forEach(function (input) {
+            var enteredQuantity = parseFloat(input.value);
+            if (enteredQuantity <= 0 || isNaN(enteredQuantity)) {
+                isValid = false;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Quantity',
+                    text: 'Please enter a valid quantity greater than 0!',
+                });
+            }
+        });
+        if (!isValid) {
+            return false;
+        }
+        return true;
+    }
+
+    $(document).on('click', '.edits-button', function () {
+        var currentRow = $(this).closest('tr');
+        var description = currentRow.find('select[name*="description"]').val().toUpperCase();
+        var productcode = currentRow.find('input[name*="productcode"]').val().toUpperCase();
+        var Warranty = currentRow.find('input[name*="Warranty"]').val();
+        var quantity = currentRow.find('input[name*="quantity"]').val();
+
+        // console.log(productcode + " - " + description + " - " + quantity + " - " + Warranty);
+        showProductDetails4(productcode, description, quantity);
+    });
+
+    function showProductDetails4(productcode, description, quantity) {
+        //console.log(" data : " + productcode + description + quantity);
+        var editUrl = '/so_inward/_partialSubComponent?productcode=' + productcode + '&description=' + description + '&quantity=' + quantity;
+        //console.log(editUrl);
+        showInPopup(editUrl, 'Subcomponent Details');
+    }
+
+    function dropdownChanged_customernames() {
+        if (document.getElementById("customernameId").value != "") {
+            var selectedValue = document.getElementById("customernameId").value;
+            if (selectedValue == "addNewCus") {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("Getcountry11", "Supplier_Master")',
+                    success: function (response) {
+                        // console.log("response : " + response);
+                        // $('#country').empty();
+                        // $.each(response, function (index, productName) {
+                        //     $('#country').append($('<option></option>').val(productName).text(productName));
+                        // });
+                        console.log("response : ", response); // Log the response as an object
+                        $('#country').empty(); // Clear existing options
+
+                        // Iterate over the response
+                        $.each(response, function (index, item) {
+                            // Access the properties of SelectListItem
+                            $('#country').append($('<option></option>').val(item.value).text(item.text));
+                        });
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.error("Error fetching products:", textStatus, errorThrown);
+                    }
+                });
+                console.log("Customer name click")
+                $('#form-modalc').modal('show');
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("ActionName_customername", "so_inward")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { selectedvalue: selectedValue },
+                    success: function (data) {
+                        //console.log(data.contactno + " /n" + data.email + " /n" + data.address + " /n" + data.state + " /n" + data.city);
+                        document.getElementById("contactnoId").value = data.contactno;
+                        document.getElementById("emailId").value = data.emailid;
+                        document.getElementById("stateId").value = data.state;
+                        document.getElementById("cityId").value = data.city;
+                        document.getElementById("addressId").value = data.address;
+                    }
+                });
+
+            }
+        }
+    }
+
+    //function handleDespChange(event, selectElement) {
+    //    var product = selectElement.value;
+    //    //console.log(product);
+    //    // Check if the selected product is already present in other rows
+    //    var selectedDescriptionExists = $('.description-dropdown').filter(function () {
+    //        return this.value === product;
+    //    }).length > 1;
+
+    //    // If the selected description already exists, show SweetAlert and return
+    //    if (selectedDescriptionExists) {
+    //        Swal.fire({
+    //            title: 'Error!',
+    //            text: 'This description is already selected in another row.',
+    //            icon: 'error',
+    //            confirmButtonText: 'OK'
+    //        }).then((result) => {
+    //            // Empty the description value after user confirmation
+    //            selectElement.value = '';
+    //        });
+    //        // Reset the select element to its previous value
+    //        selectElement.value = selectElement.dataset.previousValue;
+    //        console.log("selectElement.value :" + selectElement.value);
+    //        console.log("selectElement.dataset.previousValue : " + selectElement.dataset.previousValue);
+    //        return;
+    //    }
+
+    //    // Store the current selected value to use it for comparison next time
+    //    selectElement.dataset.previousValue = product;
+
+    //    if (product === "addNewPro") {
+    //        $.ajax({
+    //            type: 'GET',
+    //            url: '@Url.Action("GetProducts", "so_inward")',
+    //            success: function (response) {
+    //                // console.log("Products fetched successfully:", response);
+    //                $('#categoryname').empty();
+    //                $.each(response, function (index, productName) {
+    //                    $('#categoryname').append($('<option></option>').val(productName).text(productName));
+    //                });
+    //            },
+    //            error: function (xhr, textStatus, errorThrown) {
+    //                // console.error("Error fetching products:", textStatus, errorThrown);
+    //            }
+    //        });
+    //        $('#form-modal').modal('show');
+    //    } else {
+    //        // var txtProductCodeId = event.target.id.replace('description', 'productcode');
+    //        // var txtbrandId = event.target.id.replace('description', 'brand');
+    //        // var txtuomId = event.target.id.replace('description', 'uom');
+
+    //        // var txtProductCode = $('#' + txtProductCodeId);
+    //        // var txtbrand = $('#' + txtbrandId);
+    //        // var txtuom = $('#' + txtuomId);
+
+    //        // console.log('txtProductCodeId:', txtProductCodeId);
+    //        // console.log('txtbrandId:', txtbrandId);
+    //        // console.log('txtuomId:', txtuomId);
+
+    //        // console.log('txtProductCode:', txtProductCode);
+    //        // console.log('txtbrand:', txtbrand);
+    //        // console.log('txtuom:', txtuom);
+
+    //        // txtProductCode.val(''); // Clear the value
+
+    //        // console.log('Before AJAX:', txtProductCode.val(), txtbrand.val(), txtuom.val());
+
+    //        // $.ajax({
+    //        //     url: '@Url.Action("ActionName_description", "so_inward")',
+    //        //     type: 'GET',
+    //        //     dataType: 'json',
+    //        //     data: { selectedValue: product },
+    //        //     success: function (result) {
+    //        //         console.log("data:", result);
+    //        //         txtProductCode.val(result.modelno);
+    //        //         txtbrand.val(result.brand);
+    //        //         txtuom.val(result.uom);
+    //        //     },
+    //        //     error: function (xhr, textStatus, errorThrown) {
+    //        //         console.error("Error fetching product details:", textStatus, errorThrown);
+    //        //     }
+    //        // });
+    //        var txtProductCodeId = event.target.id.replace('description', 'productcode');
+    //        var txtbrandId = event.target.id.replace('description', 'brand');
+    //        var txtuomId = event.target.id.replace('description', 'uom');
+
+    //        var txtProductCode = $('#' + txtProductCodeId);
+    //        var txtbrand = $('#' + txtbrandId);
+    //        var txtuom = $('#' + txtuomId);
+
+    //        // Log IDs and elements for debugging
+    //        console.log('txtProductCodeId:', txtProductCodeId);
+    //        console.log('txtbrandId:', txtbrandId);
+    //        console.log('txtuomId:', txtuomId);
+    //        console.log('txtProductCode:', txtProductCode);
+    //        console.log('txtbrand:', txtbrand);
+    //        console.log('txtuom:', txtuom);
+
+    //        // Clear the values of input fields
+    //        txtProductCode.val('');
+    //        txtbrand.val('');
+    //        txtuom.val('');
+
+    //        // Make AJAX request to fetch product details
+    //        $.ajax({
+    //            url: '@Url.Action("ActionName_description", "so_inward")',
+    //            type: 'GET',
+    //            dataType: 'json',
+    //            data: { selectedValue: product },
+    //            success: function (result) {
+    //                console.log("data:", result);
+    //                // Populate input fields with retrieved data
+    //                txtProductCode.val(result.modelno);
+    //                txtbrand.val(result.brand);
+    //                txtuom.val(result.uom);
+    //            },
+    //            error: function (xhr, textStatus, errorThrown) {
+    //                //console.error("Error fetching product details:", textStatus, errorThrown);
+    //                console.error("Error fetching product details:", textStatus, errorThrown);
+    //                // Display SweetAlert for error
+    //                swal({
+    //                    title: "Error!",
+    //                    text: "Failed to fetch product details.",
+    //                    icon: "error",
+    //                    button: "OK",
+    //                });
+    //            }
+    //        });
+    //    }
+    //}
+
+    function validateNumber(input) {
+        var value = input.value;
+        var numericValue = value.replace(/\D/g, '');
+        if (numericValue.length > 10) {
+            numericValue = numericValue.slice(0, 10);
+        }
+        input.value = numericValue;
+    }
+
+    function validatePinNumber(input) {
+        var value = input.value;
+        var numericValue = value.replace(/\D/g, '');
+        if (numericValue.length > 6) {
+            numericValue = numericValue.slice(0, 6);
+        }
+        input.value = numericValue;
+    }
+
+    // function handleDespChange(selectElement) {
+    //     var product = selectElement.value;
+    //     console.log(product);
+    //     if (product === "addNewPro") {
+    //         $.ajax({
+    //             type: 'GET',
+    //             url: '@Url.Action("GetProducts", "so_inward")',
+    //             success: function (response) {
+    //                 // Handle success response
+    //                 console.log("Products fetched successfully:", response);
+    //                 // Populate the dropdown with fetched data
+    //                 var dropdown = $('#categoryname');
+    //                 dropdown.empty();
+    //                 $.each(response, function (index, productName) {
+    //                     dropdown.append($('<option></option>').val(productName).text(productName));
+    //                 });
+    //             },
+    //             error: function (xhr, textStatus, errorThrown) {
+    //                 // Handle error
+    //                 console.error("Error fetching products:", textStatus, errorThrown);
+    //             }
+    //         });
+    //         $('#form-modal').modal('show');
+    //     } else {
+    //         var tid = event.target.id;
+    //         var product = document.getElementById(tid).value;
+    //         console.log(product);
+
+    //         var txtProductCodeId = tid.replaceAll('description', 'productcode');
+    //         var txtbrandId = tid.replaceAll('description', 'brand');
+    //         var txtuomId = tid.replaceAll('description', 'uom');
+
+    //         var txtProductCode = document.getElementById(txtProductCodeId);
+    //         var txtbrand = document.getElementById(txtbrandId);
+    //         var txtuom = document.getElementById(txtuomId);
+
+    //         txtProductCode.value = null;
+    //         $.ajax({
+    //             url: '@Url.Action("ActionName_description", "so_inward")',
+    //             type: 'GET',
+    //             dataType: 'json',
+    //             data: { selectedvalue: product },
+    //             success: function (data) {
+    //                 console.log(data)
+    //                 txtProductCode.value = data.modelno;
+    //                 txtbrand.value = data.brand;
+    //                 txtuom.value = data.uom;
+    //             }
+    //         });
+    //     }
+    // }
+
+
+    // Function to gather data from both tables
+
+    //function saveTableData() {
+    //    var tableData = [];
+
+    //    // Iterate over table rows and push data to tableData array
+    //    $("#CodesTable tbody tr").each(function () {
+    //        var row = $(this);
+    //        tableData.push({
+    //            productcode: $(this).find('.product-code-input').val();,
+    //        description: $(this).find('.description-dropdown').val();,
+    //            brand: row.find("td:eq(2)").text(),
+    //            quantity: row.find("td:eq(3)").text(),
+    //            uom: row.find("td:eq(4)").text(),
+    //        });
+    //    });
+
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/so_inward/SaveTableData",
+    //        data: {
+
+    //            tableData: JSON.stringify(tableData), // Convert array to JSON string
+    //            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+    //        },
+    //        dataType: "json",
+    //        success: function (response) {
+    //            alert("Table data saved successfully!");
+    //            // Optionally, you can redirect or perform additional actions here
+    //            $("#CodeTable tbody tr").remove();
+    //        },
+    //        error: function (error) {
+    //            alert("Error saving table data!");
+    //        }
+    //    });
+
+    //   // document.getElementById("table2").value = "";
+    //    //document.getElementById("td").style.display = 'none';
+
+    //}
+
+
+    //function saveData() {
+    //    var data = [];
+
+    //    // Gather data from the first table
+    //    $('#CodesTable tbody tr').each(function () {
+    //        var productCode = $(this).find('.product-code-input').val();
+    //        var description = $(this).find('.description-dropdown').val();
+    //        var brand = $(this).find('.brand-input').val();
+    //        var quantity = $(this).find('.quantity-input').val();
+    //        var uom = $(this).find('.uom-input').val();
+
+    //        // Check if any required field is empty
+    //        if (productCode === '' || description === '' || brand === '' || quantity === '' || uom === '') {
+    //            console.error('One or more fields are empty. Please fill in all required fields.');
+    //            return; // Skip this row and continue to the next one
+    //        }
+
+    //        var rowData = {
+    //            productcode: productCode,
+    //            description: description,
+    //            brand: brand,
+    //            quantity: quantity,
+    //            uom: uom
+    //            // Add more fields if needed
+    //        };
+    //        data.push(rowData);
+    //    });
+
+    //    // Check if there's no data to save
+    //     var tableDataJson = JSON.stringify(data);
+
+    //     document.getElementById("data").value = tableDataJson;
+    //       var selectedoption = document.getElementById("data").value;
+    //    // AJAX request to send data to server
+    //    $.ajax({
+    //        url: '/so_inward/AddSO',
+    //        type: 'POST',
+    //        data: { selectedValue: selectedoption }, // Wrap data in an object
+    //        contentType: 'application/json',
+    //        success: function (response) {
+    //            // Handle success response
+    //            console.log('Data saved successfully:', response);
+    //        },
+    //        error: function (xhr, status, error) {
+    //            // Handle error
+    //            console.error('Error saving data:', error);
+    //        }
+    //    });
+    //}
+
+</script>
+
+<script>
+    $('#countryId').change(function () {
+        var countryId = $(this).val();
+        if (countryId) {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetStatesByCountry", "Supplier_Master")',
+                data: { countryId: countryId },
+                success: function (states) {
+                    $('#stateId').empty();
+                    $('#cityId').empty();
+                    $('#stateId').append('<option value="">Select State</option>');
+                    $.each(states, function (i, state) {
+                        $('#stateId').append('<option value="' + state.value + '">' + state.text + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#stateId').empty();
+            $('#cityId').empty();
+        }
+    });
+
+    $('#stateId').change(function () {
+        var stateId = $(this).val();
+        if (stateId) {
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetCitiesByState", "Supplier_Master")',
+                data: { stateId: stateId },
+                success: function (cities) {
+                    $('#cityId').empty();
+                    $('#cityId').append('<option value="">Select City</option>');
+                    $.each(cities, function (i, city) {
+                        $('#cityId').append('<option value="' + city.value + '">' + city.text + '</option>');
+                    });
+                }
+            });
+        } else {
+            $('#cityId').empty();
+        }
+    });
+</script>

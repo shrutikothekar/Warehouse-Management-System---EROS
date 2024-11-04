@@ -1,0 +1,185 @@
+﻿@model eros.Models.so_inward
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+        "Product Code",
+        //"Product Name" ,
+        "Decription" ,
+        "Brand",
+        //"HSN Code" ,
+        "UOM",
+        "Qty" ,
+    };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <a href="/so_inward/SalesPendingList" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                            <h5 class="mx-auto font-weight-bolder small-heading">Sale Order Delete</h5>
+                            @* <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>*@
+                        </div>
+                    </div>
+                    <form asp-action="Delete" id="CodeSbyAnizForm">
+                        <div class="row p-2">
+                            <dl class="row  ml-3">
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.sono)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.sono)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.customername)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.customername)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.contactno)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.contactno)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.emailid)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.emailid)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.address)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.address)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.city)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.city)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.state)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayNameFor(model => model.state)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.dispatchdate)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.dispatchdate)
+                                </dd>
+                            </dl>
+                            <div class="table-responsive col-md-12">
+                                <table id="PrdTable" class="table table-striped table-sm">
+                                    <thead class="bg-gray-200 sticky top-0">
+                                        <tr>
+                                            @foreach (var head in TableHeaders)
+                                            {
+                                                <th>
+                                                    @head
+                                                </th>
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody id="CsDiv">
+                                        @for (int i = 0; i < Model.soProduct_details.Count; i++)
+                                        {
+                                            <tr>
+                                                @*    <td>
+                                    <input asp-for="@Model.soProduct_details[i].productname" class="form-control" readonly />
+                                    <span asp-validation-for="@Model.soProduct_details[i].productname" class="text-danger"></span>
+                                    </td> *@
+                                                <td>
+                                                    <input asp-for="@Model.soProduct_details[i].productcode" class="form-control" readonly />
+                                                    <span asp-validation-for="@Model.soProduct_details[i].productcode" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.soProduct_details[i].description" class="form-control" readonly>
+                                                    <span asp-validation-for="@Model.soProduct_details[i].description" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.soProduct_details[i].brand" class="form-control" readonly>
+                                                    <span asp-validation-for="@Model.soProduct_details[i].brand" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.soProduct_details[i].quantity" class="form-control" readonly />
+                                                    <input type="hidden" asp-for="@Model.soProduct_details[i].IsDeleted" />
+                                                </td>
+                                                <td>
+                                                    <input asp-for="@Model.soProduct_details[i].uom" class="form-control" readonly />
+                                                    <span asp-validation-for="@Model.soProduct_details[i].uom" class="text-danger"></span>
+                                                </td>
+                                                @*  <td>
+                                    <input asp-for="@Model.soProduct_details[i].hsncode" class="form-control" readonly />
+                                    <span asp-validation-for="@Model.soProduct_details[i].hsncode" class="text-danger"></span>
+                                    </td> *@
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <input type="hidden" id="hdnLastIndex" value="0" />
+                            </div>
+                        </div>
+
+                        <div class="row mx-lg-2 mx-md-2 ">
+                            <div class="form-group col-sm-6 ">
+                                <input type="hidden" asp-for="id" />
+                                <input type="submit" value="Delete" class="btn btn-danger  col-sm-12" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <a class="btn btn-success col-sm-12" asp-action="Index">Back to List</a>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

@@ -1,0 +1,172 @@
+﻿ @model IEnumerable<eros.Models.inward>
+@{
+    ViewData["Title"] = "InwardPendingList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+
+        <div class="mt-2">
+            <div class="card m-2">
+                <div class="card-header bg-dark text-white">
+                    <div class="d-flex align-items-baseline">
+                        <a href="/" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                        <h5 class="mx-auto font-weight-bolder small-heading">Transaction Pending</h5>
+                    </div>
+                </div>
+                <main class="page payment-page">
+                    <section class="payment-form mt-1">
+                        <div class="">
+                            <div class="card-details bg-secondary">
+                                &nbsp;&nbsp;
+                                <div class="form-check form-check-inline mt-2 mb-2">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" value="1">
+                                    <label class="form-check-label text-white" for="flexRadioDefault1">
+                                        Inward
+                                    </label>
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" value="2">
+                                    <label class="form-check-label text-white" for="flexRadioDefault2">
+                                        Outward
+                                    </label>
+                                </div>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                        </div>
+
+                        <div class="container-fluid" id="form1">
+                            <div class="row">
+                                <div class="form-group col-sm-4 mt-3">
+                                    <label class="control-label">Types</label>
+                                    <select id="ordertypeId" class="form-control" name="ordertypeId" placeholder="select Ordertype">
+                                        @* <option value="selecttype">select type</option> *@
+                                        <option value=""></option>
+                                        <option value="Demo">Demo</option>
+                                        <option value="Repair">Repair</option>
+                                        <option value="Replacement">Replacement</option>
+                                        @*  <option value="Purchase">Purchase</option>
+                                <option value="Sales">Sales</option> *@
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-4 mt-3">
+                                    <label class="control-label">Party Name</label>
+                                    <select id="vendernameId" class="form-control" name="vendernameId" placeholder="select VenderType">
+                                        <option value=""></option>
+                                        <option value="Showroom">Showroom</option>
+                                        <option value="Supplier">Supplier</option>
+                                        <option value="Customer">Customer</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-4 mt-3">
+                                    <label id="lbtype" class="control-label">Status</label>
+                                    <select id="statusId" class="form-control" name="statusId" placeholder="Select Status ">
+                                        <option value=""></option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="All">All</option>
+                                    </select>
+                                </div>
+                                <div class="card-body" id="pendingOrdersContainer">
+                                    @Html.Partial("_inwardView", Model)
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+                </main>
+            </div>
+        </div>
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   
+    <script>
+    
+        $("input[name='flexRadioDefault']").click(function () {
+            var inoutType = $(this).val();
+            var ordertype = $("#ordertypeId").val();
+            var vendername = $("#vendernameId").val();
+            var status = $("#statusId").val();
+            loadPendingInwardData(inoutType, ordertype, vendername, status);
+        });
+
+        $("#ordertypeId, #vendernameId, #statusId").change(function () {
+            var inoutType = $("input[name='flexRadioDefault']:checked").val();
+            var ordertype = $("#ordertypeId").val();
+            var vendername = $("#vendernameId").val();
+            var status = $("#statusId").val();
+            loadPendingInwardData(inoutType, ordertype, vendername, status);
+        });
+
+        function loadPendingInwardData(inoutType, ordertype, vendername, status) {
+            console.log("Loading.......");
+            // alert(inoutType+ ordertype+ vendername+ status);
+            $.ajax({
+                url: '/inwards/GetInwardData',
+                type: 'GET',
+                data: {
+                    inoutType: inoutType,
+                    ordertype: ordertype,
+                    vendername: vendername,
+                    status: status
+                },
+                success: function (result) {
+                    $("#pendingOrdersContainer").html(result);
+                },
+                error: function () {
+                    console.log("An error occurred while executing the action.");
+                }
+            });
+        }
+    </script>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\PUBLISH FOLDERS\new</_PublishTargetUrl>
+    <History>True|2024-09-20T16:41:16.2593577Z||;True|2024-09-20T22:10:13.2666756+05:30||;True|2024-09-19T10:36:24.1719006+05:30||;True|2024-09-11T22:38:02.5391631+05:30||;True|2024-09-11T22:32:10.6996740+05:30||;True|2024-08-13T18:02:25.1271269+05:30||;True|2024-08-10T10:11:27.1351808+05:30||;True|2024-08-09T12:24:10.9162063+05:30||;True|2024-08-06T16:27:19.1489737+05:30||;True|2024-08-06T15:41:15.0746058+05:30||;True|2024-08-05T12:44:53.3380349+05:30||;True|2024-08-05T11:11:22.8591913+05:30||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

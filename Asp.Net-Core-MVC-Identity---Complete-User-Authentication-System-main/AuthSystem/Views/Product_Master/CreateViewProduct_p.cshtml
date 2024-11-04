@@ -1,0 +1,512 @@
+﻿@model eros.Models.Product_Master
+@{
+    ViewData["Title"] = "Create";
+    // Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
+
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN")
+    {
+
+    }
+    else if (role == "HOSITE")
+    {
+
+    }
+    else if (role == "WAREHOUSE")
+    {
+
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<div class="container">
+    <div class="mt-3">
+        <div class="card mb-3">
+            @* <div class="card-header bg-dark text-white">
+                <div class="d-flex align-items-baseline">
+                    <h5 class="mx-auto font-weight-bolder">Add Product </h5>
+                </div>
+            </div> *@
+            <div class="row row mx-lg-2 mx-md-2 mx-sm-2">
+                <div class="col-md-12">
+                    <form asp-action="CreateViewProduct_p">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="row">
+                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                <label asp-for="categorycode" class="control-label"></label>
+                                <input asp-for="categorycode" id="categorycode" readonly="true" class="form-control" />
+                                <span asp-validation-for="categorycode" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                <label for="categoryname" class="control-label">Category Name</label>
+                                <select class="form-control" asp-for="categoryname" id="categoryname" asp-items="@ViewBag.categoryname" onchange="changeCategory()">
+                                </select>
+                                <span asp-validation-for="categoryname" class="text-danger"></span>
+                            </div>
+                            @* <div class="form-group col-sm-4 mt-3">
+                            <label asp-for="subcategory" class="control-label"></label>
+                            <select asp-for="subcategory" id="subcategoryId" class="form-control" asp-items="@ViewBag.subcategory" onchange="dropdownChangedSubcategory() "></select>
+                            <span asp-validation-for="subcategory" class="text-danger"></span>
+                            </div> *@
+                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                <label asp-for="subcategory" class="control-label"></label>
+                                <select asp-for="subcategory" id="subcategoryId" class="form-control" asp-items="@ViewBag.subcategory" onchange="dropdownChangedSubcategory()"></select>
+                                <span asp-validation-for="subcategory" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                <label asp-for="productcode" class="control-label"></label>
+                                <input asp-for="productcode" id="productcode" data-uppercase autocomplete="off" class="form-control" />
+                                <span asp-validation-for="productcode" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2" id="descriptionField">
+                                <label asp-for="productdescription" class="control-label"></label>
+                                <input asp-for="productdescription" id="productdescription" data-uppercase autocomplete="off" onchange="GetProCode()" class="form-control" />
+                                <span asp-validation-for="productdescription" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                <label asp-for="brand" class="control-label"></label>
+                                <input asp-for="brand" id="brand" data-uppercase autocomplete="off" class="form-control" />
+                                <span asp-validation-for="brand" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <input type="button" class="btn btn-success" value="Insert" hidden="hidden" id="btnInsert" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                <label asp-for="hsncode" class="control-label"></label>
+                                <input asp-for="hsncode" data-uppercase autocomplete="off" class="form-control" />
+                                <span asp-validation-for="hsncode" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                <label asp-for="uom" class="control-label"></label>
+                                <input asp-for="uom" data-uppercase autocomplete="off" class="form-control" />
+                                <span asp-validation-for="uom" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row multipleblock">
+                            <div class="col-sm-2">
+                                <label asp-for="TypeOfProduct" class="control-label">Type Of Product</label>
+                            </div>
+                            <div class="col-sm-3">
+                                <label>
+                                    <input type="radio" id="rbIndividual" name="TypeOfProduct" value="Individual" /> Individual
+                                </label>
+                                <label>
+                                    <input style="font-weight: 700;" type="radio" id="rbMultiple" name="TypeOfProduct" value="Multiple" /> Multiple
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-12 mt-3">
+                            <div style="display:none;" id="_partialBOMId"></div>
+                            <div style="display:none;" id="_partialSCId"></div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="submit" onclick="submit()" value="Save" class="btn btn-success col-md-12" />
+                            </div>
+                            @* <div class="col-md-6">
+                                <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                            </div> *@
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+
+    function submit() {
+        console.log("submitt.....");
+    }
+
+    function changeCategory() {
+        if (document.getElementById("categoryname").value != "") {
+            var selectedValue = document.getElementById("categoryname").value;
+
+            var categoryCodeInput = $("#categorycode");
+            $.ajax({
+                url: '/Product_Master/GETCategory_CODE',
+                type: 'GET',
+                data: { selectedValue: selectedValue },
+                success: function (data) {
+                    categoryCodeInput.val(data);
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action: " + error);
+                }
+            });
+            //END
+            //for category and subcategory
+            var studentSelect = $('#subcategoryId');
+            $.ajax({
+                url: '@Url.Action("ChangeCategory", "Product_Master")',
+                type: 'GET',
+                dataType: 'json',
+                data: { selectedvalue: selectedValue },
+                success: function (data) {
+                    // Set the values in the textboxes
+                    $('#subcategoryId').empty();
+                    $('#subcategoryId').append($('<option>').text("--Select SubCategory--").val("--Select SubCategory--"));
+                    $.each(data, function (index, item) {
+                        $('#subcategoryId').append($('<option>').text(item.value).val(item.value));
+                    });
+                }
+            });
+        }
+    }
+
+    function dropdownChangedSubcategory() {
+        var selectedOption = document.getElementById("subcategoryId").value;  //sub-category
+        var selectedOption1 = document.getElementById("categoryname").value;      //category
+
+        $.ajax({
+            url: '/Product_Master/ActionName',
+            type: 'POST',
+            data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+            success: function (result) {
+                console.log(result);
+                console.log(result.data);
+                console.log(data.categoryname);
+            },
+            error: function (xhr, status, error) {
+                console.log("An error occurred while executing the action.");
+            }
+        });
+    }
+
+
+    //function GetProCode() {
+    //    var productNameInput = $("#productdescription");
+    //    var productCodeInput = $("#productcode");
+    //    var productNameValue = productNameInput.val();
+    //    console.log("Product Name: " + productNameValue);
+    //    $.ajax({
+    //        url: '@Url.Action("GETPROD_CODE", "Product_Master")',
+    //        type: 'GET',
+    //        dataType: 'json',
+    //        data: { selectedvalue: productNameValue },
+    //        success: function (data) {
+    //            // Set the values in the textboxes
+    //            productCodeInput.val(data);
+    //        }
+    //    });
+    //}
+    $('input[name="TypeOfProduct"]').on('change', function () {
+        if ($(this).val() === 'Multiple') {
+            var productCodeValue = $('#productcode').val().toUpperCase();
+            $.ajax({
+                url: '/product_master/LoadPartialSubComponents', // Replace with your endpoint for Sub Components
+                type: 'GET',
+                data: { productCodeValue: productCodeValue }, // Pass productCodeValue in the AJAX call
+                success: function (data) {
+                    $('#_partialBOMId').html(data); // Load returned partial view into the specified element
+                    $('#_partialBOMId').show(); // Display the loaded content if it's hidden
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        } else {
+            $('#_partialBOMId').hide();
+            console.log("Else Loop");
+        }
+    });
+
+        // $('input[name="TypeOfProduct"]').on('change', function () {
+        //     if ($(this).val() === 'Multiple') {
+        //         var productCodeValue = $('#productcode').val();
+        //         $.ajax({
+        //             url: '/product_master/LoadPartialSubComponents', // Replace with your endpoint for Sub Components
+        //             type: 'GET',
+        //             data: { productCodeValue: productCodeValue }, // Pass productCodeValue in the AJAX call
+        //             success: function (data) {
+        //                 $('#_partialBOMId').html(data); // Load returned partial view into the specified element
+        //             },
+        //             error: function (xhr, status, error) {
+        //                 console.error('Error:', error);
+        //             }
+        //         });
+        //     } else {
+        //         console.log("Else Loop");
+        //     }
+        // });
+
+
+</script>
+
+
+
+
+@* @model eros.Models.Product_Master
+
+@{
+    ViewData["Title"] = "CreateViewProduct_p";
+    Layout = null;
+}
+<div class="mt-1">
+    <div class=" mb-1">
+       
+        <div class="row">
+            <div class="col-md-12">
+                <form asp-action="CreateViewProduct_p">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="row">
+                        <div class="form-group col-sm-4 mt-3">
+                            <label asp-for="categorycode" class="control-label"></label>
+                            <input asp-for="categorycode" id="categorycode" readonly="true" class="form-control" />
+                            <span asp-validation-for="categorycode" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-4 mt-3">
+                            <label for="categoryname" class="control-label">Category Name</label>
+                            <select class="form-control" asp-for="categoryname" id="categoryname" asp-items="@ViewBag.categoryname" onchange="changeCategory()">
+                            </select>
+                            <span asp-validation-for="categoryname" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-4 mt-3">
+                            <label asp-for="subcategory" class="control-label"></label>
+                            <select asp-for="subcategory" id="subcategoryId" class="form-control" asp-items="@ViewBag.subcategory" onchange="dropdownChangedSubcategory() "></select>
+                            <span asp-validation-for="subcategory" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-4 mt-3">
+                            <label asp-for="productcode" class="control-label"></label>
+                            <input asp-for="productcode" id="productcode" data-uppercase autocomplete="off" class="form-control" readonly />
+                            <span asp-validation-for="productcode" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-4 mt-3">
+                            <label asp-for="productdescription" class="control-label"></label>
+                            <input asp-for="productdescription" id="productdescription" data-uppercase autocomplete="off" class="form-control" />
+                            <span asp-validation-for="productdescription" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-4 mt-3">
+                            <label asp-for="brand" class="control-label"></label>
+                            <input asp-for="brand" data-uppercase autocomplete="off" class="form-control" />
+                            <span asp-validation-for="brand" class="text-danger"></span>
+                        </div>
+                    
+                        <div class="form-group">
+                            <input type="button" class="btn btn-success" value="Insert" hidden="hidden" id="btnInsert" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-4 mt-3">
+                            <label asp-for="hsncode" class="control-label"></label>
+                            <input asp-for="hsncode" data-uppercase autocomplete="off" class="form-control" />
+                            <span asp-validation-for="hsncode" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-4 mt-3">
+                            <label asp-for="uom" class="control-label"></label>
+                            <input asp-for="uom" data-uppercase autocomplete="off" class="form-control" />
+                            <span asp-validation-for="uom" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-sm-12 mt-3">
+                            <label asp-for="TypeOfProduct" class="control-label">Type Of Product</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label>
+                                <input type="checkbox" asp-for="TypeOfProduct" value="true" /> Individual
+                            </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label>
+                                <input style="font-weight:700;" type="checkbox" asp-for="TypeOfProduct" value="false" /> Multiple
+                            </label>
+                            <span asp-validation-for="TypeOfProduct" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-sm-12 mt-3">
+                            <div id="_partialBOMId"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="submit" value="Save" class="btn btn-success col-md-12" />
+                        </div>
+                        <div class="col-md-6">
+                            <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+  }
+
+<script>
+    function changeCategory() {
+        if (document.getElementById("categoryname").value != "") {
+            var selectedValue = document.getElementById("categoryname").value;
+            $.ajax({
+                url: '/Product_Master/LoadPartialCategoryChair',
+                type: 'GET',
+                data: { category: selectedValue },
+                success: function (data) {
+                    $('#partialViewContainer').html(data);
+                    $('#partialViewContainer').show(); // Show the container
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action: " + error);
+                }
+            });
+           
+            var selectedValue = document.getElementById("categoryname").value;
+            var categoryCodeInput = $("#categorycode");
+            $.ajax({
+                url: '/Product_Master/GETCategory_CODE',
+                type: 'GET',
+                data: { selectedValue: selectedValue },
+                success: function (data) {
+                    categoryCodeInput.val(data);
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action: " + error);
+                }
+            });
+            //END
+
+            //for category and subcategory
+            var studentSelect = $('#subcategoryId');
+            $.ajax({
+                url: '@Url.Action("ChangeCategory", "Product_Master")',
+                type: 'GET',
+                dataType: 'json',
+                data: { selectedvalue: selectedValue },
+                success: function (data) {
+                    // Set the values in the textboxes
+                    $('#subcategoryId').empty();
+                    $('#subcategoryId').append($('<option>').text("--Select SubCategory--").val("--Select SubCategory--"));
+                    $.each(data, function (index, item) {
+                        $('#subcategoryId').append($('<option>').text(item.value).val(item.value));
+                    });
+
+                }
+            });
+        }
+    }
+
+    function dropdownChangedSubcategory() {
+        var selectedOption = document.getElementById("subcategoryId").value;  //sub-category
+        var selectedOption1 = document.getElementById("categoryname").value;      //category
+        // console.log("Dropdown fun : " + selectedOption + " " + selectedOption1);
+        $.ajax({
+            url: '/Product_Master/ActionName',
+            type: 'POST',
+            data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+            success: function (result) {
+                // document.getElementById("addressId1").value = result.data.address;
+                // document.getElementById("gstnoId1").value = result.data.gstno;
+                // document.getElementById("contactnoId1").value = result.data.contactno;
+                console.log(result)
+            },
+            error: function (xhr, status, error) {
+                console.log("An error occurred while executing the action.");
+            }
+        });
+
+    }
+
+    //genrate productcode
+    document.addEventListener('change', function (event) {
+        if (event.target.name === "TypeOfProduct") {
+            var checkboxes = document.querySelectorAll('input[name="TypeOfProduct"]');
+            var individualCheckbox = checkboxes[0];
+            var multipleCheckbox = checkboxes[1];
+            var partialBOMContainer = document.getElementById('_partialBOMId');
+
+            //for productcode
+            var productCodeInput = $("#productcode");
+            var pcode = productCodeInput.val();
+            console.log("Product code: " + pcode);
+
+            // var productNameInput = $("#productname");
+
+            if (individualCheckbox.checked && multipleCheckbox.checked) {
+                // Both checkboxes are checked
+                alert('Please select either Individual or Multiple, not both.');
+                individualCheckbox.checked = false;
+                multipleCheckbox.checked = false;
+                partialBOMContainer.innerHTML = ""; // Clear the partial view
+            } else if (individualCheckbox.checked) {
+                // Individual selected, clear the partial view
+                console.log("Individual selected");
+                partialBOMContainer.innerHTML = "";
+            } else if (multipleCheckbox.checked) {
+                // Multiple selected, load the partial view
+                console.log("Multiple selected");
+                $.ajax({
+                    url: '@Url.Action("LoadPartialBOM", "product_master")', // Replace with your controller and action names
+                    type: 'GET',
+                    data: { selectedvalue: pcode },
+                    success: function (data) {
+                        partialBOMContainer.innerHTML = data;
+                    }
+                });
+            }
+        }
+    });
+
+    //get product code
+    function GetProCode() {
+        var productNameInput = $("#productname");
+        var productCodeInput = $("#productcode");
+        var productNameValue = productNameInput.val();
+        console.log("Product Name: " + productNameValue);
+        $.ajax({
+            url: '@Url.Action("GETPROD_CODE", "Product_Master")',
+            type: 'GET',
+            dataType: 'json',
+            data: { selectedvalue: productNameValue },
+            success: function (data) {
+                // Set the values in the textboxes
+                productCodeInput.val(data);
+
+            }
+        });
+    }
+
+           
+
+
+</script>
+
+ *@

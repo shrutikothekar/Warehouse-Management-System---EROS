@@ -1,0 +1,112 @@
+﻿@model eros.Models.Picking
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+    "Product Code",
+    "Product Name" ,
+    "In Stock qty" ,
+    "Batch No." ,
+    "Box No.",
+    "Location",
+    "Quantity",
+
+    };
+}
+<div class="container">
+    <div class="mt-3">
+        <div class="card mb-3">
+            <div class="card-header bg-dark text-white">
+                <div class="d-flex align-items-baseline">
+                    <h5 class="mx-auto font-weight-bolder">Picking Details</h5>
+                    <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                </div>
+            </div>
+            <form asp-action="Details" id="CodeSbyAnizForm">
+                <div class="card-details ">
+                    <div class="row">
+                        <dl class="row ">
+                            <dt class="col-sm-4">
+                                @Html.DisplayNameFor(model => model.sono)
+                            </dt>
+                            <dd class="col-sm-8">
+                                @Html.DisplayFor(model => model.sono)
+                            </dd>
+
+                        </dl>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table divide-gray-200" id="CodesTable">
+                            <thead class="bg-gray-200 sticky top-0">
+                                <tr>
+                                    @foreach (var head in TableHeaders)
+                                    {
+                                        <th>
+                                            @head
+                                        </th>
+
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @for (int i = 0; i < Model.pickingmaster.Count; i++)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.EditorFor(x => x.pickingmaster[i].productcode,new{htmlAttributes = new{@class = "form-control " } })
+
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(x => x.pickingmaster[i].productname,new{htmlAttributes = new{@class = "form-control " } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(x => x.pickingmaster[i].instockqty,new{htmlAttributes = new{@class = "form-control " } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(x => x.pickingmaster[i].batchno,new{htmlAttributes = new{@class = "form-control " } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(x => x.pickingmaster[i].boxno,new{htmlAttributes = new{@class = "form-control " } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(x => x.pickingmaster[i].location,new{htmlAttributes = new{@class = "form-control " } })
+                                        </td>
+                                        <td>
+                                            @Html.EditorFor(x => x.pickingmaster[i].quantity,new{htmlAttributes = new{@class = "form-control " } })
+                                        </td>
+
+
+                                        <td>
+                                            <button id="btndummy-@i" type="button" class="invisible" style="margin:0px;padding:5px;">Dummy</button>
+                                            <button id='btnadd-@i' type="button" class="btn btn-warning text-white visible"
+                                                    onclick="AddItem(this)" style="left:89%;position:absolute;margin:0px;padding:5px; margin-right: 10px;">
+                                                Add
+                                            </button>
+
+                                            <button id='btnremove-@i' type="button" class="btn btn-danger text-white visible" onclick="Deleteitem(this)" style="left:93%; position:absolute;margin:0px;padding:5px; margin-left: 10px;">Delete</button>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+
+
+
+                        </table>
+                    </div>
+
+                    <div>
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.id">Edit</a>&nbsp;
+                        <a class="btn btn-danger" asp-action="Index">Back to List</a>
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+

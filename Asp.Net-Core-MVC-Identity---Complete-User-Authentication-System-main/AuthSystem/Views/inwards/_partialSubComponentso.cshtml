@@ -1,0 +1,331 @@
+﻿@model eros.Models.inward
+
+@{
+    ViewData["Title"] = "_partialSubComponent";
+    Layout = null;
+    string[] TableHeaders = new string[] {
+        "SC Code",
+        "SC Name",
+        "SC UOM",
+        "SC Qty",
+        "Total. Qty",
+        "No.Of Shipper/SC",
+        "No.Of SC Qty/Shipper",
+    };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-group mb-3">
+                    <button id="addShipperBtn" class="btn btn-info btn-sm">Add Shipper</button>
+                    <select id="shipperDropdown" class="form-select">
+                        <option value="">Select Shipper</option>
+                    </select>
+                    <button id="saveShipperBtn" class="btn btn-primary btn-sm">Save</button>
+                </div>
+            </div>
+
+            <div class="table-responsive col-md-12">
+                <table class="table table-striped" id="myTable">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="label" id="specificLabelId" style="display:none">Check</th>
+                            @foreach (var head in TableHeaders)
+                            {
+                                <th>
+                                    @head
+                                </th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody id="CsDiv">
+                        @if (Model.inward_subcomponent.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="6" style="color:green; font-weight:600;">No Subcomponent product details found!</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @for (int i = 0; i < Model.inward_subcomponent.Count; i++)
+                            {
+                                <tr>
+                                    <td class="shipper-column" style="display:none;">
+                                        <input type="checkbox" class="shipper-checkbox" data-index="@i" />
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.inward_subcomponent[i].sccode" class="form-control" readonly />
+                                        <span asp-validation-for="@Model.inward_subcomponent[i].sccode" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.inward_subcomponent[i].subcomponents" class="form-control" readonly />
+                                        <span asp-validation-for="@Model.inward_subcomponent[i].subcomponents" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.inward_subcomponent[i].scuom" class="form-control" readonly />
+                                        <span asp-validation-for="@Model.inward_subcomponent[i].scuom" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.inward_subcomponent[i].scqty" class="form-control scqty-input" />
+                                        <span asp-validation-for="@Model.inward_subcomponent[i].scqty" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.inward_subcomponent[i].tqty" class="form-control" readonly />
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.inward_subcomponent[i].NoOfshippers" class="form-control" />
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.inward_subcomponent[i].NoOfSubComQTYperShipper" class="form-control" />
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+
+}
+
+
+
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+
+<script>
+    let remainingQty;
+    let changedValue;
+    let initialValue;
+    $(document).on('change', '.scqty-input', function () {
+        console.log("Quantity Changed ...");
+
+        var $row = $(this).closest('tr');
+        $row.attr('data-initialValue', $(this).attr('value'));
+        $row.attr('data-changedValue', $(this).val());
+    });
+
+    document.getElementById('addShipperBtn').addEventListener('click', function () {
+        var dropdown = document.getElementById('shipperDropdown');
+        var shipperCount = dropdown.options.length;
+        var newShipper = document.createElement('option');
+
+        var formattedCount = ('0' + shipperCount).slice(-2); // Adjust formatting to start from Shipper01
+
+        newShipper.value = shipperCount;
+        newShipper.text = 'Shipper' + formattedCount;
+
+        dropdown.appendChild(newShipper);
+
+        var shipperColumn = document.querySelectorAll('.shipper-column');
+        var shipperCheckboxes = document.querySelectorAll('.shipper-checkbox');
+
+        shipperColumn.forEach(function (column) {
+            column.style.display = 'table-cell';
+        });
+
+        shipperCheckboxes.forEach(function (checkbox) {
+            checkbox.style.display = 'block';
+        });
+
+        document.getElementById('specificLabelId').style.display = 'table-cell';
+
+    });
+
+
+    const checkboxes = document.querySelectorAll('.shipper-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                console.log("click");
+                getData(this);
+            }
+        });
+    });
+
+    function getData(checkedCheckbox) {
+        let row = checkedCheckbox.closest('tr');
+        let cells = row.querySelectorAll('td:not(.shipper-column)'); // Exclude the first hidden column
+
+        let rowData = Array.from(cells).map(cell => {
+            const inputElement = cell.querySelector('input');
+            if (inputElement) {
+                return inputElement.value;
+            } else {
+                const spanElement = cell.querySelector('span');
+                return spanElement.textContent;
+            }
+        });
+
+        console.log("Selected Row Data:");
+        console.log(rowData);
+    }
+
+    //document.getElementById('saveShipperBtn').addEventListener('click', function () {
+    //    var dropdown = document.getElementById('shipperDropdown');
+    //    var selectedShipperIndex = dropdown.selectedIndex;
+
+    //    if (selectedShipperIndex !== 0) {
+    //        var selectedShipper = dropdown.options[selectedShipperIndex].text;
+    //        var selectedRowsData = getCheckedRowsData();
+
+    //        // Log the data before sending
+    //        console.log("selectedShipper:", selectedShipper);
+    //        console.log("selectedRowsData:", selectedRowsData);
+
+    //        sendToController(selectedShipper, selectedRowsData);
+    //    } else {
+    //        alert("Please select a shipper.");
+    //    }
+    //});
+
+    document.getElementById('saveShipperBtn').addEventListener('click', function () {
+        event.preventDefault();
+        var dropdown = document.getElementById('shipperDropdown');
+        var selectedShipperIndex = dropdown.selectedIndex;
+
+        var selectedShipper = dropdown.options[selectedShipperIndex].text;
+        var selectedRowsData = getCheckedRowsData();
+
+        // Log the data before sending
+        console.log("Selected Shipper:", selectedShipper);
+        console.log("Selected Rows Data:", selectedRowsData);
+
+        sendToController(selectedShipper, selectedRowsData);
+    });
+
+
+    function getCheckedRowsData() {
+        let table = document.getElementById('myTable');
+        let checkboxes = table.querySelectorAll('.shipper-checkbox:checked');
+        let selectedRows = [];
+        let row;
+
+        checkboxes.forEach(checkbox => {
+
+            row = checkbox.closest('tr');
+
+            if (checkbox.checked) {
+                let cells = row.querySelectorAll('td:not(.shipper-column)');
+                let rowData = Array.from(cells).map(cell => {
+                    const inputElement = cell.querySelector('input');
+                    if (inputElement) {
+                        return inputElement.value;
+                    } else {
+                        const spanElement = cell.querySelector('span');
+                        return spanElement.textContent;
+                    }
+                });
+                
+                initialValue = null;
+                initialValue = row.getAttribute('data-initialValue');
+                changedValue = null;
+                changedValue = row.getAttribute('data-changedValue');
+              
+                console.log("initialValue : " + initialValue);
+                console.log("changedValue : " + changedValue);
+
+                if (changedValue !== initialValue) {
+
+                     remainingQty = Math.abs(changedValue - initialValue); 
+                    console.log("remainingQty : " + remainingQty);
+
+                    selectedRows.push(rowData);
+                    alert("Change happened");
+                } else {
+                    selectedRows.push(rowData);
+                    row.remove();
+                    alert("No change");
+                }
+            }
+            
+        });
+        return selectedRows;
+    }
+
+
+    function sendToController(shipper, rowsData) {
+        var dataToSend = {
+            shipper: shipper,
+            rowsData: rowsData
+        };
+        console.log("dataToSend:", dataToSend); // Log the data being sent
+
+        $.ajax({
+            type: 'POST',
+            url: '/inwards/ActionInwardSC',
+            contentType: 'application/json',
+            data: JSON.stringify(dataToSend),
+
+            success: function (response) {
+                console.log('Data successfully sent to the controller!');
+
+                let table = document.getElementById('myTable');
+                let scqtyInputs = table.querySelectorAll('.scqty-input');
+
+                scqtyInputs.forEach(function (input) {
+                    console.log(input.value);
+                    if (input.value === changedValue) {
+                        alert("VALUE IS PROVIDE");
+                        input.value = remainingQty;
+
+                        // Set the remainingQty as the new initial value
+                        let row = input.closest('tr');
+                        row.setAttribute('data-initialValue', remainingQty);
+
+                        let initialValueInput = row.querySelector('.scqty-input');
+                        initialValueInput.setAttribute('value', remainingQty);
+                        initialValue = remainingQty; // Set initial value to remainingQty
+                        
+                        changedValue = null;
+                    } 
+                    // Reset changedValue
+                    changedValue = null;
+                });
+            },
+
+            error: function (error) {
+                console.error('Error sending data to the controller:', error);
+            }
+        });
+    }
+
+</script>

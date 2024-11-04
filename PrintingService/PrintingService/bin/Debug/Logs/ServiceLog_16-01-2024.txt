@@ -1,0 +1,18 @@
+Simple Service started {0}
+Simple Service stopped {0}
+Simple Service started {0}
+Simple Service stopped {0}
+Simple Service started {0}
+Simple Service stopped {0}
+Simple Service started {0}
+Simple Service stopped {0}
+Simple Service started {0}
+File Deleted12:34
+Simple Service stopped {0}
+Simple Service started {0}
+File Deleted12:41
+File Deleted12:52
+File Deleted12:53
+File Deleted12:54
+File Deleted12:58
+File Deleted19:02

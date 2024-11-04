@@ -1,0 +1,999 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = eros
+build_property.RootNamespace = eros
+build_property.ProjectDir = D:\PROJECT\EROS SYSTEM - NEW -19-10-24\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\AuthSystem\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\PROJECT\EROS SYSTEM - NEW -19-10-24\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\AuthSystem
+build_property._RazorSourceGeneratorDebug = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/Account/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxfVmlld0ltcG9ydHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/_AuthLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX0F1dGhMYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZhbGlkYXRpb25TY3JpcHRzUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Cascade/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FzY2FkZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/CityData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXENpdHlEYXRhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/CountryData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXENvdW50cnlEYXRhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/EditCity.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXEVkaXRDaXR5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/EditCountry.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXEVkaXRDb3VudHJ5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/EditState.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXEVkaXRTdGF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/IndexCity.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXEluZGV4Q2l0eS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/IndexCountry.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXEluZGV4Q291bnRyeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/IndexState.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXEluZGV4U3RhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/category_master/StateData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcY2F0ZWdvcnlfbWFzdGVyXFN0YXRlRGF0YS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CheckWarrantyStatus/CheckView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hlY2tXYXJyYW50eVN0YXR1c1xDaGVja1ZpZXcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CheckWarrantyStatus/_CheckView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hlY2tXYXJyYW50eVN0YXR1c1xfQ2hlY2tWaWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Courier_Master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cmllcl9NYXN0ZXJcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Courier_Master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cmllcl9NYXN0ZXJcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Courier_Master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cmllcl9NYXN0ZXJcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Courier_Master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cmllcl9NYXN0ZXJcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Courier_Master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cmllcl9NYXN0ZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Customer_Master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJfTWFzdGVyXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Customer_Master/CreateViewCustomer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJfTWFzdGVyXENyZWF0ZVZpZXdDdXN0b21lci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Customer_Master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJfTWFzdGVyXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Customer_Master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJfTWFzdGVyXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Customer_Master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJfTWFzdGVyXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Customer_Master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJfTWFzdGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Customer_Master/_PartialCustomerView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJfTWFzdGVyXF9QYXJ0aWFsQ3VzdG9tZXJWaWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/CheckView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xDaGVja1ZpZXcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/DemoView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xEZW1vVmlldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/EditStatus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xFZGl0U3RhdHVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/EditStatuss.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xFZGl0U3RhdHVzcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Index1.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xJbmRleDEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/InStockQty.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xJblN0b2NrUXR5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/InwardPendingList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xJbndhcmRQZW5kaW5nTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/PendingDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xQZW5kaW5nRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/PendingDetails1.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xQZW5kaW5nRGV0YWlsczEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/PendingList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xQZW5kaW5nTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Purchase.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xQdXJjaGFzZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Repair.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xSZXBhaXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Replacement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xSZXBsYWNlbWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Reprinting.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xSZXByaW50aW5nLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/Reprinting2.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xSZXByaW50aW5nMi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/SaleReturn.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xTYWxlUmV0dXJuLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/SalesPendingList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xTYWxlc1BlbmRpbmdMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/SelectReturnType.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xTZWxlY3RSZXR1cm5UeXBlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/StockMovementList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xTdG9ja01vdmVtZW50TGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/_CheckView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xfQ2hlY2tWaWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/_inwardView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xfaW53YXJkVmlldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/_inwardViews.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xfaW53YXJkVmlld3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/_partialSubComponent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xfcGFydGlhbFN1YkNvbXBvbmVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/_partialSubComponent1.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xfcGFydGlhbFN1YkNvbXBvbmVudDEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/_partialSubComponentso.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xfcGFydGlhbFN1YkNvbXBvbmVudHNvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/_PoProductDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xfUG9Qcm9kdWN0RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/inwards/_SoProductDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcaW53YXJkc1xfU29Qcm9kdWN0RGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Loading_Dispatch_Operation/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9hZGluZ19EaXNwYXRjaF9PcGVyYXRpb25cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Loading_Dispatch_Operation/Create1.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9hZGluZ19EaXNwYXRjaF9PcGVyYXRpb25cQ3JlYXRlMS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Loading_Dispatch_Operation/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9hZGluZ19EaXNwYXRjaF9PcGVyYXRpb25cRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Loading_Dispatch_Operation/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9hZGluZ19EaXNwYXRjaF9PcGVyYXRpb25cRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Loading_Dispatch_Operation/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9hZGluZ19EaXNwYXRjaF9PcGVyYXRpb25cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Loading_Dispatch_Operation/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9hZGluZ19EaXNwYXRjaF9PcGVyYXRpb25cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Location_Master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jYXRpb25fTWFzdGVyXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Location_Master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jYXRpb25fTWFzdGVyXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Location_Master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jYXRpb25fTWFzdGVyXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Location_Master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jYXRpb25fTWFzdGVyXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Location_Master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9jYXRpb25fTWFzdGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/DemoDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcRGVtb0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/ODemoView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcT0RlbW9WaWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/OPurchaseReturn.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcT1B1cmNoYXNlUmV0dXJuLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/ORepair.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcT1JlcGFpci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/OReplacement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcT1JlcGxhY2VtZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/OSales.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcT1NhbGVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/PendingDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcUGVuZGluZ0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/PendingList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcUGVuZGluZ0xpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/SalesPendingList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcU2FsZXNQZW5kaW5nTGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/_partialSubComponent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcX3BhcnRpYWxTdWJDb21wb25lbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/_partialSubComponent1.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcX3BhcnRpYWxTdWJDb21wb25lbnQxLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/_partialSubComponentpo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcX3BhcnRpYWxTdWJDb21wb25lbnRwby5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/_PoProductDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcX1BvUHJvZHVjdERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Outwards/_SoProductDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3V0d2FyZHNcX1NvUHJvZHVjdERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/checkphysicaldetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcY2hlY2twaHlzaWNhbGRldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/CheckPhysicalStock.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcQ2hlY2tQaHlzaWNhbFN0b2NrLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/Damage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcRGFtYWdlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/OverAllProduct.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcT3ZlckFsbFByb2R1Y3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/Resumepst.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcUmVzdW1lcHN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/PhysicalStockTake/VarianceReport.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGh5c2ljYWxTdG9ja1Rha2VcVmFyaWFuY2VSZXBvcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking/_partialpicking.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ1xfcGFydGlhbHBpY2tpbmcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking_Operation/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ19PcGVyYXRpb25cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking_Operation/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ19PcGVyYXRpb25cRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking_Operation/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ19PcGVyYXRpb25cRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking_Operation/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ19PcGVyYXRpb25cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking_Operation/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ19PcGVyYXRpb25cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picking_Process/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2luZ19Qcm9jZXNzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/picklistgeneration/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccGlja2xpc3RnZW5lcmF0aW9uXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/picklistgeneration/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccGlja2xpc3RnZW5lcmF0aW9uXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/picklistgeneration/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccGlja2xpc3RnZW5lcmF0aW9uXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/picklistgeneration/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccGlja2xpc3RnZW5lcmF0aW9uXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/picklistgeneration/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccGlja2xpc3RnZW5lcmF0aW9uXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/picklistgeneration/pickprd.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccGlja2xpc3RnZW5lcmF0aW9uXHBpY2twcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picklist_Generation/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2xpc3RfR2VuZXJhdGlvblxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picklist_Generation/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2xpc3RfR2VuZXJhdGlvblxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picklist_Generation/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2xpc3RfR2VuZXJhdGlvblxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picklist_Generation/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2xpc3RfR2VuZXJhdGlvblxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Picklist_Generation/InStockQty.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlja2xpc3RfR2VuZXJhdGlvblxJblN0b2NrUXR5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Product_Master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdF9NYXN0ZXJcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Product_Master/CreateViewProduct.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdF9NYXN0ZXJcQ3JlYXRlVmlld1Byb2R1Y3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Product_Master/CreateViewProduct_p.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdF9NYXN0ZXJcQ3JlYXRlVmlld1Byb2R1Y3RfcC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Product_Master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdF9NYXN0ZXJcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Product_Master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdF9NYXN0ZXJcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Product_Master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdF9NYXN0ZXJcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Product_Master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdF9NYXN0ZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Product_Master/_PartialProductView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdF9NYXN0ZXJcX1BhcnRpYWxQcm9kdWN0Vmlldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Product_Master/_partialSubComponent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdF9NYXN0ZXJcX3BhcnRpYWxTdWJDb21wb25lbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/EditStatus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXEVkaXRTdGF0dXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/partialDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXHBhcnRpYWxEZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/PendingDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXFBlbmRpbmdEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/PendingEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXFBlbmRpbmdFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/PurchasePendingList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXFB1cmNoYXNlUGVuZGluZ0xpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/_partialSubComponent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXF9wYXJ0aWFsU3ViQ29tcG9uZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/purchases/_PendingOrdersPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccHVyY2hhc2VzXF9QZW5kaW5nT3JkZXJzUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/rack_master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccmFja19tYXN0ZXJcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/rack_master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccmFja19tYXN0ZXJcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/rack_master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccmFja19tYXN0ZXJcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/rack_master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccmFja19tYXN0ZXJcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/rack_master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NccmFja19tYXN0ZXJcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/AgeingReport.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEFnZWluZ1JlcG9ydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/AgeingView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEFnZWluZ1ZpZXcuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/Damage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XERhbWFnZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/InOutStock.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEluT3V0U3RvY2suY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/InOutStockIndex.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XEluT3V0U3RvY2tJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/LogReport.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XExvZ1JlcG9ydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/productlocation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XHByb2R1Y3Rsb2NhdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/productreport.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XHByb2R1Y3RyZXBvcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/StockDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XFN0b2NrRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/StokeLedger.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XFN0b2tlTGVkZ2VyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/StokeLedgerView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XFN0b2tlTGVkZ2VyVmlldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Report/VarianceReport.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0XFZhcmlhbmNlUmVwb3J0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Shared/_LoginPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Showroom_Master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hvd3Jvb21fTWFzdGVyXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Showroom_Master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hvd3Jvb21fTWFzdGVyXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Showroom_Master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hvd3Jvb21fTWFzdGVyXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Showroom_Master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hvd3Jvb21fTWFzdGVyXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Showroom_Master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hvd3Jvb21fTWFzdGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/EditStatus.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXEVkaXRTdGF0dXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/partialDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXHBhcnRpYWxEZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/PendingDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXFBlbmRpbmdEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/PendingEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXFBlbmRpbmdFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/PendingList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXFBlbmRpbmdMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/SalesPendingList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXFNhbGVzUGVuZGluZ0xpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/_PartialCustomerView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXF9QYXJ0aWFsQ3VzdG9tZXJWaWV3LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/_partialSubComponent.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXF9wYXJ0aWFsU3ViQ29tcG9uZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/so_inward/_PendingOrdersPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc29faW53YXJkXF9QZW5kaW5nT3JkZXJzUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/state_master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc3RhdGVfbWFzdGVyXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/state_master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc3RhdGVfbWFzdGVyXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/state_master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc3RhdGVfbWFzdGVyXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/state_master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc3RhdGVfbWFzdGVyXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/state_master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc3RhdGVfbWFzdGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Storage_Operation/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RvcmFnZV9PcGVyYXRpb25cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Storage_Operation/CreateDMG.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RvcmFnZV9PcGVyYXRpb25cQ3JlYXRlRE1HLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Storage_Operation/CreateStockMovement.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RvcmFnZV9PcGVyYXRpb25cQ3JlYXRlU3RvY2tNb3ZlbWVudC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Storage_Operation/CreateStockTransfer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RvcmFnZV9PcGVyYXRpb25cQ3JlYXRlU3RvY2tUcmFuc2Zlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Storage_Operation/CreateStockTransferHome.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RvcmFnZV9PcGVyYXRpb25cQ3JlYXRlU3RvY2tUcmFuc2ZlckhvbWUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Storage_Operation/Damage.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RvcmFnZV9PcGVyYXRpb25cRGFtYWdlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Storage_Operation/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RvcmFnZV9PcGVyYXRpb25cRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Storage_Operation/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RvcmFnZV9PcGVyYXRpb25cRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Storage_Operation/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RvcmFnZV9PcGVyYXRpb25cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Storage_Operation/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3RvcmFnZV9PcGVyYXRpb25cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/subcategory_master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc3ViY2F0ZWdvcnlfbWFzdGVyXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/subcategory_master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc3ViY2F0ZWdvcnlfbWFzdGVyXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/subcategory_master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc3ViY2F0ZWdvcnlfbWFzdGVyXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/subcategory_master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc3ViY2F0ZWdvcnlfbWFzdGVyXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/subcategory_master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3Ncc3ViY2F0ZWdvcnlfbWFzdGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Supplier_Master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJfTWFzdGVyXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Supplier_Master/CreateViewSupplier.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJfTWFzdGVyXENyZWF0ZVZpZXdTdXBwbGllci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Supplier_Master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJfTWFzdGVyXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Supplier_Master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJfTWFzdGVyXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Supplier_Master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJfTWFzdGVyXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Supplier_Master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJfTWFzdGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/SweetAlert.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3dlZXRBbGVydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Transport_Master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNwb3J0X01hc3RlclxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Transport_Master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNwb3J0X01hc3RlclxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Transport_Master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNwb3J0X01hc3RlclxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Transport_Master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNwb3J0X01hc3RlclxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Transport_Master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNwb3J0X01hc3RlclxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/uom/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcdW9tXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/uom/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcdW9tXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/uom/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcdW9tXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/uom/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcdW9tXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/uom/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcdW9tXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/UserManagment/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlck1hbmFnbWVudFxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/UserManagment/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlck1hbmFnbWVudFxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/UserManagment/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlck1hbmFnbWVudFxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/UserManagment/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlck1hbmFnbWVudFxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/UserManagment/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlck1hbmFnbWVudFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/usertype_master/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcdXNlcnR5cGVfbWFzdGVyXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/usertype_master/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcdXNlcnR5cGVfbWFzdGVyXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/usertype_master/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcdXNlcnR5cGVfbWFzdGVyXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/usertype_master/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcdXNlcnR5cGVfbWFzdGVyXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/usertype_master/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcdXNlcnR5cGVfbWFzdGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PROJECT/EROS SYSTEM - NEW -19-10-24/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-r68s9dkxln

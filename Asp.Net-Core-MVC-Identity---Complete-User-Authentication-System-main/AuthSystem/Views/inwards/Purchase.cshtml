@@ -1,0 +1,770 @@
+﻿@model eros.Models.inward
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="container-field">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+@*                             <h5 class="mx-auto font-weight-bolder small-heading">Inward Entry</h5>
+                    *@          <h5 class="mx-auto font-weight-bolder small-heading">Inward Entry - @ViewBag.ordertype</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <main class="page payment-page">
+                        <section class="payment-form">
+                            <div class="p-2">
+                                <div class="card-details">
+                                    <form class="bg-secondary mt-2 mx-2" method="post" action="radio" id="form10" onkeydown="return event.key != 'Enter';">
+                                        &nbsp;&nbsp;
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Demo-tab" autocomplete="off" value="Demo">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Demo-tab">Demo</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Repair-tab" autocomplete="off" value="Repair">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Repair-tab">Repair</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Replacement-tab" autocomplete="off" value="Replacement">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Replacement-tab">Replacement</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Purchase-tab" autocomplete="off" value="Purchase">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Purchase-tab">Purchase</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Salereturn-tab" autocomplete="off" value="Sale Return">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Salereturn-tab">Sale Return</label>
+                                    </form>
+                                    <br />
+                                    <form asp-action="Create" id="form4">
+                                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                        <div class="row mx-lg-2 mx-md-2">
+                                            @* vendername, pono *@
+                                            <div class="form-group" style="display: none;">
+                                                <label asp-for="vendername" class="control-label">Type of Vendor</label>
+                                                <select asp-for="vendername" id="SelectSupplierId" class="form-control" onchange="changewbsupplier()">
+                                                    <option value="Supplier">Supplier</option>
+                                                </select>
+                                                <span asp-validation-for="vendername" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2" id="selectponoId">
+                                                <label asp-for="pono" class="control-label">Purchase Order No.</label>
+                                                <select asp-for="pono" id="ponoId" class="form-control" asp-items="@ViewBag.pono" onchange="dropdownChangedpono() "></select>
+                                                <span asp-validation-for="pono" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="form-modal">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header p-2">
+                                                        <h4 class="modal-title"></h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="output1"></div>
+                                        <input asp-for="ordertype" id="ordertypeId4" class="form-control" hidden />
+                                        <div class="row mx-lg-2 mx-md-2">
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="dcno" class="control-label"></label>
+                                                <input asp-for="dcno" id="dreferenceno" data-uppercase autocomplete="off" class="form-control" />
+                                                <span asp-validation-for="dcno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label id="dcdateLabel" asp-for="dcdate" class="control-label"></label>
+                                                <input asp-for="dcdate" type="date" data-uppercase autocomplete="off" class="form-control" id="dcdateInput" />
+                                                <span asp-validation-for="dcdate" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="invoiceno" class="control-label"></label>
+                                                <input asp-for="invoiceno" id="dinvoiceno" data-uppercase autocomplete="off" class="form-control" />
+                                                <span asp-validation-for="invoiceno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label id="invoicedateLabel" asp-for="invoicedate" class="control-label"></label>
+                                                <input asp-for="invoicedate" type="date" data-uppercase autocomplete="off" class="form-control" />
+                                                <span asp-validation-for="invoicedate" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="hdnLastIndex" value="0" />
+                                        <div class="row mx-lg-2 mx-md-2">
+                                            @* batchcode, remark *@
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="grnno" class="control-label"></label>
+                                                <input asp-for="grnno" id="sgrnno" data-uppercase autocomplete="off" class="form-control"  required />
+                                                <span asp-validation-for="grnno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="grndate" id="grndateid" class="control-label">GRN Date</label>
+                                                <input type="date" asp-for="grndate" id="grndate" data-uppercase autocomplete="off" class="form-control" required />
+                                                <span asp-validation-for="grndate" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="batchcode" class="control-label"></label>
+                                                <input asp-for="batchcode" data-uppercase autocomplete="off" class="form-control" required />
+                                                <span asp-validation-for="batchcode" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="remarks" class="control-label"></label>
+                                                <input asp-for="remarks" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                                <span asp-validation-for="remarks" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <div class="row mx-lg-2 mx-md-2" style="display:none;">
+                                            <div class="form-group col-sm-4 mt-3 ">
+                                                <label asp-for="date" class="control-label">Date</label>
+                                                <input type="text" data-uppercase autocomplete="off" id="datepicker" asp-for="date" class="form-control" />
+                                                <span asp-validation-for="date" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-4 mt-3">
+                                                <label asp-for="time" class="control-label">Time</label>
+                                                <input type="time" data-uppercase autocomplete="off" id="timepicker" asp-for="time" class="form-control" />
+                                                <span asp-validation-for="time" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                        <input asp-for="printflag" hidden id="stickerDecision" name="stickerDecision" value="" />
+
+                                        <div class="row mx-lg-2 mx-md-2">
+                                            <div class="col-md-12">
+                                                @* <input type="submit" id="submitButton" onclick="return generateSticker(this);" class="btn btn-primary col-md-12" /> *@
+                                                <button type="submit" value="Create" class="btn btn-sm btn-primary col-md-12 btn-print-slip"> Create</button>
+
+                                            </div>
+                                            <div class="col-md-6" style="display:none">
+                                                <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container-field">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container-field">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Initialize Select2 on the dropdown
+        $('#ponoId').select2({
+            placeholder: "Select Ref. Order No.", // Placeholder text
+            allowClear: true // Allow clearing the selection
+        });
+    });
+</script>
+<script>
+    // Attach change event listeners to both date inputs and the PONO dropdown
+    $('#invoicedate, #dcdateInput, #grndate').on('change', function () {
+        // Get the selected date value
+        var selectedDate = $(this).val();
+
+        // Determine which input triggered the event
+        var triggerId = $(this).attr('id');
+
+        // Determine the corresponding label and validation span IDs
+        var labelId, validationId;
+        if (triggerId === 'invoicedate') {
+            labelId = 'invoicedateLabel';
+            validationId = 'invoicedateValidation';
+        } else if (triggerId === 'dcdateInput') {
+            labelId = 'dcdateLabel';
+            validationId = 'dcdateValidation';
+        } else if (triggerId === 'grndate') {
+            labelId = 'grndateid';
+            validationId = 'grndateValidation';
+        }
+
+        // Get the selected PONO value
+        var selectedPono = $('#ponoId').val();
+
+        // Only call the controller action if either invoicedate or dcdate changes
+        if (triggerId === 'invoicedate' || triggerId === 'dcdateInput' || triggerId === 'grndate') {
+            // Call the controller action with the selected date and PONO
+            $.ajax({
+                url: '/inwards/ChangeDate',
+                type: 'POST',
+                data: {
+                    selectedDate: selectedDate,
+                    selectedPono: selectedPono
+                },
+                success: function (response) {
+                    if (response.success) {
+                        // Date is valid, do any additional logic here
+                        console.log(response.message);
+                    } else {
+                        // Display SweetAlert for invalid date
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Enter Correct Date ',
+                            text: response.message,
+                        });
+
+                        // Reset the corresponding date input to its previous value
+                        $('#' + triggerId).val('');
+                    }
+                },
+                error: function (error) {
+                    // Handle the error response if needed
+                    console.error(error);
+                }
+            });
+        }
+    });
+    
+    // function checkFieldsAndSubmit() {
+    //     var fieldIds = [
+    //         '#SelectSupplierId',
+    //         '#ponoId',
+    //         '#spartynameIdinput',
+    //         '#sgstnoId',
+    //         '#pono',
+    //         '#scontactnoId',
+    //         '#saddressId',
+    //         '#sgrnno',
+    //         '#grndate',
+    //         '#batchcode',
+    //         '#remarks',
+    //         '#datepicker',
+    //         '#timepicker',
+    //         '#stickerDecision'
+    //     ];
+
+    //     var isAnyFieldNull = false;
+
+    //     fieldIds.forEach(function (id) {
+    //         var value = $(id).val();
+    //         if (!value) {
+    //             isAnyFieldNull = true;
+    //             console.log("Null Field ID:", id); // Print null field ID to the console
+    //             return false; // Break the loop if any field is null
+    //         }
+    //     });
+
+    //     if (isAnyFieldNull) {
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Oops...',
+    //             text: 'Please fill in all fields!',
+    //         });
+    //     } else {
+    //         // All fields are filled, submit the form
+    //         $('#form4').submit();
+    //     }
+    // }
+ 
+    $(document).ready(function () {
+
+        console.log("Ready ....");
+        $('#form4').submit(function (event) {
+            console.log(" Submitt ....");
+            event.preventDefault(); // Prevent the default form submission
+            checkFieldsAndSubmit(); // Call the function to check fields and submit the form
+        });
+    });
+    
+    // function checkFieldsAndSubmit() {
+    //     console.log("generateSticker call ....");
+    //     var fieldIds = [
+    //         { id: '#SelectSupplierId', label: 'Supplier ID' },
+    //         { id: '#ponoId', label: 'PO Number' },
+    //         { id: '#spartynameIdinput', label: 'Party Name' },
+    //         { id: '#sgstnoId', label: 'GST Number' },
+    //         { id: '#pono', label: 'PO Number' },
+    //         { id: '#scontactnoId', label: 'Contact Number' },
+    //         { id: '#saddressId', label: 'Address' },
+    //         { id: '#sgrnno', label: 'GRN Number' },
+    //         { id: '#grndate', label: 'GRN Date' },
+    //         { id: '#batchcode', label: 'Batch Code' },
+    //         { id: '#remarks', label: 'Remarks' },
+    //         { id: '#datepicker', label: 'Date Picker' },
+    //         { id: '#timepicker', label: 'Time Picker' },
+    //     ];
+
+    //     var isAnyFieldNull = false;
+    //     var emptyFieldLabels = [];
+
+    //     fieldIds.forEach(function (field) {
+    //         var value = $(field.id).val();
+    //         if (!value) {
+    //             isAnyFieldNull = true;
+    //             emptyFieldLabels.push(field.label);
+    //             console.log("Field '" + field.label + "' is empty."); // Print empty field label to console
+    //         }
+    //     });
+
+    //     if (isAnyFieldNull) {
+    //         // Display error message with empty field labels
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Oops...',
+    //             html: 'Please fill in all required fields:<br>' + emptyFieldLabels.join('<br>')
+    //         });
+    //     } else {
+    //         generateSticker(); // Call the function to generate sticker if all fields are filled
+    //     }
+    // }
+
+    function checkFieldsAndSubmit() {
+        console.log("generateSticker call ....");
+
+        // Define the field IDs and their corresponding labels
+        var fieldIds = [
+            { id: '#SelectSupplierId', label: 'Supplier ID' },
+            { id: '#ponoId', label: 'PO Number' },
+            { id: '#spartynameIdinput', label: 'Party Name' },
+            { id: '#sgstnoId', label: 'GST Number' },
+            { id: '#pono', label: 'PO Number' },
+            { id: '#scontactnoId', label: 'Contact Number' },
+            { id: '#saddressId', label: 'Address' },
+            { id: '#sgrnno', label: 'GRN Number' },
+            { id: '#grndate', label: 'GRN Date' },
+            { id: '#batchcode', label: 'Batch Code' },
+            { id: '#remarks', label: 'Remarks' },
+            { id: '#datepicker', label: 'Date Picker' },
+            { id: '#timepicker', label: 'Time Picker' },
+        ];
+
+        var isAnyFieldNull = false;
+        var emptyFieldLabels = [];
+
+        // Check required fields outside the table
+        fieldIds.forEach(function (field) {
+            var value = $(field.id).val();
+            if (!value) {
+                isAnyFieldNull = true;
+                emptyFieldLabels.push(field.label);
+                console.log("Field '" + field.label + "' is empty."); // Print empty field label to console
+            }
+        });
+
+        // // Check specific fields in each row of the table
+        // $('#CodesTable tbody tr').each(function () {
+        //     var qtyperpkt = $(this).find('input[name$=".qtyperpkt"]').val();
+        //     var noofpackets = $(this).find('input[name$=".noofpackets"]').val();
+        //     var totalpacket = $(this).find('input[name$=".totalpacket"]').val();
+
+        //     // Check if any of the fields is empty or zero
+        //     if (!qtyperpkt || !noofpackets || !totalpacket || qtyperpkt == '0' || noofpackets == '0' || totalpacket == '0') {
+        //         isAnyFieldNull = true;
+        //         console.log("Null or Zero Value in Table Row:", $(this).index());
+        //         return false; // Break the loop if any field in the row is null or zero
+        //     }
+        // });
+
+        // Check specific fields in each row of the table
+        $('#CodesTable tbody tr').each(function () {
+            var qtyperpkt = $(this).find('input[name$=".qtyperpkt"]').val();
+            var noofpackets = $(this).find('input[name$=".noofpackets"]').val();
+            // var totalpacket = $(this).find('input[name$=".totalpacket"]').val();
+
+            // Check if any of the fields is empty or zero
+            if (!qtyperpkt || !noofpackets) {//|| !totalpacket
+                isAnyFieldNull = true;
+                console.log("Null or Zero Value in Table Row:", $(this).index());
+                return false; // Break the loop if any field in the row is null or zero
+            }
+
+            // Check if qtyperpkt is zero, then set other values to zero as well
+            if (qtyperpkt === '0') {
+                noofpackets = '0';
+                //totalpacket = '0';
+            }
+        });
+
+        // Display error message with empty field labels if any field is empty
+        if (isAnyFieldNull) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                html: 'Please fill in all required fields:<br>' + emptyFieldLabels.join('<br>')
+            });
+        } else {
+            generateSticker(); // Call the function to generate sticker if all fields are filled
+        }
+    }
+
+    
+    var object = { status: false, ele: null };
+    // function generateSticker(ev) {
+    //     console.log("generateSticker call ....");
+    //     if (object.status) { return true; };
+        
+    //     Swal.fire({
+    //         title: "Warning",
+    //         text: "Do you want to generate a sticker?",
+    //         icon: "warning",
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Shipper Wise',
+    //         cancelButtonText: 'Subcomponent Wise',
+    //         showCloseButton: false, // Hide the close button
+    //         showDenyButton: true, // Show the "No Sticker" button
+    //         denyButtonText: 'No Sticker', // Text for the "No Sticker" button
+    //         customClass: {
+    //             confirmButton: 'btn btn-success',
+    //             cancelButton: 'btn btn-warning',
+    //             denyButton: 'btn btn-info' // Style for the "No Sticker" button
+    //         }
+    //     }).then((result) => {
+    //         if (result.isConfirmed) 
+    //         {
+    //             const stickerDecisionInput = document.getElementById('stickerDecision');
+    //             document.getElementById('stickerDecision').value = 1;
+    //             var form = $('#form4');
+    //             var formData = form.serialize();
+    //             var formDataObject = {};
+    //             formData.split('&').forEach(function (keyValue) {
+    //                 var keyValueArr = keyValue.split('=');
+    //                 formDataObject[keyValueArr[0]] = decodeURIComponent(keyValueArr[1].replace(/\+/g, ' '));
+    //             });
+    //             console.log(formDataObject);
+    //             $.ajax({
+    //                 url: form.attr('action'), // Use the form's action attribute as the URL
+    //                 type: form.attr('method'), // Use the form's method attribute as the request type
+    //                 data: formData,
+    //                 success: function (response) {
+    //                     var blob = new Blob([response], { type: 'text/plain' });
+    //                     var a = document.createElement('a');
+    //                     a.href = window.URL.createObjectURL(blob);
+    //                     a.download = 'example.prn';
+    //                     a.click();
+    //                     window.URL.revokeObjectURL(a.href);
+    //                     //window.location.href = '/inwards/Index';
+    //                     Swal.fire({
+    //                         icon: 'success',
+    //                         title: 'Success !',
+    //                         text: 'Purchase Order successfully Done !',
+    //                         confirmButtonColor: '#3085d6',
+    //                         confirmButtonText: 'OK'
+    //                     }).then((result) => {
+    //                         if (result.isConfirmed) {
+    //                             // Redirect to index page
+    //                             window.location.href = '/inwards/Index';
+    //                         }
+    //                     });
+    //                 },
+    //                 error: function (xhr, status, error) {
+    //                     console.error(xhr.responseText);
+    //                 }
+    //             });
+    //         } 
+    //         else if (result.dismiss === Swal.DismissReason.cancel) 
+    //         {
+
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Functionality Not Available !',
+    //                 text: 'Sorry, the functionality is not available at the moment.',
+    //                 confirmButtonColor: '#3085d6',
+    //                 confirmButtonText: 'OK'
+    //             }).then((result) => {
+    //                 // Check if the user clicked the "OK" button
+    //                 if (result.isConfirmed) {
+    //                     Swal.close(); // Close the SweetAlert popup
+    //                 }
+    //             });
+    //         } 
+    //         else if (result.isDenied) 
+    //         {
+    //             // const stickerDecisionInput = document.getElementById('stickerDecision');
+    //             // document.getElementById('stickerDecision').value = 3; // Set value for "No Sticker"
+    //             // var form = $('#form4');
+    //             // var formData = form.serialize();
+    //             // var formDataObject = {};
+    //             // formData.split('&').forEach(function (keyValue) {
+    //             //     var keyValueArr = keyValue.split('=');
+    //             //     formDataObject[keyValueArr[0]] = decodeURIComponent(keyValueArr[1].replace(/\+/g, ' '));
+    //             // });
+    //             // console.log(formDataObject);
+    //             // $.ajax({
+    //             //     url: form.attr('action'), // Use the form's action attribute as the URL
+    //             //     type: form.attr('method'), // Use the form's method attribute as the request type
+    //             //     data: formData,
+    //             //     success: function (response) {
+    //             //         //window.location.href = '/inwards/Index';
+    //             //         // Show SweetAlert for success
+    //             //         Swal.fire({
+    //             //             icon: 'success',
+    //             //             title: 'Success!',
+    //             //             text: 'Purchase Order done successfully !',
+    //             //             confirmButtonColor: '#3085d6',
+    //             //             confirmButtonText: 'OK'
+    //             //         }).then((result) => {
+    //             //             if (result.isConfirmed) {
+    //             //                 // Redirect to index page
+    //             //                 window.location.href = '/inwards/Index';
+    //             //             }
+    //             //         });
+    //             //     },
+    //             //     error: function (xhr, status, error) {
+    //             //         console.error(xhr.responseText);
+    //             //     }
+    //             // });
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Functionality Not Available !',
+    //                 text: 'Sorry, the functionality is not available at the moment.',
+    //                 confirmButtonColor: '#3085d6',
+    //                 confirmButtonText: 'OK'
+    //             }).then((result) => {
+    //                 // Check if the user clicked the "OK" button
+    //                 if (result.isConfirmed) {
+    //                     Swal.close(); // Close the SweetAlert popup
+    //                 }
+    //             });
+    //         }
+    //     });
+    //     return false;
+    // }
+    function generateSticker(ev) {
+    console.log("generateSticker call ....");
+    if (object.status) { return true; }
+
+    Swal.fire({
+        title: "Submit and generate shipper-wise sticker?",
+        // title: "Warning",
+        text: "Do you want to submit and generate a sticker?",
+        // text: "Do you want to submit?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+        customClass: {
+            confirmButton: 'btn btn-success',
+            cancelButton: 'btn btn-danger'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const stickerDecisionInput = document.getElementById('stickerDecision');
+            document.getElementById('stickerDecision').value = 1; // or set to the appropriate value for submission
+            var form = $('#form4');
+            var formData = form.serialize();
+            var formDataObject = {};
+            formData.split('&').forEach(function (keyValue) {
+                var keyValueArr = keyValue.split('=');
+                formDataObject[keyValueArr[0]] = decodeURIComponent(keyValueArr[1].replace(/\+/g, ' '));
+            });
+            console.log(formDataObject);
+
+            $.ajax({
+                url: form.attr('action'),
+                type: form.attr('method'),
+                data: formData,
+                success: function (response) {
+                    var blob = new Blob([response], { type: 'text/plain' });
+                    var a = document.createElement('a');
+                    a.href = window.URL.createObjectURL(blob);
+                    a.download = 'example.prn';
+                    a.click();
+                    window.URL.revokeObjectURL(a.href);
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Purchase Order successfully done!',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/inwards/Index';
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Swal.fire({
+            //     icon: 'error',
+            //     title: 'Cancelled',
+            //     text: 'Submission was cancelled.',
+            //     confirmButtonColor: '#3085d6',
+            //     confirmButtonText: 'OK'
+            // });
+            return;
+        }
+    });
+    return false;
+}
+
+    $(document).ready(function () {
+        // Listen for change event on radio buttons
+        $('input[name="nav"]').change(function () {
+            // Submit the form when a radio button is changed
+            $('#form10').submit();
+        });
+        $("#batchcode").val(GenerateBatchCode());
+
+        function generateGRNNo() {
+            $.ajax({
+                url: '/inwards/GETGRNP_CODE', // Replace with your actual API endpoint URL for generating GRN number
+                type: 'GET',
+                success: function (response) {
+                    // Populate the input field with the generated GRN number
+                    $('#sgrnno').val(response);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        // Call the function to generate GRN number when the page loads
+        generateGRNNo();
+    });
+    function GenerateBatchCode() {
+        var today = new Date();
+        var year = today.getFullYear().toString().slice(-2); // Get last two digits of the year
+        var month = "ABCDEFGHIJKL"[today.getMonth()]; // Get month character
+        var day = ('0' + today.getDate()).slice(-2); // Get day with leading zero if needed
+        //console.log(year + month + day);
+        return year + month + day;
+    }
+    function changewbsupplier() {
+        if (document.getElementById("SelectSupplierId").value != "") {
+            console.log("supplier id select");
+            var selectedValue = document.getElementById("SelectSupplierId").value;
+            console.log(selectedValue);
+            console.log(" is get")
+            var studentSelect = $('#ponoId');
+            $.ajax({
+                url: '@Url.Action("Changepono", "inwards")',
+                type: 'GET',
+                dataType: 'json',
+                data: { selectedvalue: selectedValue },
+                success: function (data) {
+                    // Set the values in the textboxes
+                    console.log("pono sselected...............");
+                    $('#ponoId').empty();
+                    $('#ponoId').append($('<option>').text("--Select PONO--").val("--Select PONO--"));
+                    $.each(data, function (index, item) {
+                        $('#ponoId').append($('<option>').text(item.value).val(item.value));
+                    });
+
+                }
+            });
+        }
+    }
+    function dropdownChangedpono() {
+        if (document.getElementById('ponoId').ariaValueMax != "") {
+            console.log("pono id selected");
+            var selectedOption = document.getElementById("ponoId").value;
+            var selectedOption1 = "Supplier";
+            $.ajax({
+                url: '/inwards/ActionName1',
+                type: 'POST',
+                data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+                success: function (result) {
+                    $('#output1').empty();
+                    $("#output1").html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action.");
+                }
+            });
+        }
+    }
+    document.addEventListener('change', function (e) {
+        if (event.target.id.indexOf('description') >= 0) {
+            var tid = event.target.id;
+            var product = document.getElementById(tid).value;
+            console.log(product);
+            var txtProductCodeId = tid.replaceAll('description', 'productcode');
+            var txtbrandnameId = tid.replaceAll('description', 'brandname');
+            var txthsncodeId = tid.replaceAll('description', 'uom');
+            var txtsubcomponentId = tid.replaceAll('description', 'subcomponents');
+            // var txttemplatenameId = tid.replaceAll('description', 'templatename');
+
+            var txtProductCode = document.getElementById(txtProductCodeId);
+            var txtbrandname = document.getElementById(txtbrandnameId);
+            var txthsncode = document.getElementById(txthsncodeId);
+            var txtsubcomponent = document.getElementById(txtsubcomponentId);
+            // var txttemplatename = document.getElementById(txttemplatenameId);
+            // console.log(txttemplatenameId);
+
+            txtProductCode.value = null;
+
+            $.ajax({
+                url: '@Url.Action("ActionName_description", "inwards")',
+                type: 'GET',
+                dataType: 'json',
+                data: { selectedvalue: product },
+                success: function (data) {
+                    console.log(data);
+                    txtProductCode.value = data.modelno;
+                    txthsncode.value = data.hsncode;
+                    txtbrandname.value = data.brandname;
+                    txtsubcomponent.value = data.subcomponents;
+                    // txttemplatename.ariaValueMax = data.templatename;
+
+                    console.log("data.category is : " + data.categoryname)
+                    // console.log("data.templatename : "+data.templatename);
+                }
+            });
+        }
+    }, false);
+</script>

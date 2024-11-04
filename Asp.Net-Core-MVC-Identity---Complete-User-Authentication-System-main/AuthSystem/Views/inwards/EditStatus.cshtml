@@ -1,0 +1,222 @@
+﻿@model eros.Models.inward
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <main class="page payment-page">
+
+            <section class="payment-form mt-4 ">
+                <div class="card m-3">
+                    <form asp-action="EditStatus">
+                        <div class="card-header text-white p-1" style="background-color:#FC2947;">
+                            <div class="d-flex align-items-baseline">
+                                <a href="/inwards/InwardPendingList" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                                <h5 class="mx-auto text-white text-2xl font-semibold small-heading">Update Status</h5>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <input type="hidden" asp-for="inward_id" />
+                            <input type="hidden" asp-for="pono" />
+                            <input type="hidden" asp-for="flag" />
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="vendername" class="control-label"></label>
+                                    <input asp-for="vendername" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="vendername" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="typeofreturn" class="control-label"></label>
+                                    <select asp-for="typeofreturn" id="typeofreturn" class="form-control">
+                                        <option value="Returned">Returned</option>
+                                        <option value="Non-Returnable">Non-Returnable</option>
+                                        <option value="Billed">Billed</option>
+                                    </select>
+                                    <span asp-validation-for="typeofreturn" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-3 mt-3" id="referencenoSection">
+                                    <label asp-for="dcno" id="referencenoLabel" class="control-label"></label>
+                                    <input asp-for="dcno" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="dcno" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-3 mt-3" id="dcdateSection">
+                                    <label asp-for="dcdate" id="dcdateLabel" class="control-label"></label>
+                                    <input asp-for="dcdate" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="dcdate" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-3 mt-3" id="invoicenoSection">
+                                    <label asp-for="invoiceno" id="invoicenoLabel" class="control-label"></label>
+                                    <input asp-for="invoiceno" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="invoiceno" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group col-sm-3 mt-3">
+                                    <label id="invoicedateLabel" asp-for="invoicedate" class="control-label"></label>
+                                    <input asp-for="invoicedate" type="text" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="invoicedate" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="partyname" class="control-label"></label>
+                                    <input asp-for="partyname" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="partyname" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="gstinno" class="control-label"></label>
+                                    <input asp-for="gstinno" data-uppercase autocomplete="off" class="form-control" />
+                                    <input asp-for="ordertype" class="form-control" hidden />
+                                    <span asp-validation-for="gstinno" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="contactno" class="control-label"></label>
+                                    <input asp-for="contactno" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="contactno" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="address" class="control-label"></label>
+                                    <input asp-for="address" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="address" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row p-2">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="grnno" class="control-label"></label>
+                                    <input asp-for="grnno" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="grnno" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="grndate" class="control-label"></label>
+                                    <input asp-for="grndate" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="grndate" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-sm-12">
+                                @* <button type="submit" value="Change Status" onclick="return ConfirmStatus(this); class="btn btn-success col-sm-12">Change Status</button> *@
+                                <div class="form-group col-sm-12 mt-2">
+                                    <input type="submit" value="Change Status" class="btn btn-success btn-sm col-sm-12" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+
+            </section>
+        </main>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+   
+    // $(document).ready(function () {
+    //     $('#typeofreturn').change(function () {
+    //         var selectedValue = $(this).val();
+
+    //         // Hide all sections initially
+    //         $('#radioButtonsSection').hide();
+    //         $('#referencenoSection').hide();
+    //         $('#dcdateSection').hide();
+    //         $('#invoicenoSection').hide();
+
+    //         if (selectedValue === 'Billed') {
+    //             $('#radioButtonsSection').show();
+
+    //             $('input[name="option"]').change(function () {
+    //                 var optionSelected = $('input[name="option"]:checked').val();
+
+    //                 // Hide all sections initially
+    //                 $('#referencenoSection').hide();
+    //                 $('#dcdateSection').hide();
+    //                 $('#invoicenoSection').hide();
+
+    //                 // Show the relevant sections based on the selected radio button
+    //                 if (optionSelected === 'dc') {
+    //                     $('#referencenoSection').show();
+    //                     $('#dcdateSection').show();
+    //                     $('#dcdateLabel').text('DC Date'); // Change label text for DC Date
+    //                     $('#referencenoLabel').text('DC No.'); // Change label text for DC Date
+
+    //                 } else if (optionSelected === 'invoice') {
+    //                     $('#invoicenoSection').show();
+    //                     $('#dcdateSection').show();
+    //                     $('#dcdateLabel').text('Invoice Date'); // Change label text for Invoice Date
+    //                     $('#invoicenoLabel').text('Invoice No.'); // Change label text for Invoice Date
+
+    //                 }
+    //             });
+    //         }
+    //     });
+    // });
+
+</script>

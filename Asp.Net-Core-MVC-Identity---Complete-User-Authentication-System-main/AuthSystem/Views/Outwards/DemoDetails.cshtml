@@ -1,0 +1,350 @@
+﻿@*
+@model eros.Models.inward
+@{
+    Layout = null;
+    string[] TableHeaders = new string[] {
+        "Pro. Code",
+        "Prd. Name.",
+        "Qty",
+        "Scan"
+      };
+    string role = _Context.Request.Http_Context.Session.GetString("Role");
+    var jsonData = _Context.Request.Http_Context.Session.GetString("MenuMaster");
+}
+
+<div class="row">
+    <div class="form-group col-sm-4 mt-2" style="display:none" id="vendernamediv">
+        <label asp-for="vendername" class="control-label">Type of Vendor</label>
+        <select asp-for="vendername" id="SelectVenderId" class="form-control" onchange="changewb1()" required>
+            <option value="-------">-------</option>
+            <option value="Showroom">Showroom</option>
+            <option value="Supplier">Supplier</option>
+            <option value="Customer">Customer</option>
+        </select>
+    </div>
+    <div class="form-group col-sm-4 mt-2" style="display:none" id="vendername1div">
+        <label asp-for="vendername" class="control-label">Type of Vendor</label>
+        <input type="text" asp-for="vendername1" class="form-control" id="vendername1" readonly required>
+    </div>
+    <div class="form-group col-sm-4 mt-2" style="display:none" id="typeofreturndiv">
+        <label asp-for="typeofreturn" class="control-label"></label>
+        <select asp-for="typeofreturn" id="typeofreturn" required class="form-control">
+            <option value="-------">-------</option>
+            <option value="Returned">Returned</option>
+            <option value="Returnable">Returnable</option>
+        </select>
+    </div>
+    <div class="form-group col-sm-4 mt-2" style="display:none" id="typeofreturn1div">
+        <label asp-for="typeofreturn" class="control-label"></label>
+        <input type="text" asp-for="typeofreturn1" class="form-control" id="typeofreturn1" readonly value="Returned" required>
+    </div>
+    <div class="form-group col-sm-4 mt-2">
+        <label asp-for="partyname" class="control-label"></label>
+
+        <input type="text" asp-for="partyname" class="form-control" id="partynameId" placeholder="Enter party name" required>
+        <span asp-validation-for="partyname" class="text-danger"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group col-sm-4 mt-2">
+        <label asp-for="gstinno" class="control-label">GST No.</label>
+        <input asp-for="gstinno" data-uppercase autocomplete="off" id="gstnoId" class="form-control"
+               oninput="validateAlphaNumeric(this)" maxlength="20" />
+        <span asp-validation-for="gstinno" class="text-danger"></span>
+    </div>
+    <div class="form-group col-sm-4 mt-2">
+        <label asp-for="contactno" class="control-label">Contact No.</label>
+        <input asp-for="contactno" data-uppercase autocomplete="off" id="contactnoId"
+               class="form-control" required oninput="validateNumber(this)" />
+        <span asp-validation-for="contactno" class="text-danger"></span>
+    </div>
+    <div class="form-group col-sm-4 mt-2">
+        <label asp-for="address" class="control-label">Address</label>
+        <input asp-for="address" data-uppercase autocomplete="off" id="addressId"
+               class="form-control" required oninput="validateAlphNum(this)" />
+        <span asp-validation-for="address" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="col-md-12 p-2">
+    <table id="CodesTable" class="table table-striped table-sm">
+        <thead>
+            <tr>
+                @foreach (var head in TableHeaders)
+                {
+                    <th>
+                        @head
+                    </th>
+                }
+                <th>
+                    <button id='btnAddDetailRow' type="button" class="btn btn-sm btn-secondary visible" onclick="AddItem(this)">
+                        Add
+                    </button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.inwardPacket.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input asp-for="@Model.inwardPacket[i].productcode" class="form-control productcode-input" />
+                        <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                    </td>
+                    <td>
+                        <select class="form-control" asp-for="@Model.inwardPacket[i].description" id="desc1"  asp-items="@ViewBag.description" onchange="handleDespChange(this)"></select>
+                        <input asp-for="@Model.inwardPacket[i].description" class="form-control" readonly id="desc2" required />
+                        <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                    </td>
+                    <td style="display:none">
+                        <input asp-for="@Model.inwardPacket[i].brand" readonly class="form-control" oninput="validateAlphabet(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].brand" class="text-danger"></span>
+                    </td>
+                    <td style="width:120px;">
+                        <input asp-for="@Model.inwardPacket[i].quantity" class="form-control quantity-input" onchange="calculateTotals(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].quantity" class="text-danger"></span>
+                    </td>
+                    <td style="display:none">
+                        <select asp-for="@Model.inwardPacket[i].type" class="form-control">
+                            <option value="ST">Good Condition</option>
+                            <option value="DMG">Damaged</option>
+                            <option value="DMG">Manufacturing Defect</option>
+                            <option value="NONRPR">Physically Broken</option>
+                        </select>
+                        <span asp-validation-for="@Model.inwardPacket[i].type" class="text-danger"></span>
+                    </td>
+
+                    <td style="display:none;">
+                        <input asp-for="@Model.inwardPacket[i].uom" readonly class="form-control" />
+                        <span asp-validation-for="@Model.inwardPacket[i].uom" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px;display:none;">
+                        <input asp-for="@Model.inwardPacket[i].setofsub_assemb" class="form-control" oninput="validateNumber(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].setofsub_assemb" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px;display:none;">
+                        <input asp-for="@Model.inwardPacket[i].qtyperpkt" class="form-control noofshpperqty-input" oninput="validateNumber(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].qtyperpkt" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px;display:none;">
+                        <input asp-for="@Model.inwardPacket[i].noofpackets" class="form-control noofpackets-input" oninput="calculate(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].noofpackets" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px; display:none;">
+                        <input asp-for="@Model.inwardPacket[i].noqtypershp" readonly class="form-control noqtypershp-input" oninput="calculate2(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].noqtypershp" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px; display:none;">
+                        <input asp-for="@Model.inwardPacket[i].totalpacket" readonly class="form-control totalpacket-input" />
+                        <span asp-validation-for="@Model.inwardPacket[i].totalpacket" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px; display:none;">
+                        <input asp-for="@Model.inwardPacket[i].totalsubassmbly" id="totalsubassembly" class="form-control totalsubassembly" readonly />
+                        <span asp-validation-for="@Model.inwardPacket[i].totalsubassmbly" class="text-danger"></span>
+                        <input type="hidden" asp-for="@Model.inwardPacket[i].IsDeleted" />
+                    </td>
+
+                    <td style="display:none">
+                        <a id="editDetail-@i" class="btn text-white btn-sm btn-warning poedit3-button"
+                           data-id="@Model.inwardPacket[i].id"
+                           data-quantity="@Model.inwardPacket[i].quantity"
+                           data-productcode="@Model.inwardPacket[i].productcode">
+                            View
+                        </a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm scaningidd"
+                                onclick="scaningSR(this)"
+                                data-productcode="@Model.inwardPacket[i].productcode"
+                                data-quantity="@Model.inwardPacket[i].quantity">
+                            <span class="d-none d-sm-inline">scan</span>
+                            <span class="d-inline d-sm-none">scan</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div> 
+*@
+
+@model eros.Models.inward
+@{
+    // var sweetAlert = @Html.Raw(Json.Serialize(ViewBag.SweetAlert));
+    string[] TableHeaders = new string[] {
+        // "Pro. Code",
+        // "Prd. Name.",
+        // "PO Qty",
+        // "Qty",
+        // "No. Set/Pro." ,
+        // "No. set/shp" ,
+        // "No. Shp/Qty" ,
+        // "Shp.Allot",
+                "Pro. Code",
+        "Prd. Name.",
+        "Qty",
+        "Scan"
+         };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+
+<div class="row">
+    <div class="form-group col-sm-4 mt-2" style="display:none" id="vendernamediv">
+        <label asp-for="vendername" class="control-label">Type of Vendor</label>
+        <select asp-for="vendername" id="SelectVenderId" class="form-control" onchange="changewb1()" required>
+            <option value="-------">-------</option>
+            <option value="Showroom">Showroom</option>
+            <option value="Supplier">Supplier</option>
+            <option value="Customer">Customer</option>
+        </select>
+    </div>
+    <div class="form-group col-sm-4 mt-2" style="display:none" id="vendername1div">
+        <label asp-for="vendername" class="control-label">Type of Vendor</label>
+        <input type="text" asp-for="vendername1" class="form-control" id="vendername1" readonly required>
+    </div>
+    <div class="form-group col-sm-4 mt-2" style="display:none" id="typeofreturndiv">
+        <label asp-for="typeofreturn" class="control-label"></label>
+        <select asp-for="typeofreturn" id="typeofreturn" required class="form-control">
+            <option value="-------">-------</option>
+            <option value="Returned">Returned</option>
+            <option value="Returnable">Returnable</option>
+        </select>
+    </div>
+    <div class="form-group col-sm-4 mt-2" style="display:none" id="typeofreturn1div">
+        <label asp-for="typeofreturn" class="control-label"></label>
+        <input type="text" asp-for="typeofreturn1" class="form-control" id="typeofreturn1" readonly value="Returned" required>
+    </div>
+    <div class="form-group col-sm-4 mt-2">
+        <label asp-for="partyname" class="control-label"></label>
+
+        <input type="text" asp-for="partyname" class="form-control" id="partynameId" placeholder="Enter party name" required>
+        <span asp-validation-for="partyname" class="text-danger"></span>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group col-sm-4 mt-2">
+        <label asp-for="gstinno" class="control-label">GST No.</label>
+        <input asp-for="gstinno" data-uppercase autocomplete="off" id="gstnoId" class="form-control"
+               oninput="validateAlphaNumeric(this)" maxlength="20" />
+        <span asp-validation-for="gstinno" class="text-danger"></span>
+    </div>
+    <div class="form-group col-sm-4 mt-2">
+        <label asp-for="contactno" class="control-label">Contact No.</label>
+        <input asp-for="contactno" data-uppercase autocomplete="off" id="contactnoId"
+               class="form-control" required oninput="validateNumber(this)" />
+        <span asp-validation-for="contactno" class="text-danger"></span>
+    </div>
+    <div class="form-group col-sm-4 mt-2">
+        <label asp-for="address" class="control-label">Address</label>
+        <input asp-for="address" data-uppercase autocomplete="off" id="addressId"
+               class="form-control" required oninput="validateAlphNum(this)" />
+        <span asp-validation-for="address" class="text-danger"></span>
+    </div>
+</div>
+
+
+<div class="col-md-12 mx-lg-2 mx-md-2">
+
+    <table id="CodesTable" class="table table-striped table-sm p-2">
+        <thead>
+            <tr>
+                @foreach (var head in TableHeaders)
+                {
+                    <th>
+                        @head
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody id="tbody">
+            @for (int i = 0; i < Model.inwardPacket.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input asp-for="@Model.inwardPacket[i].productcode" class="form-control productcode-input" />
+                        <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                    </td>
+                    <td>
+                        @* style="display:none" id="desc1" *@
+                        <select class="form-control" asp-for="@Model.inwardPacket[i].description"  asp-items="@ViewBag.description" onchange="handleDespChange(this)"></select>
+                        @* <input asp-for="@Model.inwardPacket[i].description1" class="form-control" style="display:none"  readonly id="desc2" required /> *@
+                        <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                    </td>
+                    <td style="display:none">
+                        <input asp-for="@Model.inwardPacket[i].brand" readonly class="form-control" oninput="validateAlphabet(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].brand" class="text-danger"></span>
+                    </td>
+                    <td style="width:120px;">
+                        <input asp-for="@Model.inwardPacket[i].quantity" class="form-control quantity-input" onchange="calculateTotals(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].quantity" class="text-danger"></span>
+                    </td>
+                    <td style="display:none">
+                        <select asp-for="@Model.inwardPacket[i].type" class="form-control">
+                            <option value="ST">Good Condition</option>
+                            <option value="DMG">Damaged</option>
+                            <option value="DMG">Manufacturing Defect</option>
+                            <option value="NONRPR">Physically Broken</option>
+                        </select>
+                        <span asp-validation-for="@Model.inwardPacket[i].type" class="text-danger"></span>
+                    </td>
+
+                    <td style="display:none;">
+                        <input asp-for="@Model.inwardPacket[i].uom" readonly class="form-control" />
+                        <span asp-validation-for="@Model.inwardPacket[i].uom" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px;display:none;">
+                        <input asp-for="@Model.inwardPacket[i].setofsub_assemb" class="form-control" oninput="validateNumber(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].setofsub_assemb" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px;display:none;">
+                        <input asp-for="@Model.inwardPacket[i].qtyperpkt" class="form-control noofshpperqty-input" oninput="validateNumber(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].qtyperpkt" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px;display:none;">
+                        <input asp-for="@Model.inwardPacket[i].noofpackets" class="form-control noofpackets-input" oninput="calculate(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].noofpackets" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px; display:none;">
+                        <input asp-for="@Model.inwardPacket[i].noqtypershp" readonly class="form-control noqtypershp-input" oninput="calculate2(this)" />
+                        <span asp-validation-for="@Model.inwardPacket[i].noqtypershp" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px; display:none;">
+                        <input asp-for="@Model.inwardPacket[i].totalpacket" readonly class="form-control totalpacket-input" />
+                        <span asp-validation-for="@Model.inwardPacket[i].totalpacket" class="text-danger"></span>
+                    </td>
+                    <td style="width:80px; display:none;">
+                        <input asp-for="@Model.inwardPacket[i].totalsubassmbly" id="totalsubassembly" class="form-control totalsubassembly" readonly />
+                        <span asp-validation-for="@Model.inwardPacket[i].totalsubassmbly" class="text-danger"></span>
+                        <input type="hidden" asp-for="@Model.inwardPacket[i].IsDeleted" />
+                    </td>
+
+                    <td style="display:none">
+                        <a id="editDetail-@i" class="btn text-white btn-sm btn-warning poedit3-button"
+                           data-id="@Model.inwardPacket[i].id"
+                           data-quantity="@Model.inwardPacket[i].quantity"
+                           data-productcode="@Model.inwardPacket[i].productcode">
+                            View
+                        </a>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm scaningidd"
+                                onclick="scaningSR(this)"
+                                data-productcode="@Model.inwardPacket[i].productcode"
+                                data-quantity="@Model.inwardPacket[i].quantity">
+                            <span class="d-none d-sm-inline">scan</span>
+                            <span class="d-inline d-sm-none">scan</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

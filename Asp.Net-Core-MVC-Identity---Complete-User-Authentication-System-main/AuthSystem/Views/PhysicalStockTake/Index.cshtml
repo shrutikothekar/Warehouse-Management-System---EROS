@@ -1,0 +1,427 @@
+﻿@model IEnumerable<eros.Models.PhysicalStockTake>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@* @if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN")
+    {
+
+    }
+    else if (role == "HOSITE")
+    {
+
+    }
+    else if (role == "WAREHOUSE")
+    {
+
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+ *@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+
+    <!-- Include DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.2/css/jquery.dataTables.min.css" />
+    <style>
+        /*   .SendHO {
+                    position:relative;
+                    left:166px;
+                    top:30px;
+                } */
+        .SendHO {
+            margin-left: 15px;
+        }
+
+        .tablesize1 {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="mt-3">
+        <div class="card mb-3">
+            <div class="card-header bg-dark text-white">
+                <div class="d-flex align-items-baseline">
+                    <h5 class="mx-auto font-weight-bolder">PhysicalStock Take </h5>
+                    <a asp-action="Create" class="btn btn-success text-white"><i class="fas fa-plus-square"></i> Add</a>
+                </div>
+            </div>
+            <div class="card-body">
+
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                        <thead class="thead-light  text-center">
+                            <tr >
+                                <th>
+                                    @Html.DisplayNameFor(model => model.physicalid)
+                                </th>
+                                @* <th>
+                                @Html.DisplayNameFor(model => model.boxno)
+                                </th> *@
+                                @* <th>
+                                @Html.DisplayNameFor(model => model.batchcode)
+                                </th> *@
+                                @*  <th>
+                                @Html.DisplayNameFor(model => model.locationcode)
+                                </th> *@
+                                @*   <th>
+                                @Html.DisplayNameFor(model => model.boxes)
+                                </th> *@
+                                <th>
+                                    @Html.DisplayNameFor(model => model.boxcount)
+                                </th>
+                                @* <th>
+                                @Html.DisplayNameFor(model => model.count)
+                                </th> *@
+                                @*  <th>
+                                @Html.DisplayNameFor(model => model.flag)
+                                </th> *@
+                                <th style="width:150px;" id="hidetable">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            @foreach (var item in Model)
+                            {
+                                <tr class="text-center">
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.physicalid)
+                                    </td>
+                                    @*  <td>
+                                @Html.DisplayFor(modelItem => item.boxno)
+                                </td> *@
+                                    @* <td>
+                                @Html.DisplayFor(modelItem => item.batchcode)
+                                </td> *@
+                                    @*  <td>
+                                @Html.DisplayFor(modelItem => item.locationcode)
+                                </td> *@
+                                    @*  <td>
+                                @Html.DisplayFor(modelItem => item.boxes)
+                                </td> *@
+                                    <td class="text-center">
+                                        @Html.DisplayFor(modelItem => item.boxcount)
+                                    </td>
+                                    @* <td>
+                                @Html.DisplayFor(modelItem => item.count)
+                                </td> *@
+                                    @*   <td>
+                                @Html.DisplayFor(modelItem => item.flag)
+                                </td> *@
+                                    <td class="text-center" id="hidetable">
+                                        <a asp-action="Details" asp-route-id="@item.physicalid" class="btn btn-sm bg-warning">
+                                            <i style="color:white" class="fa fa-eye" aria-hidden="true"></i>
+                                            Details
+                                        </a>
+                                        <a asp-action="Resumepst" asp-route-id="@item.physicalid" class="btn btn-success p-1">
+                                            <i class="fas fa-pencil-alt"></i> Continue PST
+                                        </a>
+                                        @*  <a asp-action="Pst_Excel" asp-route-id="@item.pstid" class="btn btn-danger p-1">
+                                    <i class="fa fa-file-excel small"></i>
+                                    </a> *@
+                                        @* <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                                    <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                                    <a asp-action="Delete" asp-route-id="@item.id">Delete</a> *@
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* <div>
+    <a asp-action="VarianceReport" class="btn btn-sm btn-primary" style="display:none;">Variance Report</a>
+    <a asp-action="OverAllProduct" class="btn btn-sm btn-primary" style="display:none;">Product Info</a>
+    </div> *@
+    <div class="SendHO">
+        @* <button class="btn btn-sm btn-primary text-white" onclick="generatePDF()">Send HO</button> *@
+        <button id="sendHOBtn" class="btn btn-sm btn-primary text-white ">Request to Validate</button>
+        <button id="Restart" class="btn btn-sm btn-primary text-white " style="display:none;">Restart</button>
+    </div>
+
+    <!-- Include jsPDF library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
+    <!-- Include jsPDF-AutoTable plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script>
+
+
+    <!-- Include html2canvas library -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+    <!-- Include SweetAlert library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Include DataTables JavaScript -->
+    <script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+
+
+    <!-- Initialize DataTable -->
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable().on('init.dt', function () {
+                // DataTables has finished initializing
+                console.log('DataTables initialized');
+            });
+
+            // Event listener for the "Validate" button
+            document.getElementById('sendHOBtn').addEventListener('click', function () {
+                // Display SweetAlert confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'PST is done, and you want to validate the data to the admin. This action cannot be undone!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Send Data!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        // Perform AJAX request to your server for validation
+                        $.ajax({
+                            url: '/PhysicalStockTake/RetrieveData',  // Replace with your actual controller and action
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (response) {
+                                // if (response.success) {
+                                //     Swal.fire('Done!', 'Data Send Successfully.', 'success');
+                                //     window.location.href = '/PhysicalStockTake/Index';
+                                //     var columnIndex = 4; // Replace with the actual index of the column to hide
+                                //     $('#dataTable thead th:eq(' + columnIndex + ')').css('display', 'none');
+                                //     $('#dataTable tbody tr').each(function () {
+                                //         $(this).find('td:eq(' + columnIndex + ')').css('display', 'none');
+                                //     });
+                                // } else {
+                                //     Swal.fire('Error', response.message, 'error');
+                                // }
+                                if (response.success) {
+                                    Swal.fire({
+                                        title: 'Done!',
+                                        text: 'Data Send Successfully.',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.href = '/PhysicalStockTake/Index';
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire('Error', response.message, 'error');
+                                }
+
+                            },
+                            error: function () {
+                                Swal.fire('Error', 'An error occurred during validation.', 'error');
+                            }
+                        });
+
+                    }
+                });
+            });
+
+            // $('#sendHOBtn').click(function () {
+            //     $.ajax({
+            //         url: '/PhysicalStockTake/RetrieveData',  // Replace with the actual endpoint to retrieve data
+            //         type: 'GET',
+            //         success: function (data) {
+
+            //             if (data && data.success) {
+
+            //                 // Display a success message with SweetAlert
+            //                 Swal.fire({
+            //                     icon: 'success',
+            //                     title: 'Success',
+            //                     text: 'Data Send successfully.',
+            //                 });
+            //                 // Redirect to another view if needed
+            //                 // window.location.href = '/PhysicalStockTake/CheckPhysicalStock';
+            //             } else {
+            //                 // Display an error message when an error occurs
+            //                 // Swal.fire({
+            //                 //     icon: 'error',
+            //                 //     title: 'Error',
+            //                 //     text: data.message || 'Error Sending data.',
+            //                 // });
+
+            //                 // Display an error or info message when no data is found or an error occurs
+            //                 Swal.fire({
+            //                     icon: data.success ? 'info' : 'error',
+            //                     title: data.success ? 'Info' : 'Error',
+            //                     text: data.message || (data.success ? 'No data found.' : 'Error retrieving or inserting data.'),
+            //                 });
+            //             }
+
+            //         },
+            //         error: function (error) {
+            //             console.error('Error retrieving data from server:', error);
+            //         }
+            //     });
+            // });
+
+            // for Restart
+            document.getElementById('Restart').addEventListener('click', function () {
+                // Display SweetAlert confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure, You Want to restart Process?',
+                    text: 'You want to restart the PST process you have done !',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Restart!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        // Perform AJAX request to your server for validation
+                        $.ajax({
+                            url: '/PhysicalStockTake/Restart',  // Replace with your actual controller and action
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (response) {
+                                if (response.success) {
+                                    Swal.fire('Done!', 'Restart Successfully.', 'success');
+                                    // localStorage.setItem('dataSentSuccessfully', 'true');
+                                    window.location.href = '/PhysicalStockTake/Index';
+
+                                } else {
+                                    Swal.fire('Error', response.message, 'error');
+                                }
+                            },
+                            error: function () {
+                                Swal.fire('Error', 'An error occurred during validation.', 'error');
+                            }
+                        });
+
+                    }
+                });
+            });
+
+        });
+
+    </script>
+
+    <script>
+        // Check if the data was sent successfully from checkphysicalstock
+        var dataSentSuccessfully = localStorage.getItem('dataSentSuccessfully');
+
+        // Hide the column if the flag is set
+        if (dataSentSuccessfully) {
+            // Replace 'yourColumnSelector' with the actual selector for the column you want to hide
+            document.getElementById('actionColumn').style.display = 'none';
+        }
+    </script>
+
+    @* <script>
+
+    // Define jsPDF globally
+    var jsPDF = window.jspdf.jsPDF;
+
+    // function convertToPDF() {
+    function convertToPDF(columnNames) {
+    // Create a new jsPDF instance
+    var doc = new jsPDF();
+
+    // Get the DataTable instance
+    var dataTable = $('#dataTable').DataTable();
+
+    // Specify the columns you want to include in the PDF
+    var selectedColumns = ['0', '1', '2', '3'];
+
+    // Track processed pages
+    var processedPages = [];
+
+    // Function to capture content of a DataTable page and add it to the PDF
+    function addPageToPDF(pageNumber) {
+
+    // Go to the specified page
+    dataTable.page(pageNumber).draw('page');
+
+    // Get the DataTable data for the current page
+    var tableData = dataTable.rows().data().toArray();
+
+    // Prepare data for the autoTable plugin
+    var columns = selectedColumns; // Use only the selected columns
+    var rows = tableData.map(row => selectedColumns.map(column => (row[column] !== undefined) ? row[column].toString() : ''));
+
+    // Add content to the PDF using autoTable
+    doc.autoTable({
+    head: [columnNames],
+    body: rows,
+    startY: 10,
+    styles: {
+    fontSize: 10,
+    cellPadding: 2,
+    valign: 'middle',
+    halign: 'left',
+    },
+    margin: { top: 20 },
+    });
+
+    // If there are more pages, add a new page to the PDF
+    if (pageNumber < dataTable.page.info().pages - 1) {
+    doc.addPage();
+    addPageToPDF(pageNumber + 1);
+    } else {
+    // Save the PDF when all pages are added
+    doc.save('table.pdf');
+
+    // Show SweetAlert on success
+    Swal.fire({
+    icon: 'success',
+    title: 'PDF Created Successfully!',
+    showConfirmButton: false,
+    timer: 1500
+    });
+    }
+    }
+
+    // Start the process by adding content from the first page
+    addPageToPDF(0);
+    }
+
+    function generatePDF() {
+    // Specify custom header and column names
+    var customHeader = 'Custom PDF Header';
+    var columnNames = ['Product Code', 'Batch Code', 'Storage location', 'Boxes'];
+
+    // Call convertToPDF function
+    convertToPDF(columnNames);
+    }
+    </script> *@
+
+</body>
+</html>
+

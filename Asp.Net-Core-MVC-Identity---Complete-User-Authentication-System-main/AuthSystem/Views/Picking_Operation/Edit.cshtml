@@ -1,0 +1,1463 @@
+﻿
+
+@model eros.Models.Pick_OperaNewcs
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+        "Product Code",
+        "Batch Code",
+        "Location",
+        "Box No.",
+        "Pick Box Qty"
+    };
+    var sono = ViewBag.sono;
+    var dropDownData = ViewBag.DropDownDatasono as SelectList;
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+
+
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="container-field m-2">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder small-heading ">Picking Operation</h5>
+                            @*<a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>*@
+                            <a asp-action="Index" class="btn btn-success text-white btn-sm"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <div class="p-2 mt-3 mb-3">
+                        <div class="row mx-lg-2 mx-md-2">
+                            <div class="col-md-12">
+                                <form asp-action="Create" id="sensorDataTable">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                                    @* select sono *@
+                                    <div class="row">
+                                        <div class="form-group col-sm-4 mt-2" id="sono">
+                                            <label class="control-label">Order No.</label>
+                                            <input asp-for="Picking_Operation.sono" id="sonoId" readonly value="@sono" class="form-control" />
+                                            <span asp-validation-for="Picking_Operation.sono" class="text-danger"></span>
+                                        </div>
+                                        <div class="form-group col-sm-4 mt-2"></div>
+                                        <div class="form-group col-sm-4 mt-2 d-flex align-items-end">
+                                            @*  <button type="button" class="btn btn-info btn-sm mr-2" onclick="showDetailsView()">Show Details</button>
+                                    <button type="button" class="btn btn-info btn-sm" id="startPickingBtn" onclick="showStartDiv()">Start Picking</button>
+                                    *@
+                                            @* <button type="button" class="btn btn-info btn-sm mr-2" onclick="showDetailsView()"> *@
+                                            <button type="button" class="btn btn-info btn-sm mr-2" onclick="ShowDetails()">
+                                                <span class="d-none d-sm-inline">Show Details</span>
+                                                <span class="d-inline d-sm-none">Details</span>
+                                            </button>
+                                            <button type="button" class="btn btn-info btn-sm mr-2" id="startPickingBtn" onclick="showStartDiv()">
+                                                <span class="d-none d-sm-inline">Start Picking</span>
+                                                <span class="d-inline d-sm-none">Start</span>
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-sm damageid" onclick="damageStockModal(this)">
+                                                <span class="d-none d-sm-inline">Damage</span>
+                                                <span class="d-inline d-sm-none">Dmg</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    @* main table *@
+                                    <!-- Modal -->
+
+                                    <div class="startdiv" style="display:none">
+                                        @* input table *@
+                                        <div class="row" id="list">
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Picking_Operation.location" class="control-label"></label>
+                                                <input asp-for="Picking_Operation.location" data-uppercase autocomplete="off" class="form-control" id="extlocn" style="height:5vh;" onkeydown="checkloc(event)"  />
+                                                <span asp-validation-for="Picking_Operation.location" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Picking_Operation.boxno" class="control-label"></label>
+                                                <input asp-for="Picking_Operation.boxno" id="boxno" data-uppercase autocomplete="off" class="form-control" onkeypress="Insertpickdata(event)" />
+                                                <span asp-validation-for="Picking_Operation.boxno" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label asp-for="Picking_Operation.qtypicked" class="control-label"></label>
+                                                <input asp-for="Picking_Operation.qtypicked" style="height:5vh; font-size: 16px; color: green; font-weight: 650;" id="qtypicked" data-uppercase autocomplete="off" class="form-control" type="text" value="@ViewBag.data4" readonly />
+                                                <span asp-validation-for="Picking_Operation.qtypicked" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-3 mt-2">
+                                                <label id="expickig" asp-for="Picking_Operation.balanceqty" class="control-label">Balance Box Count</label>
+                                                <input asp-for="Picking_Operation.balanceqty" style="height:5vh; font-size: 16px; color: red; font-weight: 650;" data-uppercase autocomplete="off" readonly class="form-control" type="text" value="@ViewBag.data3" id="extpickg" style="height:5vh;" />
+                                                <span asp-validation-for="Picking_Operation.balanceqty" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-2 mt-2" style="display:none;">
+                                                <label></label>
+                                                <input type="button" value="Save" class="btn btn-primary col-12" id="btnSave" onclick="SaveTableData()" />
+                                            </div>
+                                        </div>
+                                        <br />
+                                        @* last table - small table  *@
+                                        <input type="hidden" name="tableData1" id="tableData1" />
+                                        <div class="table-responsive col-12 col-sm-12 mt-2 " id="preInwardTable" style="max-height: 220px; overflow-y: auto;">
+                                            <table class="table table-bordered table-striped divide-gray-300 small" id="DataInsert">
+                                                <thead style="background-color: #666; color: #fff;" class="sticky-top">
+                                                    <tr>
+                                                        <th>Location</th>
+                                                        <th>Box No.</th>
+                                                        <th>Batch Code</th>
+                                                        <th>Pro. Code</th>
+                                                        <th style="display:none">flag</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var item in ViewBag.data2)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.location</td>
+                                                            <td>@item.boxno</td>
+                                                            <td>@item.batchcode</td>
+                                                            <td>@item.productcode</td>
+                                                            <td style="display:none">@item.flag</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+<div class="modal fade" id="mainTableModal" tabindex="-1" role="dialog" aria-labelledby="mainTableModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mainTableModalLabel">Picked Product Details</h5>
+                <div class="btn-group ml-auto" role="group" aria-label="Export Buttons">
+                  @*   <a onclick="generatePDF()" class="btn btn-danger text-white mr-3"><i class="fas fa-file-pdf"></i>Pdf</a>
+                    <a onclick="exportToExcel()" class="btn btn-success text-white"><i class="fas fa-file-excel"></i>Excel</a> *@
+                    <a onclick="generatePDF()" class="btn btn-danger btn-sm text-white mr-1"><i class="fas fa-file-pdf"></i>Pdf</a>
+                    <a onclick="exportToExcel()" id="exportButton" class="btn btn-success text-white btn-sm mr-1">
+                        <i class="fas fa-file-excel"></i>
+                        Excel
+                    </a>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive col-md-12 p-0" style="max-height: 220px; overflow-y: auto;">
+                    <table class="table table-striped table-sm" id="table1">
+                        <thead class="bg-gray-200 sticky-top">
+                            <tr>
+                                @foreach (var head in TableHeaders)
+                                {
+                                    <th style="background:white;">
+                                        @head
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody id="CsDivUUUUUU">
+                           @*  @foreach (var item in ViewBag.data1)
+                            {
+                                <tr>
+                                    <td>@item.productcode</td>
+                                    <td>@item.batchcode</td>
+                                    <td>@item.location</td>
+                                    <td>@item.boxno</td>
+                                    <td style="height:5vh; font-size: 16px; color: green; font-weight: 650;">@item.instockqty</td>
+                                </tr>
+                            } *@
+                        </tbody>
+                    </table>
+                    <input type="hidden" id="hdnLastIndex" value="0" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* MODEL POPUP FOR DAMAGE *@
+<div class="modal fade" id="damageModal" tabindex="-1" role="dialog" aria-labelledby="damageModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="damageModalLabel">Damage Stock</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="damageForm">
+                    <small style="color:green; font-weight:550">Please Scan the damage product sticker ...</small>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <small><label style="color:black; font-weight:550" for="productcode">Pro.Code:</label></small>
+                            <input type="text" class="form-control" id="productcode" onkeypress="damagepickdata(event)">
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <small><label style="color:black; font-weight:550" for="batchcode">Batch Code</label></small>
+                            <input type="text" class="form-control" id="batchcode">
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <small><label style="color:black; font-weight:550" for="boxno">Box No</label></small>
+                            <input type="text" class="form-control" id="boxno">
+                        </div>
+                    </div>
+                    <button style="display:none" type="submit" class="btn btn-danger">Submit</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script> *@
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+
+<style>
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+
+    .table td, .table th {
+        white-space: nowrap;
+        white-space: normal;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+        /* Adjust input field width */
+        .table-responsive input[type="text"] {
+            width: 100%;
+        }
+
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+</style>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+
+         $(document).ready(function () {
+            console.log("on ready fuc call");
+            ShowDetails1();
+            // mergeCells();
+        });
+
+        var jsPDF = window.jspdf.jsPDF;
+        function convertToPDF(columnNames, tableData) {
+            var doc = new jsPDF();
+            var currentDate = new Date();
+
+            var additionalText = 'EROS GENERAL AGENCIES PVT LTD.';
+            var pageWidth = doc.internal.pageSize.getWidth();
+            var additionalTextX = pageWidth / 2;
+            doc.setFontSize(14);
+            doc.text(additionalText, additionalTextX, 10, { align: 'center' });
+
+            var heading1 = 'Picked Boxes Report';
+            var currentDate = new Date();
+            var day = currentDate.getDate();
+            var month = currentDate.getMonth() + 1; // Month is zero-based, so add 1
+            var year = currentDate.getFullYear();
+            var formattedDate = (day < 10 ? '0' : '') + day + '/' + (month < 10 ? '0' : '') + month + '/' + year; // Format date as dd/mm/yyyy
+            var formattedTime = currentDate.toTimeString().slice(0, 8); // Format time
+            var pageWidth = doc.internal.pageSize.getWidth();
+            var headingX = pageWidth / 2;
+            doc.setFontSize(10);
+            doc.text(heading1 + ' - Generated on: ' + formattedDate + ' ' + formattedTime, headingX, 19, { align: 'center' });
+
+            var selectedColumns = ['0', '1', '2', '3', '4'];
+
+            var rows = tableData.map(row => selectedColumns.map(column => (row[column] !== undefined) ? row[column].toString() : ''));
+
+            doc.autoTable({
+                head: [columnNames],
+                body: rows,
+                startY: 30, // Start below the date and time text
+                styles: {
+                    fontSize: 9,
+                    cellPadding: 2,
+                    valign: 'middle',
+                    halign: 'left',
+                },
+                margin: { top: 20 },
+            });
+
+            doc.save('report.pdf');
+            console.log("Doc Generated Successfully!");
+        }
+        function generatePDF() {
+            var customHeader = 'Custom PDF Header';
+            var columnNames = ['Prod.Code', 'BatchCode', 'Location', 'Box No', 'PickQty'];
+            var dataTable = $('#table1').DataTable();
+            var tableData = dataTable.rows().data().toArray();
+            convertToPDF(columnNames, tableData);
+            // Destroy the DataTable but keep the table data
+            dataTable.destroy();  // Clear and remove the DataTable
+        }
+        function exportToExcel() {
+            function formatDate(date) {
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${day}/${month}/${year}`;
+            }
+
+            const now = new Date();
+            const formattedDate = formatDate(now);
+            const formattedTime = now.toLocaleTimeString();
+            const sheetHeading = ['EROS GENERAL AGENCIES PVT.LTD'];
+            const SubHeading = ['Picked Boxes Report - Excel generated on ' + formattedDate + ' at ' + formattedTime];
+            const tableHeading = ['Prod.Code', 'BatchCode', 'Location', 'Box No', 'PickQty'];
+
+
+            // const sheetHeading = ['EROS GENERAL AGENCIES PVT.LTD'];
+            // const SubHeading = ['Excel generated on ' + (new Date().toLocaleDateString()) + ' at ' + (new Date().toLocaleTimeString())];
+            // const tableHeading = ['Prod.Code', 'Box No', 'Batch Code', 'GRN No', 'Location'];
+
+            // Collecting data from all pages of the table
+            const wsData = [sheetHeading, SubHeading, tableHeading];
+
+            // Function to collect data from all pages
+            function collectDataFromAllPages() {
+                var dataTable = $('#table1').DataTable();
+                var pageCount = dataTable.page.info().pages;
+
+                for (let i = 0; i < pageCount; i++) {
+                    dataTable.page(i).draw('page');
+                    $('#table1 tbody tr').each(function () {
+                        const rowData = [];
+                        $(this).find('td').each(function () {
+                            rowData.push($(this).text().trim());
+                        });
+                        wsData.push(rowData);
+                    });
+                }
+
+                // Restore the original page
+                dataTable.page(0).draw('page');
+            }
+
+            // Collect data from all pages of the DataTable
+            collectDataFromAllPages();
+
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Order Sheet');
+
+            // Define border style
+            const borderStyle = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+            };
+
+            // Add and style the sheet heading
+            const headingRow = worksheet.addRow(sheetHeading);
+            headingRow.font = { bold: true, size: 14 };
+            worksheet.mergeCells('A1:E1');
+            headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+            headingRow.eachCell((cell) => {
+                cell.border = borderStyle;
+            });
+
+            const headingRow1 = worksheet.addRow(SubHeading);
+            worksheet.mergeCells('A2:E2');
+            headingRow1.font = { size: 10 };
+            headingRow1.alignment = { horizontal: 'center', vertical: 'center' };
+            headingRow1.eachCell((cell) => {
+                cell.border = borderStyle;
+            });
+
+            // Add and style the table heading
+            const headerRow = worksheet.addRow(tableHeading);
+            headerRow.eachCell((cell) => {
+                cell.font = { bold: true, size: 14 };
+                cell.alignment = { horizontal: 'center', vertical: 'center' };
+                cell.border = borderStyle;
+            });
+
+            // Add data rows and center align, with special alignment for the first two columns
+            wsData.slice(3).forEach(dataRow => {
+                const row = worksheet.addRow(dataRow);
+                row.eachCell((cell, colNumber) => {
+                    if (colNumber === 1) {
+                        cell.alignment = { horizontal: 'left', vertical: 'top', wrapText: true };
+                    } else {
+                        cell.alignment = { horizontal: 'center', vertical: 'center' };
+                    }
+                    cell.border = borderStyle;
+                });
+            });
+
+            // Set specific widths for the columns
+            worksheet.columns = [
+                { width: 34 },  // Set width for the first column
+                { width: 15 },  // Set width for the second column
+                { width: 15 },  // Set width for the third column
+                { width: 15 },  // GRN No column width
+                { width: 15 }   // Location column width
+            ];
+
+            // Generate Excel file and trigger download
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'report.xlsx');
+                // After export, remove the DataTable
+                $('#table1').DataTable().destroy();  // Clear and remove the DataTable
+                // $('#table1 tbody').empty();  // Remove the table body content
+            });
+        }
+
+        // var jsPDF = window.jspdf.jsPDF;
+        // function generatePDF() {
+        //     event.preventDefault(); // Prevent the default behavior of the anchor tag
+        //     var customHeader = 'Picking Products Details';
+        //     var columnNames = ['Product Code', 'Batch Code', 'Location', 'Box No.', 'Pick Box Qty'];
+        //     convertToPDF(customHeader, columnNames);
+        // }
+        // function convertToPDF(customHeader, columnNames) {
+        //     var doc = new jsPDF();
+        //     var table = document.getElementById('table1');
+        //     var rows = table.querySelectorAll('tbody tr');
+
+        //     var data = [];
+        //     rows.forEach(row => {
+        //         var rowData = [];
+        //         row.querySelectorAll('td').forEach(cell => {
+        //             rowData.push(cell.innerText);
+        //         });
+        //         data.push(rowData);
+        //     });
+        //     console.log("data : " + data);
+        //     doc.setFontSize(12); // Set title font size to H4
+        //     doc.text(customHeader, 10, 10); // Set title
+
+        //     // Display date and time at the right corner
+        //     var today = new Date();
+        //     var dateTimeString = today.toLocaleString();
+        //     var textWidth = doc.getStringUnitWidth(dateTimeString) * doc.internal.getFontSize() / doc.internal.scaleFactor;
+        //     var pageWidth = doc.internal.pageSize.width;
+        //     doc.setFontSize(12); // Set font size for date and time
+        //     doc.text(dateTimeString, pageWidth - textWidth - 10, 10);
+
+        //     doc.autoTable({
+        //         head: [columnNames],
+        //         body: data,
+        //         startY: 20, // Adjust startY to make space for the title
+        //         styles: {
+        //             fontSize: 10,
+        //             cellPadding: 2,
+        //             valign: 'middle',
+        //             halign: 'left',
+        //         },
+        //         margin: { top: 20 },
+        //     });
+
+        //     doc.save('PickedProductDetails.pdf');
+        // }
+        // function exportToExcel() {
+        //     var table = document.getElementById("table1");
+        //     var data = XLSX.utils.table_to_sheet(table);
+        //     var wb = XLSX.utils.book_new();
+        //     XLSX.utils.book_append_sheet(wb, data, "Sheet1");
+        //     XLSX.writeFile(wb, "PickedProductDetails.xlsx");
+        // }
+        // document.getElementById("exportBtn").addEventListener("click", exportToExcel);
+
+       function ShowDetails1() {
+            console.log("call ShowDetails() Function");
+            var sono = $('#sonoId').val();
+            $.ajax({
+                url: '/Picking_Operation/TMPDataDetails',
+                data: { sono: sono },
+                type: 'GET',
+                success: function (response) {
+                    console.log("Data bind !");
+                    console.log(response);
+
+                    $('#CsDivUUUUUU').empty(); // Clear previous data
+                    if (response.success) {
+                        response.data.forEach(function (item) {
+                            var row = '<tr>';
+                            row += `<td style="width:300px;" data-name="productcode">${item.productcode}</td>`;
+                            row += `<td style="width:150px;"data-name="batchcode">${item.batchcode}</td>`;
+                            row += `<td style="width:150px;"data-name="location">${item.location}</td>`;
+                            row += `<td style="width:150px;"data-name="boxno">${item.boxno}</td>`;
+                            row += `<td style="width:100px;"data-name="instockqty">${item.instockqty}</td>`;
+                            row += '</tr>';
+                            $("#CsDivUUUUUU").append(row);
+                        });
+                    } else {
+                        var row = '<tr><td colspan="8" style="text-align:center;">' + response.message + '</td></tr>';
+                        $("#CsDivUUUUUU").append(row);
+                    }
+
+                    // $('#mainTableModal').modal('show');
+
+                },
+                error: function () {
+                    console.log('An error occurred while fetching the details.');
+                }
+            });
+        }
+
+        function ShowDetails() {
+            console.log("call ShowDetails() Function");
+            var sono = $('#sonoId').val();
+            $.ajax({
+                url: '/Picking_Operation/TMPDataDetails',
+                data: { sono: sono },
+                type: 'GET',
+                success: function (response) {
+                    console.log("Data bind !");
+                    console.log(response);
+
+                    $('#CsDivUUUUUU').empty(); // Clear previous data
+                    if (response.success) {
+                        response.data.forEach(function (item) {
+                            var row = '<tr>';
+                            row += `<td style="width:300px;" data-name="productcode">${item.productcode}</td>`;
+                            row += `<td style="width:150px;"data-name="batchcode">${item.batchcode}</td>`;
+                            row += `<td style="width:150px;"data-name="location">${item.location}</td>`;
+                            row += `<td style="width:150px;"data-name="boxno">${item.boxno}</td>`;
+                            row += `<td style="width:100px;"data-name="instockqty">${item.instockqty}</td>`;
+                            row += '</tr>';
+                            $("#CsDivUUUUUU").append(row);
+                        });
+                    } else {
+                        var row = '<tr><td colspan="8" style="text-align:center;">' + response.message + '</td></tr>';
+                        $("#CsDivUUUUUU").append(row);
+                    }
+
+                    $('#mainTableModal').modal('show');
+
+                },
+                error: function () {
+                    console.log('An error occurred while fetching the details.');
+                }
+            });
+        }
+
+       function damagepickdata(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                var selectedSono = document.getElementById("sonoId").value;
+                console.log("Selected SO No.: " + selectedSono);
+
+                var inputVal = document.getElementById("productcode").value;
+                console.log("inputVal : " + document.getElementById("productcode").value);
+                var splitData = splitDataAndStoreVariables(inputVal, selectedSono);
+                console.log("splitData : ", JSON.stringify(splitData)); // Print split data object
+                document.getElementById("productcode").value = "";
+
+                $.ajax({
+                    url: '/Picking_Operation/DamageStockQty', // Replace 'ControllerName' and 'ActionName' with your controller and action names
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(splitData),
+                    success: function (response) {
+                         console.log('Data sent successfully:', response);
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message
+                            }).then(function () {
+                                document.getElementById("qtypicked").value = response.qtypicked;
+                                document.getElementById("extpickg").value = response.balpicked;
+                                ShowDetails1();
+                                $('#damageModal').modal('hide');
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: response.message
+                            });
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error sending data to the controller:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to send data to the server. Please try again later.'
+                        });
+                    }
+                });
+            }
+        }
+
+        function splitDataAndStoreVariables(dataString, sono) {
+            // var splitData = dataString.split("$");
+            var splitData = dataString.split(/[,|$]/);
+            console.log("splitData : ", JSON.stringify(splitData));
+
+            // Extract variables from split data
+            var productCode = splitData[0];
+            var description = splitData[1];
+            var grn = splitData[2];
+            var boxNo = splitData[3];
+            var qtyPerSet = splitData[4];
+            var batchCode = splitData[5];
+
+            // Log the extracted variables
+            console.log("Product Code:", productCode);
+            console.log("Description:", description);
+            console.log("GRN:", grn);
+            console.log("Box No.:", boxNo);
+            console.log("Qty Per Set:", qtyPerSet);
+            console.log("Batch Code:", batchCode);
+            console.log("sono :", sono);
+
+            return {
+                sono: sono,
+                productCode: productCode,
+                description: description,
+                grn: grn,
+                boxNo: boxNo,
+                qtyPerSet: qtyPerSet,
+                batchCode: batchCode
+            };
+        }
+
+           function damageStockModal(button) {
+
+                $("#productcode").focus();
+
+                var selectedSono = document.getElementById("sonoId").value;
+                console.log("Selected SO No.: " + selectedSono);
+
+                // Check if a SO No. is selected
+                if (!selectedSono) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning',
+                        text: 'Please select a Sale Order Number first.'
+                    });
+                    return;
+                }
+
+                var productcode = $(button).data("productcode");
+                var batchcode = $(button).data("batchcode");
+                var boxno = $(button).data("boxno");
+
+                $("#productcode").val(productcode);
+                $("#batchcode").val(batchcode);
+                $("#boxno").val(boxno);
+
+                $("#damageModal").modal("show");
+
+                $("#damageForm").submit(function (event) {
+                    event.preventDefault();
+
+                    var productcode = $("#productcode").val();
+                    var batchcode = $("#batchcode").val();
+                    var boxno = $("#boxno").val();
+
+                    $("#damageModal").modal("hide");
+                    $(this).trigger("reset");
+                });
+            }
+
+        function showDetailsView() {
+            //console.log("Call ....");
+            $('#mainTableModal').modal('show');
+        }
+
+        function showStartDiv() {
+            // Show the startdiv and unblock the UI
+            $(".startdiv").show();
+            $.unblockUI();
+        }
+
+        function clearfrm() {
+            window.location.href = '/Delivery_Note/Create/';
+        }
+        var dataList = [];
+
+        $(document).ready(function () {
+            
+            const inputElement = $('#extlocn');
+            if (inputElement.length > 0) {
+                inputElement.focus();
+            }
+
+            // $("#sonoId").on("change", function () {
+            // });
+
+            $("form").bind("keypress", function (e) {
+                if (e.keyCode == 13) {
+                    return false;
+                }
+            });
+            document.getElementById("extlocn").focus();
+        });
+
+       function dropdownChanged() {
+                // Check if the selected dropdown option has a value
+                if ($("#sonoId").attr("aria-value-max") !== "") {
+                    var selectedOption = $("#sonoId").val();
+
+                    $.ajax({
+                        url: '/Picking_Operation/Getlist',
+                        type: 'POST',
+                        data: { optionValue: selectedOption },
+                        success: function (result) {
+                            // Display the table on success
+                            document.getElementById('table1').style.display = 'block';
+
+                            // Clear the existing table rows
+                            $('#CsDivUUU').empty();
+                            var totalQuantity = 0; // Variable to accumulate total quantity
+
+                            // Check if result.data2 exists and iterate through its items
+                            if (result.data2 && Array.isArray(result.data2)) {
+                                $.each(result.data2, function (i, item) {
+                                    // Accumulate total quantity
+                                    totalQuantity += parseInt(item.instockqty) || 0; // Fallback to 0 if NaN
+
+                                    // Create a new row and append it to the table
+                                    var newRow = '<tr>' +
+                                        '<td>' + item.location + '</td>' +
+                                        '<td>' + item.boxno + '</td>' +
+                                        '<td>' + item.batchcode + '</td>' +
+                                        '<td>' + item.productcode.toUpperCase() + '</td>' +
+                                        '</tr>';
+                                    $("#DataInsert tbody").append(newRow);
+                                });
+                            }
+
+                            // Set total quantity value in the respective input field
+                            document.getElementById("qtypicked").value = result.data4 || totalQuantity; // Use totalQuantity as fallback
+                            document.getElementById("extpickg").value = result.data3 || '';
+
+                            // Show or hide elements based on the result
+                            if (result.data1 && result.data1.length > 0) {
+                                $("#boxno, #btnsusp, #DataInsert, #btnSave, #extqty, #extpickg, #exqtyp, #expickig").show();
+                                $("#list").show();
+                            } else {
+                                // Optionally hide the elements if no data
+                                $("#boxno, #btnsusp, #DataInsert, #btnSave, #extqty, #extpickg, #exqtyp, #expickig").hide();
+                                $("#list").hide();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("An error occurred while executing the action: " + error);
+                        }
+                    });
+                }
+            }
+
+
+        // function dropdownChanged() {
+        //     if ($("#sonoId").attr("aria-value-max") !== "") {
+
+        //         //console.log("SO SELECT DATA :" + dataList);
+        //         var formattedDataList = dataList.map(function (item) {
+        //             return {
+        //                 location: item.location,
+        //                 boxno: item.boxno,
+        //                 batchcode: item.batchcode,
+        //                 prdcode: item.prdcode,
+        //                 instockqty: item.instockqty,
+        //                 // prdname: item.prdname,
+        //                 // pickingqty: item.pickingqty,
+        //             };
+        //         });
+
+
+        //         var selectedOption = $("#sonoId").val();
+        //         $.ajax({
+        //             url: '/Picking_Operation/Getlist',
+        //             type: 'POST',
+        //             data: { optionValue: selectedOption },
+        //             success: function (result) {
+        //                 console.log("result :" + result);
+
+        //                 document.getElementById('table1').style.display = 'block';
+
+        //                 $('#CsDivUUU').empty();
+        //                 var qnty = 0;
+        //                 var qty = 0;
+        //                 $.each(result.data1, function (i, item) {
+        //                     var newRow = '<tr>' +
+        //                         '<td><input name="Picking_Operation1[' + i + '].productcode" class="exprocode form-control" value="' + item.productcode + '" readonly></td>' +
+        //                         '<td><input name="Picking_Operation1[' + i + '].batchcode" class="form-control" value="' + item.batchcode + '" readonly></td>' +
+        //                         '<td><input name="Picking_Operation1[' + i + '].location" class="form-control" value="' + item.location + '" readonly></td>' +
+        //                         '<td><input name="Picking_Operation1[' + i + '].boxno" class="form-control" value="' + item.boxno + '" readonly></td>' +
+        //                         '<td><input style="font-size: 20px; color: green; font-weight: 650;"  name="Picking_Operation1[' + i + '].instockqty" class="form-control" value="' + item.instockqty + '" readonly></td>' +
+        //                         '</tr>';
+
+        //                     $('#CsDivUUU').append(newRow);
+        //                     qnty += parseInt(item.instockqty);
+        //                     var rowData = {
+        //                         prdcode: item.productcode,
+        //                         batchcode: item.batchcode,
+        //                         location: item.location,
+        //                         boxno: item.boxno,
+        //                         instockqty: item.instockqty,
+        //                     };
+
+        //                     dataList.push(rowData);
+        //                     $.each(result, function (i, item) {
+        //                         $("#extpick").val(item.pickingqty);
+        //                         qty += parseInt(item.pickingqty);
+        //                         $("#boxno, #btnsusp, #DataInsert, #btnSave,#extqty,#extpickg,#exqtyp,#expickig").show();
+        //                         $("#list").show();
+        //                     });
+        //                 });
+        //                 $.each(result.data2, function (i, item) {
+        //                     var newRow = '<tr>' +
+        //                                     '<td>' + item.location + '</td>' + // Replace with the actual properties you want to display
+        //                                     '<td>' + item.boxno + '</td>' +
+        //                                     '<td>' + item.batchcode + '</td>' +
+        //                                     '<td>' + item.productcode.toUpperCase()  + '</td>' +
+        //                                  '</tr>';
+
+        //                     $("#DataInsert tbody").append(newRow);
+        //                 });
+        //                 document.getElementById("qtypicked").value = result.data4;
+        //                 document.getElementById("extpickg").value = result.data3;
+
+        //             },
+        //             error: function (xhr, status, error) {
+        //                 console.log("An error occurred while executing the action.");
+        //             }
+        //         });
+        //     }
+        // }
+
+
+       
+
+        
+       
+        function SaveTableData() {
+            var tableData = [];
+
+            $("#DataInsert tbody tr").each(function () {
+                var row = $(this);
+                tableData.push({
+                    location: row.find("td:eq(0)").text(),
+                    boxno: row.find("td:eq(1)").text(),
+                    batchcode: row.find("td:eq(2)").text(),
+                });
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/Picking_Operation/SaveTableData",
+                data: {
+                    tableData: JSON.stringify(tableData),
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val(),
+                },
+                dataType: "json",
+                success: function (response) {
+                    // console.log("Table data saved successfully!");
+                    $("#DataInsert tbody tr").remove();
+                },
+                error: function (error) {
+                    // console.log("Error saving table data!");
+                }
+            });
+
+            document.getElementById("boxno").value = "";
+            document.getElementById("extlocn").value = "";
+        }
+
+     function checkloc(event) {
+            // console.log(event);
+            if (event.key == "Enter" || event.key == "Tab") 
+            {
+                event.preventDefault();
+                console.log(event.key);
+                var selectedoption = document.getElementById("extlocn").value;
+                if (selectedoption !== "") {
+                    var f1 = "0";
+
+                    $("#table1 tbody").find('tr').each(function () {
+                        var row = $(this);
+                        var location = row.children('td:eq(2)').text().trim();
+                        // var location = row.children('td:eq(2)').find('input').val();
+                        console.log("location :" + location + "locationValue :" + selectedoption);
+                        if (location == selectedoption) 
+                        {
+                            // console.log("location :" + location + "locationValue :" + selectedoption);
+                            f1 = "1";
+                        }
+                    });
+
+                    if (f1 == "1") 
+                    {
+                        document.getElementById("boxno").focus();
+                    }
+                    else {
+                        //console.log("Enter correct Location "); 
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Incorrect Location',
+                            text: 'Please scan correct location !'
+                        });
+                        document.getElementById("extlocn").focus();
+                        document.getElementById("extlocn").value = "";
+                    }
+                } else {
+                    console.log("Location value is null");
+                }
+
+            }
+        }
+
+         function Insertpickdata(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                console.log("dataList : " + dataList);
+               
+                var flag = "0";
+
+                var str = document.getElementById("boxno").value.split(/[,|$]/);
+                var pc = str[0];
+                var boxno1 = str[3]; // Ensure str has enough elements
+                var boxno = boxno1 ? boxno1 : ""; // Clean box number
+                document.getElementById("boxno").value = boxno;
+
+                if (boxno) {
+                    console.log("scan boxno: *" + boxno + "*");
+                    var batchno1 = str[5] || ""; // Ensure str has enough elements
+                    var batchno = batchno1.replace(/[^a-zA-Z0-9]/g, '').trim();
+                    console.log("scan batchno: *" + batchno + "*");
+
+                    var productcode1 = str[0].trim().toUpperCase();
+                    console.log("Scan Product : *" + productcode1 + "*");
+                    var box = boxno.split("-");
+
+                    if (box.length > 1) {
+                        console.log("Before call ajax" + box[1]);
+                    } else {
+                        console.log("Error: box doesn't have enough parts.");
+                    }
+
+                    $("#table1 tbody").find('tr').each(function () 
+                    {
+                        var row = $(this);
+    
+                        // Get the values from the text inside the `td` elements
+                        var location = row.children('td:eq(2)').text().trim();
+                        var boxValue = row.children('td:eq(3)').text().trim();
+                        var productcode = row.children('td:eq(0)').text().trim().toUpperCase();
+                        var batchno = row.children('td:eq(1)').text().replace(/[^a-zA-Z0-9]/g, '').trim();
+
+                        var splitbox = box[1].split("/");
+                        var num = parseInt(splitbox[0]);
+                        var den = parseInt(splitbox[1]);
+
+                        console.log(num+" <= "+den);
+
+                        if (num < den) 
+                        {
+                            console.log("Scan box is, in case of 1 qty - multiple shipper ");
+                            if (boxValue == box[1].trim() &&
+                                location == document.getElementById("extlocn").value.trim() &&
+                                productcode == productcode1.toUpperCase() &&
+                                batchno == batchno) {
+            
+                                flag = "1"; // Item matches
+                                console.log("Flag  :" + flag);
+                            }
+                        } 
+                        else 
+                        {
+                            console.log("Scan box is, in case of multiple qty - 1 shipper ");
+                            if (location == document.getElementById("extlocn").value.trim() &&
+                                productcode == productcode1.toUpperCase() &&
+                                batchno == batchno) {
+            
+                                flag = "1";
+                                console.log("Flag  :" + flag);
+                            }
+                        }
+                });
+                    if (flag == "1") 
+                    {
+                        var selectedoption = document.getElementById("boxno").value;
+                        var selectedoption1 = document.getElementById("extlocn").value;
+                        var sonoValue = document.getElementById("sonoId").value;
+
+                        // if (selectedoption1.trim() === "") {
+                        //     console.log("Please enter a location.");
+                        //     return;
+                        // }
+
+                        $.ajax({
+                            url: '/Picking_Operation/SavePickingData',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                location: selectedoption1,
+                                boxno: selectedoption,
+                                sono: sonoValue,
+                                qtypicked: $("#qtypicked").val(),  // Assuming the qtypicked input has an id of "qtypicked"
+                                balanceqty: $("#extpickg").val(),  // Assuming the balanceqty input has an id of "extpickg"
+                                batchno: batchno,
+                                productcode: productcode1
+                            }),
+                            success: function (response) {
+                                    console.log("Response as string:", JSON.stringify(response));
+                                    console.log("Response.data as string:", JSON.stringify(response.data));
+    
+                                    if (response.success) {
+                                        var tableBody = $("#DataInsert tbody");
+        
+                                        // Case when flag is 0
+                                        if (response.flag == 0) {
+                                            console.log("Flag is 0");
+            
+                                            // Create a new row and append data from response
+                                            var newRow = $('<tr>');
+                                            newRow.append($('<td>').text(response.location1));
+                                            newRow.append($('<td>').text(response.boxno1));
+                                            newRow.append($('<td>').text(response.batch1));
+                                            newRow.append($('<td>').text(response.productcode1.toUpperCase()));
+                                            tableBody.prepend(newRow);
+            
+                                            // Log the appended data
+                                            console.log("Appended Data:", {
+                                                location: response.location1,
+                                                boxno: response.boxno1,
+                                                batch: response.batch1,
+                                                productcode: response.productcode1.toUpperCase()
+                                            });
+                                        }
+                                        // Case when flag is 1
+                                        else if (response.flag == 1) {
+                                            console.log("Flag is 1");
+            
+                                            // Loop through the data array and append each row to the table
+                                            response.data.forEach(function (item) {
+                                                var newRow = `
+                                                    <tr>
+                                                        <td>${item.location}</td>
+                                                        <td>${item.boxno}</td>
+                                                        <td>${item.batchcode}</td>
+                                                        <td>${item.productcode.toUpperCase()}</td>
+                                                    </tr>`;
+                                                tableBody.append(newRow);
+                                            });
+            
+                                            // Log the appended data
+                                            console.log("Appended Data:", response.data.map(item => ({
+                                                location: item.location,
+                                                boxno: item.boxno,
+                                                batch: item.batchcode,
+                                                productcode: item.productcode
+                                            })));
+                                        }
+
+                                        // Update the quantity-related fields
+                                        $("#qtypicked").val(response.qtypicked);
+                                        $("#extpickg").val(response.balanceqty);
+                                            ShowDetails1();
+                                        $("#expickig").show();
+
+                                        // Check if the balance quantity is zero and show success message
+                                        if (response.balanceqty === 0) {
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Picking Process Completed Successfully!',
+                                                text: 'All Quantity shippers Completedly Scanned!',
+                                            }).then((result) => {
+                                                if (result.isConfirmed || result.isDismissed) {
+                                                    window.location.href = '/Picking_Operation/'; // Navigate to Picking Operation page
+                                                }
+                                            });
+                                        }
+
+                                        // Reset the box number field
+                                        $("#boxno").val("");
+                                    } else {
+                                        console.log("Error: " + response.message);
+        
+                                        // Display error message in a SweetAlert dialog
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: 'Warning',
+                                            text: response.message,
+                                        });
+
+                                        // Reset the box number field
+                                        $("#boxno").val("");
+                                    }
+                                },
+                                error: function (xhr) {
+                                    // console.log("Error: " + xhr.statusText);
+                                    Swal.fire({
+                                        icon: 'warning',
+                                        title: 'Warning',
+                                        text: xhr.statusText +" Responce.data : "+response.message,
+                                    });
+                                    $("#boxno").val("");
+                                $("#extlocn").val("");
+                                }
+
+                        });
+                    } 
+                    else 
+                    {
+                        Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Warning',
+                                    text: "Please scan correct product shipper with the entered location !",
+                                });
+                                $("#boxno").val("");
+                                $("#extlocn").val("");
+                        console.log("The scanned box or batch number does not match.");
+                    }
+                }
+            }
+        }
+
+
+
+    //   function Insertpickdata(event) {
+    //     if (event.key === "Enter") {
+    //         var dataToInsert = [];
+
+    //         $('#table1 tbody tr').each(function () {
+    //             var rowData = {};
+    //             $(this).find('td').each(function (index) {
+    //                 var columnName = $('#table1 thead th:eq(' + index + ')').text().trim();
+    //                 var cellValue = $(this).text().trim();
+    //                 rowData[columnName] = cellValue;
+    //             });
+    //             dataToInsert.push(rowData);
+    //         });
+
+    //         var formattedDataList = dataToInsert.map(function (item) {
+    //             return {
+    //                 location: item["Location"],
+    //                 boxno: item["Box No."],
+    //                 batchcode: item["Batch Code"],
+    //                 prdcode: item["Product Code"],
+    //                 instockqty: item["Pick Box Qty"],
+    //             };
+    //         });
+
+
+    //         var str = document.getElementById("boxno").value.split(/[,|$]/);
+
+    //         var boxno1 = str[3]; // Assuming str[3] contains the box number
+    //         var boxno  = boxno1;
+    //         document.getElementById("boxno").value = boxno;
+    //         console.log("scan boxno: *" + boxno+"*");
+
+    //         var batchno1 = str[5];
+    //         var batchno = batchno1.replace(/[^a-zA-Z0-9]/g, '').trim();
+    //         console.log("scan batchno: *" + batchno+"*");
+
+    //         var productcode1 = str[0].toUpperCase() .trim();
+
+    //         var box = document.getElementById("boxno").value.split("-");
+    //         var flag = "0";
+    //         formattedDataList.forEach(function (item) {
+    //             console.log("item.boxno.trim() : *" + item.boxno.trim()+"*");
+    //             console.log("box[1].trim() : *" + box[1].trim()+"*");
+    //             console.log("item.location.trim() : *" + item.location.trim()+"*");
+    //             console.log("document.getElementById('extlocn').value.trim() : *" + document.getElementById("extlocn").value.trim()+"*");
+    //             console.log("item.prdcode.trim() : *" + item.prdcode.trim()+"*");
+    //             console.log("productcode1 : *" + productcode1+"*");
+    //             console.log("item.batchcode.trim() : *" + item.batchcode.trim()+"*");
+    //             console.log("item.batchcode.trim() : *" + item.batchcode.replace(/[^a-zA-Z0-9]/g, '').trim()+"*");
+    //             console.log("batchno : *" + batchno+"*");
+    //             if (item.hasOwnProperty('boxno')) {
+    //                 if (item.boxno.trim() == box[1].trim()
+    //                     && item.location.trim() == document.getElementById("extlocn").value.trim()
+    //                 && item.prdcode.toUpperCase().trim() == productcode1
+    //                 && item.batchcode.replace(/[^a-zA-Z0-9]/g, '').trim() == batchno) {
+    //                     flag = "1";
+    //                 }
+    //             } else {
+    //                 //console.error("boxno property is undefined in the item object:", item);
+    //             }
+    //         });
+    //         if (flag == "1") {
+    //             //console.log(flag);
+    //             var selectedoption = document.getElementById("boxno").value;
+
+    //             var selectedoption1 = document.getElementById("extlocn").value;
+    //             var sonoValue = document.getElementById("sonoId").value;
+
+    //             if (selectedoption1.trim() === "") {
+    //                 console.log("Please enter a location.");
+    //                 return;
+    //             }
+
+    //             $.ajax({
+    //                 url: '/Picking_Operation/GetPick',
+    //                 type: "GET",
+    //                 data: {
+    //                     selectedValue: selectedoption,
+    //                     selectedValue1: selectedoption1,
+    //                 },
+    //                 success: function (data) {
+    //                     if (parseInt(data.pickingqty) === parseInt(data.qtypicked)) {
+    //                         console.log("Quantity filled already!");
+    //                         return;
+    //                     }
+    //                     $.ajax({
+    //                         // url: '/Picking_Operation/InsertAndCheck',
+    //                         url: '/Picking_Operation/SavePickingData',
+    //                         type: 'POST',
+    //                         contentType: 'application/json',
+    //                         data: JSON.stringify({
+    //                             location: selectedoption1,
+    //                             boxno: selectedoption,
+    //                             sono: sonoValue,
+    //                             dataList: formattedDataList,
+    //                             qtypicked: $("#qtypicked").val(),  // Assuming the qtypicked input has an id of "qtypicked"
+    //                             balanceqty: $("#extpickg").val(),  // Assuming the balanceqty input has an id of "extpickg"
+    //                             batchno: batchno,
+    //                             productcode: productcode1
+    //                         }),
+
+    //                         success: function (response) {
+    //                             console.log("Response as string:", JSON.stringify(response));
+    //                             if (response.success) {
+    //                                 var tableBody = $("#DataInsert tbody");
+    //                                 var newRow = $('<tr>');
+    //                                 newRow.append($('<td>').text(response.location1));
+    //                                 newRow.append($('<td>').text(response.boxno1));
+    //                                 newRow.append($('<td>').text(response.batch1));
+    //                             newRow.append($('<td>').text(response.productcode1.toUpperCase() ));
+    //                                 // newRow.append($('<td >').text("1"));
+    //                                 newRow.append($('<td>').text("1").css('display', 'none'));
+
+    //                                 // tableBody.append(newRow);
+    //                                 tableBody.prepend(newRow);
+
+    //                                 // Array to store matched data
+    //                                 var matchedData = [];
+    //                                 var tableBody = $("#DataInsert tbody");
+    //                                 var counter = 0;
+
+    //                                 $("#DataInsert tbody").find('tr').each(function () {
+
+    //                                 var productcode = $(this).find('td:eq(3)').text().trim().toUpperCase() ;
+    //                                     var location = $(this).find('td:eq(0)').text().trim();
+    //                                     var boxno = $(this).find('td:eq(1)').text().trim();
+    //                                     var batchcode = $(this).find('td:eq(2)').text().trim();
+    //                                     var flag1 = $(this).find('td:eq(4)').text().trim();
+    //                                     // Split the boxno
+    //                                     var boxnoParts = boxno.split("-");
+    //                                     var extractedBoxno = boxnoParts.length > 1 ? boxnoParts[1].trim() : '';
+    //                                     var part = boxnoParts[1].trim();
+
+    //                                     if (
+    //                                         location.trim() == response.location1.trim() &&
+    //                                         batchcode.trim() == response.batch1.trim() &&
+    //                                         part.trim() == response.boxno1.trim().split("-")[1].trim() &&
+    //                                     productcode.trim() == response.productcode1.trim().toUpperCase() && flag1 == "1"
+    //                                     ) {
+    //                                         counter = counter + 1;
+    //                                     }
+    //                                 });
+    //                                 //console.log("counter : " + counter);
+    //                                 $("#table1 tbody").find('tr').each(function () {
+
+    //                                     var row = $(this);
+    //                                 var productcode = row.children('td:eq(0)').html().trim().toUpperCase() ;
+    //                                     var location = row.children('td:eq(2)').html().trim();
+    //                                     var boxno = row.children('td:eq(3)').html().trim();
+    //                                     var batchcode = row.children('td:eq(1)').html().trim();
+    //                                     var instock = row.children('td:eq(4)').html().trim();
+
+    //                                     console.log(" location: " + location);
+    //                                     console.log(" location11: " + response.location1.trim());
+    //                                     console.log(" boxno: " + boxno);
+    //                                     console.log(" boxno1: " + response.boxno1.trim().split("-")[1].trim());
+    //                                     console.log(" batchcode: " + batchcode);
+    //                                     console.log(" batchcode1: " + response.batch1.trim());
+    //                                     console.log(" Instock: " + instock);
+    //                                     console.log(" productcode: " + productcode);
+
+    //                                     if (location == response.location1.trim()
+    //                                         && boxno == response.boxno1.trim().split("-")[1].trim()
+    //                                         && batchcode.replace(/[^a-zA-Z0-9]/g, '') == response.batch1.trim()
+    //                                         && instock == counter
+    //                                 && productcode.toUpperCase()  == response.productcode1.trim().toUpperCase() ) {
+    //                                         row.remove();
+    //                                         //console.log("row :" + row);
+    //                                     }
+    //                                 });
+
+
+    //                                 //console.log("Matched Data in DataTable:", matchedData);
+
+    //                                 $("#qtypicked").val(response.qtypicked);
+    //                                 $("#extpickg").val(response.balanceqty);
+    //                                 $("#expickig").show();
+    //                                 if (response.balanceqty === 0) {
+    //                                     Swal.fire({
+    //                                         icon: 'success',
+    //                                         title: 'Picking Process Completed Successfully !',
+    //                                         text: 'All Quantity shippers Completedly Scanned ',
+    //                                     }).then((result) => {
+    //                                         if (result.isConfirmed || result.isDismissed) {
+    //                                             window.location.href = '/Picking_Operation/'; // Replace '/index' with the actual URL of your index page
+    //                                         }
+    //                                     });
+    //                                 }
+    //                                 $("#boxno").val("");
+    //                             }
+    //                             else {
+    //                                 //console.log("Error: " + response.message);
+    //                                 Swal.fire({
+    //                                     icon: 'warning',
+    //                                     title: 'Warning',
+    //                                     text: response.message,
+    //                                 });
+    //                                 $("#boxno").val("");
+    //                             }
+    //                         },
+    //                         error: function (xhr, status, error) {
+    //                             //console.log("AJAX request to InsertAndCheck failed");
+    //                             console.log("Error: " + error);
+    //                             Swal.fire({
+    //                                 icon: 'error',
+    //                                 title: 'Error,picking Not Success',
+    //                                 text: error,
+    //                             });
+    //                         }
+    //                     });
+    //                 },
+    //                 error: function (xhr, status, error) {
+    //                     //console.log("AJAX request to GetPick failed");
+    //                     console.log("Error: " + error);
+    //                     Swal.fire({
+    //                         icon: 'error',
+    //                         title: 'Error,GetPick Not Success ',
+    //                         text: error,
+    //                     });
+    //                 }
+    //             });
+
+    //         }
+    //         else {
+    //             console.log("Wrong BoxNo & Location Scanned !");
+    //             Swal.fire({
+    //                 icon: 'warning',
+    //                 title: 'Wrong BoxNo & Location Scanned !',
+    //                 text: 'Please enter correct boxno and location !',
+    //             });
+    //             $("#boxno").val("");
+    //         }
+
+    //     }
+    // }
+
+
+    </script>
+
+}
+
+
+
+
+
+
+
+        

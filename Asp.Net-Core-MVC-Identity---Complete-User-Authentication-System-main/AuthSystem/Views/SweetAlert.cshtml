@@ -1,0 +1,16 @@
+﻿<script type="text/javascript">
+    function validateData() {
+
+        if ($("#OrderCode").val() == "") {
+            swal("Please enter OrderCode !");
+            return false;
+        } else if ($("#OrderPrice").val() == "") {
+            swal("Please enter OrderPrice !");
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>
+
+<input type="submit" onclick="return validateData();" value="Create" />

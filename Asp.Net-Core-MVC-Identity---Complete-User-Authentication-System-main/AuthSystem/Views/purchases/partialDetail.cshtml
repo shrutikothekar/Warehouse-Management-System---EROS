@@ -1,0 +1,138 @@
+﻿@model eros.Models.purchase
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = null;
+    string[] TableHeaders = new string[] {
+        "S.C Name",
+        "S.C Code",
+        "S.C Uom",
+        "S.C Qty",
+        "Total Qty",
+    };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="continer">
+            <div class="row">
+                <div class="table-responsive col-md-12">
+                    <table class="table divide-gray-200">
+                        <thead class="bg-gray-200 sticky top-0">
+                            <tr>
+                                @foreach (var head in TableHeaders)
+                                {
+                                    <th>
+                                        @head
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody id="CsDiv">
+                            @for (int i = 0; i < Model.purchase_subcomponent.Count; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        <input asp-for="@Model.purchase_subcomponent[i].sccode" id="sccode" class="form-control" oninput="validateAlphabet(this)" />
+                                        <span asp-validation-for="@Model.purchase_subcomponent[i].sccode" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.purchase_subcomponent[i].subcomponents" id="scname" class="form-control" oninput="validateAlphabet(this)" />
+                                        <span asp-validation-for="@Model.purchase_subcomponent[i].subcomponents" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.purchase_subcomponent[i].scuom" id="scuom" class="form-control" oninput="validateAlphabet(this)" />
+                                        <span asp-validation-for="@Model.purchase_subcomponent[i].scuom" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.purchase_subcomponent[i].scqty" id="scqty" class="form-control" oninput="validateNumber(this)" />
+                                        <span asp-validation-for="@Model.purchase_subcomponent[i].scqty" class="text-danger"></span>
+                                    </td>
+                                    <td>
+                                        <input asp-for="@Model.purchase_subcomponent[i].tqty" class="form-control" readonly />
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function validateAlphabet(input) {
+            var regex = /^[a-zA-Z\s._-\s]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+
+        function validateAlphNum(input) {
+            var regex = /^[a-zA-Z0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validateNumber(input) {
+            var regex = /^[0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validatePinNumber(input) {
+            var regex = /^[0-5]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+    </script>
+}
+
+
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>

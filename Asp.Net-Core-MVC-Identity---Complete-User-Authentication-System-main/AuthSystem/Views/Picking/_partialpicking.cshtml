@@ -1,0 +1,67 @@
+﻿@model eros.Models.Picking
+@{
+    Layout = null;
+    string[] TableHeaders = new string[] {
+        "Product Code",
+        "Product Name",
+        "In Stock qty",
+        "Batch No.",
+        "Box No.",
+        "Location",
+        "Quantity"
+    };
+    // var dropDownData = ViewBag.DropDownDatasono as SelectList;
+}
+
+
+<div class="table-responsive col-md-12">
+    <table class="table divide-gray-200" id="data-table">
+        <thead class="bg-gray-200 sticky top-0">
+            <tr>
+                @foreach (var head in TableHeaders)
+                {
+                    <th>
+                        @head
+                    </th>
+                }
+                <th>
+                    Action
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.pickingmaster.Count; i++)
+            {
+                <tr>
+
+                    <td>
+                        <input asp-for="pickingmaster[i].productcode" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="pickingmaster[i].productname" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="pickingmaster[i].instockqty" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="pickingmaster[i].batchno" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="pickingmaster[i].boxno" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="pickingmaster[i].location" class="form-control" />
+                    </td>
+                    <td>
+                        <input asp-for="pickingmaster[i].quantity" class="form-control" />
+                    </td>
+                    <td>
+                        <button id="showDetailsButton" class="btn btn-primary" onclick="showAllDetails()">Select</button>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    <input type="hidden" id="hdnLastIndex" value="0" />
+</div>

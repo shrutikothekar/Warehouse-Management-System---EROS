@@ -1,0 +1,105 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3732C449-FF22-4B0C-80B1-A62FB71FCF76}|AuthSystem\\eros.csproj|d:\\project\\eros system - new -19-10-24\\asp.net-core-mvc-identity---complete-user-authentication-system-main\\authsystem\\areas\\identity\\data\\erosdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3732C449-FF22-4B0C-80B1-A62FB71FCF76}|AuthSystem\\eros.csproj|solutionrelative:authsystem\\areas\\identity\\data\\erosdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3732C449-FF22-4B0C-80B1-A62FB71FCF76}|AuthSystem\\eros.csproj|d:\\project\\eros system - new -19-10-24\\asp.net-core-mvc-identity---complete-user-authentication-system-main\\authsystem\\models\\loading_dispatch_operation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3732C449-FF22-4B0C-80B1-A62FB71FCF76}|AuthSystem\\eros.csproj|solutionrelative:authsystem\\models\\loading_dispatch_operation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3732C449-FF22-4B0C-80B1-A62FB71FCF76}|AuthSystem\\eros.csproj|d:\\project\\eros system - new -19-10-24\\asp.net-core-mvc-identity---complete-user-authentication-system-main\\authsystem\\models\\inwarddispatchviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3732C449-FF22-4B0C-80B1-A62FB71FCF76}|AuthSystem\\eros.csproj|solutionrelative:authsystem\\models\\inwarddispatchviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3732C449-FF22-4B0C-80B1-A62FB71FCF76}|AuthSystem\\eros.csproj|d:\\project\\eros system - new -19-10-24\\asp.net-core-mvc-identity---complete-user-authentication-system-main\\authsystem\\controllers\\inwardscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3732C449-FF22-4B0C-80B1-A62FB71FCF76}|AuthSystem\\eros.csproj|solutionrelative:authsystem\\controllers\\inwardscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3732C449-FF22-4B0C-80B1-A62FB71FCF76}|AuthSystem\\eros.csproj|d:\\project\\eros system - new -19-10-24\\asp.net-core-mvc-identity---complete-user-authentication-system-main\\authsystem\\views\\inwards\\index1.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3732C449-FF22-4B0C-80B1-A62FB71FCF76}|AuthSystem\\eros.csproj|solutionrelative:authsystem\\views\\inwards\\index1.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Loading_Dispatch_Operation.cs",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\AuthSystem\\Models\\Loading_Dispatch_Operation.cs",
+              "RelativeDocumentMoniker": "AuthSystem\\Models\\Loading_Dispatch_Operation.cs",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\AuthSystem\\Models\\Loading_Dispatch_Operation.cs",
+              "RelativeToolTip": "AuthSystem\\Models\\Loading_Dispatch_Operation.cs",
+              "ViewState": "AQIAAIcAAAAAAAAAAAAAAIwAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-03T09:45:41.019Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ErosDbContext.cs",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\AuthSystem\\Areas\\Identity\\Data\\ErosDbContext.cs",
+              "RelativeDocumentMoniker": "AuthSystem\\Areas\\Identity\\Data\\ErosDbContext.cs",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\AuthSystem\\Areas\\Identity\\Data\\ErosDbContext.cs",
+              "RelativeToolTip": "AuthSystem\\Areas\\Identity\\Data\\ErosDbContext.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAgAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-03T09:30:46.996Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "InwardDispatchViewModel.cs",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\AuthSystem\\Models\\InwardDispatchViewModel.cs",
+              "RelativeDocumentMoniker": "AuthSystem\\Models\\InwardDispatchViewModel.cs",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\AuthSystem\\Models\\InwardDispatchViewModel.cs",
+              "RelativeToolTip": "AuthSystem\\Models\\InwardDispatchViewModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-03T09:28:55.228Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "inwardsController.cs",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\AuthSystem\\Controllers\\inwardsController.cs",
+              "RelativeDocumentMoniker": "AuthSystem\\Controllers\\inwardsController.cs",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\AuthSystem\\Controllers\\inwardsController.cs",
+              "RelativeToolTip": "AuthSystem\\Controllers\\inwardsController.cs",
+              "ViewState": "AQIAAL8ZAAAAAAAAAIAwwMcZAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-03T09:22:05.35Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Index1.cshtml",
+              "DocumentMoniker": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\AuthSystem\\Views\\inwards\\Index1.cshtml",
+              "RelativeDocumentMoniker": "AuthSystem\\Views\\inwards\\Index1.cshtml",
+              "ToolTip": "D:\\PROJECT\\EROS SYSTEM - NEW -19-10-24\\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\\AuthSystem\\Views\\inwards\\Index1.cshtml",
+              "RelativeToolTip": "AuthSystem\\Views\\inwards\\Index1.cshtml",
+              "ViewState": "AQIAANsAAAAAAAAAAAAcwOYAAAALAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-03T09:20:41.81Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

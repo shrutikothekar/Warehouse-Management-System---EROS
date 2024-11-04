@@ -1,0 +1,209 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = AuthSystem
+build_property.RootNamespace = AuthSystem
+build_property.ProjectDir = E:\Shrutiii\Dashoard Demo\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\AuthSystem\
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = E:\Shrutiii\Dashoard Demo\Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main\AuthSystem
+build_property._RazorSourceGeneratorDebug = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/Account/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxfVmlld0ltcG9ydHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/_AuthLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX0F1dGhMYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZhbGlkYXRpb25TY3JpcHRzUGFydGlhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Areas/Identity/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CategoryMasters/create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlNYXN0ZXJzXGNyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CategoryMasters/edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlNYXN0ZXJzXGVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CategoryMasters/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlNYXN0ZXJzXGluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CompanyMasters/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcGFueU1hc3RlcnNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CompanyMasters/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcGFueU1hc3RlcnNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CompanyMasters/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcGFueU1hc3RlcnNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CompanyMasters/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcGFueU1hc3RlcnNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CompanyMasters/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tcGFueU1hc3RlcnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CustomerMasters/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJNYXN0ZXJzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CustomerMasters/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJNYXN0ZXJzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CustomerMasters/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJNYXN0ZXJzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CustomerMasters/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJNYXN0ZXJzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/CustomerMasters/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ3VzdG9tZXJNYXN0ZXJzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/EmployeeMasters/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVNYXN0ZXJzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/EmployeeMasters/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVNYXN0ZXJzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/EmployeeMasters/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVNYXN0ZXJzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/EmployeeMasters/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVNYXN0ZXJzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/EmployeeMasters/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVNYXN0ZXJzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/GradeMasters/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhZGVNYXN0ZXJzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/GradeMasters/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhZGVNYXN0ZXJzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/GradeMasters/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhZGVNYXN0ZXJzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/GradeMasters/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhZGVNYXN0ZXJzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/GradeMasters/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR3JhZGVNYXN0ZXJzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Shared/_LoginPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/SubCategoryMasters/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3ViQ2F0ZWdvcnlNYXN0ZXJzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/SubCategoryMasters/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3ViQ2F0ZWdvcnlNYXN0ZXJzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/SubCategoryMasters/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3ViQ2F0ZWdvcnlNYXN0ZXJzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/SubCategoryMasters/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3ViQ2F0ZWdvcnlNYXN0ZXJzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/SubCategoryMasters/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3ViQ2F0ZWdvcnlNYXN0ZXJzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/UserTypeMasters/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclR5cGVNYXN0ZXJzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/UserTypeMasters/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclR5cGVNYXN0ZXJzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/UserTypeMasters/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclR5cGVNYXN0ZXJzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/UserTypeMasters/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclR5cGVNYXN0ZXJzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/UserTypeMasters/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclR5cGVNYXN0ZXJzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Shrutiii/Dashoard Demo/Asp.Net-Core-MVC-Identity---Complete-User-Authentication-System-main/AuthSystem/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-1ktkr6bxvw

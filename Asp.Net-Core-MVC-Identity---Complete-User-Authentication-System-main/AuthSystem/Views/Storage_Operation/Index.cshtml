@@ -1,0 +1,311 @@
+﻿@model IEnumerable<eros.Models.Storage_Operation>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+
+    <!-- Include DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.2/css/jquery.dataTables.min.css" />
+    <style>
+        .damaged-button {
+            background-color: red;
+            color: white;
+        }
+
+        .small-heading {
+            font-size: 1rem; /* Adjust the font size as needed */
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid mt-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0 font-weight-bold">Storage Information</h6>
+                    <div>
+                        <a asp-action="Create" class="btn btn-success btn-sm mr-1">
+                            <i class="fas fa-plus-square fa-sm"></i> Add
+                        </a>
+                        <a asp-action="CreateStockMovement" class="btn btn-secondary btn-sm mr-1">
+                            <i class="fas fa-exchange-alt fa-sm"></i> Stock Movement
+                        </a>
+                        <a asp-action="CreateStockTransfer" class="btn btn-warning btn-sm">
+                            <i class="fas fa-file-alt"></i> Stock Transaction Details
+                        </a>
+
+                        <a asp-action="Damage" class="btn btn-danger btn-sm">
+                            <i class="fas fa-exclamation-triangle fa-sm"></i> Damage
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4 ml-auto">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="statusFlagFilter">Select Stock</label>
+                            </div>
+                            <select id="statusFlagFilter" class="custom-select custom-select-sm" onchange="onOrderTypeChange()">
+                                <option value="All">Stock Inventory</option>
+                                <option value="DM">Demo Inventory</option>
+                                <option value="RPR">Repair Inventory</option>
+                                <option value="RP">Replacement Inventory</option>
+                                <option value="DMG">Damage Inventory</option>
+                                <option value="NONRPR">NON Repairable Stock</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                        <thead class="thead-light  text-center">
+                            <tr class="small">
+                                <th>Sr.No.</th>
+                                <th>Product Code</th>
+                                <th>Box No</th>
+                                <th>GRN No</th>
+                                <th>Batch Code</th>
+                                <th>Location Code</th>
+                                <th style="display:none;">Status</th>
+                                <th class="d-none">Action</th>
+                                <th class="d-none">Damage</th>
+                            </tr>
+                        </thead>
+                        <tbody class="small text-center">
+                            @{
+                                int counter = 1;
+                            }
+                            @foreach (var item in Model.OrderByDescending(a => a.id))
+                            {
+                                <tr>
+                                    <td>@counter</td>
+                                    <td>@item.productcode</td>
+                                    <td>@item.boxno</td>
+                                    <td>@item.grnno</td>
+                                    <td>@item.batchcode</td>
+                                    <td>@item.locationcode</td>
+                                    <td style="display:none"><span class="badge badge-secondary">@item.statusflag</span></td>
+                                    <td class="d-none">
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-outline-secondary">
+                                                <i class="fas fa-pencil-alt fa-sm"></i>
+                                            </a>
+                                            <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-outline-danger">
+                                                <i class="fas fa-trash-alt fa-sm"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td class="d-none">
+                                        <button class="btn btn-sm btn-outline-danger damageid" type="button"
+                                                data-productcode="@item.productcode"
+                                                data-boxno="@item.boxno"
+                                                data-grnno="@item.grnno"
+                                                data-batchcode="@item.batchcode"
+                                                data-locationcode="@item.locationcode">
+                                            Damage
+                                        </button>
+                                    </td>
+                                </tr>
+                                counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+    <script>
+        function onOrderTypeChange() {
+            console.log("fun call");
+            var selectedOrderType = document.getElementById("statusFlagFilter").value;
+            console.log("Selected Order Type:", selectedOrderType);
+            filterOrders(selectedOrderType);
+        }
+        function filterOrders(orderType) {
+            console.log("orderType : " + orderType);
+            $.ajax({
+                url: '/Storage_Operation/FilterOrdersData',
+                type: 'POST', // Use POST instead of GET
+                data: { orderType: orderType },
+                success: function (response) {
+                    if (response.success) {
+                        console.log("Filtered orders:", response.data);
+                        updateTable(response.data);
+                    } else {
+                        console.error(response.message);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error fetching filtered orders:", textStatus, errorThrown);
+                }
+            });
+        }
+        function updateTable(data) {
+            let table = $('#dataTable').DataTable();  // Initialize or get the DataTable instance
+            table.clear().draw();  // Clear existing table data
+
+            let counter = 1;
+            data.forEach(function (item) {
+                let row = `<tr>
+                                        <td>${counter}</td>
+                                        <td>${item.productcode}</td>
+                                        <td>${item.boxno}</td>
+                                        <td>${item.grnno}</td>
+                                        <td>${item.batchcode}</td>
+                                        <td>${item.locationcode}</td>
+                                        <td style="display:none"><span class="badge badge-secondary">${item.statusflag}</span></td>
+                                        <td class="d-none">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <a href="/Edit/${item.id}" class="btn btn-outline-secondary">
+                                                    <i class="fas fa-pencil-alt fa-sm"></i>
+                                                </a>
+                                                <a href="/Delete/${item.id}" class="btn btn-outline-danger">
+                                                    <i class="fas fa-trash-alt fa-sm"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td class="d-none">
+                                            <button class="btn btn-sm btn-outline-danger damageid" type="button"
+                                                    data-productcode="${item.productcode}"
+                                                    data-boxno="${item.boxno}"
+                                                    data-grnno="${item.grnno}"
+                                                    data-batchcode="${item.batchcode}"
+                                                    data-locationcode="${item.locationcode}">
+                                                Damage
+                                            </button>
+                                        </td>
+                                    </tr>`;
+                table.row.add($(row)).draw();  // Add new row to DataTable
+                counter++;
+            });
+        }
+        $(document).ready(function () {
+            $('#statusFlagFilter').on('change', function () {
+                var selectedStatus = $(this).val();
+                //alert(selectedStatus);
+                $('#dataTable tbody tr').each(function () {
+                    var rowStatus = $(this).find('td:nth-child(7) .badge').text().trim();
+                    if (selectedStatus == "" || rowStatus == selectedStatus) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+            var dataTable = $('#dataTable').DataTable({
+                columnDefs: [
+                    { targets: '_all', searchable: true } // Make all columns searchable
+                ],
+                initCompleted: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var select = $('<select class="form-control"><option value=""></option></select>')
+                            // var select = $('<select><option value=""></option></select>')
+                            .appendTo($(column.header()))
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+                                column
+                                    .search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('#dataTable').DataTable();
+
+            $(".damageid").click(function () {
+                var productcode = $(this).data("productcode");
+                var boxno = $(this).data("boxno");
+                var grnno = $(this).data("grnno");
+                var batchcode = $(this).data("batchcode");
+                var locationcode = $(this).data("locationcode");
+                var clickedButton = $(this); // Store reference to the clicked button
+
+                Swal.fire({
+                    title: 'Confirm Damage',
+                    text: 'Are you sure you want to consider this product as damaged?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, continue',
+                    cancelButtonText: 'No, cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '/Storage_Operation/damageStockQty',
+                            type: 'POST',
+                            data: {
+                                productcode: productcode,
+                                boxno: boxno,
+                                grnno: grnno,
+                                batchcode: batchcode,
+                                locationcode: locationcode
+                            },
+                            success: function (response) {
+                                if (response.success) {
+                                    // Show SweetAlert success message
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Success',
+                                        text: response.message,
+                                    });
+                                    // Add CSS class to the clicked button
+                                    clickedButton.addClass('damaged-button');
+                                } else {
+                                    // Show SweetAlert error message
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: response.message,
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                // Show SweetAlert error message
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'An error occurred while processing the request.',
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

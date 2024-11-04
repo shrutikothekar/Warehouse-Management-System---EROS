@@ -1,0 +1,469 @@
+﻿@model eros.Models.NewPickcs
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+        "Product Code",
+        "Product Name" ,
+        // "In Stock Qty" ,
+        "SO Qty" ,
+        "Picking Qty" ,
+        " Stock",
+        // "Batch Code",
+        // //"Batchwise Qty.",
+        // "Location",
+        // "Box No.",
+        // "In Stock Qty",
+
+    };
+    var dropDownData = ViewBag.DropDownDatasono as SelectList;
+
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    // var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder small-heading">Picklist Generation</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <div class="container mt-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                @* asp-action="Create" *@
+                                @* onsubmit="return submitForm();" *@
+                                <form id="sensorDataTable">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="row p-3">
+                                        <input type="hidden" asp-for="Picklist_Generation.gen_id" />
+                                        <div class="form-group col-sm-4 m-2">
+                                            <label asp-for="Picklist_Generation.sono" class="control-label">Sale Order No.</label>
+                                            <select asp-for="Picklist_Generation.sono" id="sonoId" asp-items="@ViewBag.data1" class="form-control" onchange="dropdownChangedsono()">
+                                            </select>
+                                            <span asp-validation-for="Picklist_Generation.sono" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive col-md-12">
+                                        <table class="table table-striped table-sm" id="table1" style="display:none;">
+                                            <thead class="bg-gray-200 sticky top-0">
+                                                <tr>
+                                                    @foreach (var head in TableHeaders)
+                                                    {
+                                                        <th>
+                                                            @head
+                                                        </th>
+                                                    }
+                                                </tr>
+                                            </thead>
+                                            <tbody id="CsDiv">
+                                            </tbody>
+                                        </table>
+                                        <input type="hidden" id="hdnLastIndex" value="0" />
+                                    </div>
+                                    <div class="row mx-lg-2 mx-md-2 mx-sm-2 mb-3">
+                                        <div class="col-md-6">
+                                            <button type="button" onclick="submitForm()" class="btn btn-success col-md-12">Generate</button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a asp-action="Index" class="btn btn-danger col-md-12"> <i class="fa fa-reply"></i>Back</a>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" id="form-modal">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header p-2">
+                                                    <h4 class="modal-title"></h4>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+               <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+           
+    }
+}
+<style>
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+</style>
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+    <script>
+        $(document).ready(function () {
+            // Initialize Select2 on the dropdown
+            $('#sonoId').select2({
+                placeholder: "Select a Sale Order No.", // Placeholder text
+                allowClear: true // Allow clearing the selection
+            });
+        });
+        function checkQuantity(input) {
+
+            if (!input) {
+                console.error('Input element is undefined.');
+                return;
+            }
+            var enteredQuantity = parseInt(input.value.trim());
+            if (enteredQuantity === 0) {
+                // Show SweetAlert for 0 quantity
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Warning',
+                    text: 'Quantity cannot be 0.',
+                });
+                return false; // Return false indicating invalid quantity
+            }
+            if (enteredQuantity > 0) {
+                var selectElement = input.closest('tr').querySelector('.productcode'); // Get the select element in the same row
+
+                var productdesc = selectElement.toUpperCase() ? selectElement.value.toUpperCase() : null;
+                console.log("productdesc:-" + productdesc)
+                if (!productdesc.toUpperCase()) {
+                    console.error('Product description not found.');
+                    return;
+                }
+                console.log('Select element is:-' + selectElement.value.toUpperCase());
+                var url = '/so_inward/checkquantity'; // Replace with your actual URL
+                var data = {
+                    productcode: productdesc.toUpperCase(),
+                    quantity: enteredQuantity
+                };
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data,
+                    success: function (response) {
+                        if (response.isQuantityAvailable == false) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: 'Not Enough Quantity Available in stock !, Current Stock is ' + response.currentqty + ' only !',
+                            });
+                            input.value = ''; // Clear invalid value
+                        }
+                        else if (response.isQuantityAvailable == true) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: ' Product is not in stock !',
+                                text: 'No Stock found of that product in storage !',
+                            });
+                            input.value = ''; // Clear invalid value
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr, status, error);
+                    }
+                });
+            }
+            else {
+
+            }
+            // Return true indicating valid quantity
+            return true;
+        }
+
+        // function submitForm() {
+        //         // Check each pickingqty value
+        //         var allPickingQtysFilled = true;
+        //         $('.quantity-input').each(function() {
+        //             if (!checkQuantity(this)) {
+        //                 // If any pickingqty is invalid, set flag to false
+        //                 allPickingQtysFilled = false;
+        //                 return false; // Exit loop early since we found an invalid quantity
+        //             }
+        //         });
+        //         // If any pickingqty is invalid, show SweetAlert and don't submit form
+        //         if (!allPickingQtysFilled) {
+        //             Swal.fire({
+        //                 icon: 'warning',
+        //                 title: 'Warning',
+        //                 text: 'Please correct all quantities before submitting.',
+        //                 confirmButtonColor: '#3085d6',
+        //                 confirmButtonText: 'OK'
+        //             });
+        //             return; // Exit function early
+        //         }
+
+        //     // Serialize the form data including the Anti-forgery token
+        //     var formData = $("#sensorDataTable").serialize();
+        //     formData += "&" + $("input[name=__RequestVerificationToken]").serialize();
+
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/Picklist_Generation/Create",
+        //         data: formData,
+        //         success: function (response) {
+        //             if (response.success) {
+        //                 // Success SweetAlert for successful AJAX request
+        //                 Swal.fire({
+        //                     icon: 'success',
+        //                     title: 'Success',
+        //                     text: response.message,
+        //                     confirmButtonColor: '#3085d6',
+        //                     confirmButtonText: 'OK'
+        //                 }).then((result) => {
+        //                     if (result.isConfirmed || result.isDismissed) {
+        //                         window.location.href = '/Picklist_Generation/'; // Replace '/index' with the actual URL of your index page
+        //                     }
+        //                 });
+        //             } else {
+        //                 Swal.fire({
+        //                     icon: 'warning',
+        //                     title: 'Warning',
+        //                     text: response.message,
+        //                     confirmButtonColor: '#3085d6',
+        //                     confirmButtonText: 'OK'
+        //                 });
+        //             }
+        //         },
+        //         error: function (error) {
+        //             // Error SweetAlert for AJAX request failure
+
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Oops...',
+        //                 text: 'An error occurred while processing the request.',
+        //                 confirmButtonColor: '#3085d6',
+        //                 confirmButtonText: 'OK'
+        //             });
+        //         }
+        //     });
+        // }
+
+        function submitForm() {
+            var isAnyFieldNull = false;
+            var emptyFieldLabels = [];
+
+            $('#table1 tbody tr').each(function () {
+                var row = $(this);
+                row.find('input').each(function () {
+                    var value = $(this).val();
+                    if (!value) {
+                        isAnyFieldNull = true;
+                        emptyFieldLabels.push(row.find('td:first-child').text().trim()); // Get the label from the first cell of the row
+                    }
+                });
+            });
+
+            if (isAnyFieldNull) {
+                // Display error message with empty field labels
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: 'Please fill in all required fields <br>' + emptyFieldLabels.join('<br>')
+                });
+            } else {
+                // Serialize the form data including the Anti-forgery token
+                var formData = $("#sensorDataTable").serialize();
+                formData += "&" + $("input[name=__RequestVerificationToken]").serialize();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Picklist_Generation/Create",
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            // Success SweetAlert for successful AJAX request
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed || result.isDismissed) {
+                                    window.location.href = '/Picklist_Generation/'; // Replace '/index' with the actual URL of your index page
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: response.message,
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        // Error SweetAlert for AJAX request failure
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'An error occurred while processing the request.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            }
+        }
+
+        function redirectToStockView() {
+            // Redirect to the desired URL
+            event.preventDefault();
+            window.location.href = '/inwards/InStockQty'; // Replace 'inwards' with the actual controller name
+        }
+
+        $(document).ready(function () {
+            $("#sonoId").on("change", function () {
+            });
+        });
+
+        //var uniqueCombinations = new Set();
+
+        function dropdownChangedsono() {
+            if ($("#sonoId").attr("aria-value-max") !== "") {
+                var selectedOption = $("#sonoId").val();
+                var productcode = $('#prdcode_').val();
+                $.ajax({
+                    url: '/Picklist_Generation/GetSono',
+                    type: 'POST',
+                    data: { optionValue: selectedOption, productcode: productcode },
+                    success: function (result) {
+                        console.log(result);
+
+                        if (result.length > 0) {
+                            // If there is data, show the table
+                            $('#table1').show();
+                            $('#CsDiv').empty();
+                            $.each(result, function (i, item) {
+                                
+                                var newRow = '<tr>' +
+                                    '<td><input readonly id="prdcode_' + i + '" name="Picklist_Generation1[' + i + '].prdcode" class="form-control productcode" value="' + item.prdcode + '"></td>' +
+                                    '<td><input readonly name="Picklist_Generation1[' + i + '].prdname" class="form-control" value="' + item.prdname + '"></td>' +
+                                    '<td><input readonly id="soqty_' + i + '" name="Picklist_Generation1[' + i + '].soqty"  class="form-control" value="' + item.soqty + '"></td>' +
+                                    // '<td><input id="pickingQty_' + i + '" name="Picklist_Generation1[' + i + '].pickingqty" class="form-control quantity-input" onchange="checkQuantity(this)" value="' + item.pickingqty + '"></td>' +
+                                    '<td><input type="number" id="pickingQty_' + i + '" name="Picklist_Generation1[' + i + '].pickingqty" class="form-control quantity-input" value="' + item.pickingqty + '" oninput="validatePickingQty(' + i + ', ' + item.soqty + ')"></td>' +
+                                    '<td><button type="button" class="btn btn-warning btn-sm editid" onclick="openStockModal(\'' + item.prdcode + '\')"><i class="fa fa-eye"></i></button></td>' +
+                                    '</tr>';
+
+
+                                $('#CsDiv').append(newRow);
+                            });
+                        } else {
+                            // If there is no data, hide the table
+                            $('#table1').hide();
+                            $('#CsDiv').empty(); // Optional: Clear the table body
+                        }
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("An error occurred while executing the action.");
+                    }
+                });
+            }
+        }
+
+        function validatePickingQty(index, soqty) {
+            var pickingQtyInput = $('#pickingQty_' + index);
+            var pickingQty = parseFloat(pickingQtyInput.val()) || 0;
+            if (pickingQty > soqty) {
+                // alert("Picking qty cannot be greater than instock qty.");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Picking quantity cannot be greater than Sale order quantity.',
+                });
+                pickingQtyInput.val(soqty);
+            }
+            // Optionally, you can clear any previous error messages or styles.
+        }
+        function openStockModal(productcode) {
+            // Fetch the content of the desired view using AJAX
+            //alert("productcode : " + productcode);
+            $.ajax({
+                url: '/Picklist_Generation/InStockQty',
+                type: 'GET',
+                data: { productcode: productcode.toUpperCase() }, // Pass productcode as a parameter to the AJAX request
+                success: function (data) {
+                    // Update the modal content with the fetched data
+                    $('.modal-body').html(data);
+                    // Open the modal
+                    $('#form-modal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching content:", error);
+                }
+            });
+        }
+
+
+
+    </script>
+
+    @*   <script>
+        function checkStock() {
+            var productCode = $("#prdcode_").val();
+            var requiredQty = parseInt($("#soqty_").val());
+
+            $.ajax({
+                url: "/Storage/CheckStock",
+                type: "POST",
+                data: { productCode: productCode, requiredQty: requiredQty },
+                success: function (data) {
+                    if (data.success) {
+                        $("#result").text("In stock quantity: " + data.inStockQty);
+                    } else {
+                        $("#result").text(data.message);
+                    }
+                },
+                error: function () {
+                    $("#result").text("An error occurred while checking stock.");
+                }
+            });
+        }
+    </script>
+ *@
+}

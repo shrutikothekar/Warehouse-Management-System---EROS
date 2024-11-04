@@ -1,0 +1,2007 @@
+﻿@model eros.Models.inward
+@{
+    string[] TableHeaders = new string[] {
+
+        // "Prd. Code",
+        // "Prd. Name.",
+        // "Br.",
+        // "Qty",
+        // "No. set/pro." ,
+        // "No. Qty/shp" ,
+        // "No. shp/Qty" ,
+        // "Ttl shp" ,
+        // "Ttl sub",
+        // "SC",
+
+        "Pro. Code",
+        "Prd. Name.",
+        //"Brand",
+        "Qty",
+        "Condition",
+        "No. Set/Pro." ,
+        "No. set/shp" ,
+        "No. Shp/Qty" ,
+        //         "No. Qty/Shp",
+        // "Ttl Shp" ,
+        // "Ttl Sub",
+        "Scan",
+        //"SC",
+      };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+    // Assuming you have some data in the ViewBag
+    var description7Options = ViewBag.description;
+    var description7Json = Newtonsoft.Json.JsonConvert.SerializeObject(description7Options);
+
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="container-field">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            @*                             <h5 class="mx-auto font-weight-bolder small-heading">Inward Entry</h5>
+                    *@
+                            <h5 class="mx-auto font-weight-bolder small-heading">Inward Entry - @ViewBag.ordertype</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <main class="page payment-page">
+                        <section class="payment-form">
+                            <div class="p-2">
+                                <div class="card-details">
+                                    <form class="bg-secondary mt-2 mx-2" method="post" action="radio" id="form10" onkeydown="return event.key != 'Enter';">
+                                        &nbsp;&nbsp;
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Demo-tab" autocomplete="off" value="Demo">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Demo-tab">Demo</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Repair-tab" autocomplete="off" value="Repair">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Repair-tab">Repair</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Replacement-tab" autocomplete="off" value="Replacement">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Replacement-tab">Replacement</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Purchase-tab" autocomplete="off" value="Purchase">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Purchase-tab">Purchase</label>
+
+                                        <input type="radio" style="height:18px; width:18px; vertical-align: middle;" class="btn-check" name="nav" id="nav-Salereturn-tab" autocomplete="off" value="Sale Return">
+                                        <label class="btn text-white" style="width:180px;" for="nav-Salereturn-tab">Sale Return</label>
+                                    </form>
+                                    <br />
+                                    <div class="container mt-1">
+                                        <div class="row mx-lg-2 mx-md-2 ">
+                                            <form asp-action="Create" id="form3">
+                                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                                <div class="row">
+                                                    <div class="form-group col-sm-5 mt-2" id="selectponoId">
+                                                        <label asp-for="pono" class="control-label">Ref. Order No.</label>
+                                                        <select asp-for="pono" id="GetRefNo" class="form-control" asp-items="@ViewBag.GetRefNo" onchange="dropdownChangedpono() "></select>
+                                                        <span asp-validation-for="pono" class="text-danger"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    @*  <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="vendername" class="control-label">Type of Vendor</label>
+                                            <select asp-for="vendername" id="SelectVenderId" class="form-control" onchange="changewb3()" required>
+                                            <option value="-------">-------</option>
+                                            <option value="Showroom">Showroom</option>
+                                            <option value="Supplier">Supplier</option>
+                                            <option value="Customer">Customer</option>
+                                            </select>
+                                            <span asp-validation-for="vendername" class="text-danger"></span>
+                                            </div>
+                                            <div class="form-group col-sm-4 mt-2">
+                                            <label asp-for="typeofreturn" class="control-label"></label>
+                                            <select asp-for="typeofreturn" id="typeofreturn" class="form-control" required>
+                                            <option value="-------">-------</option>
+                                            <option value="Returnable">Returnable</option>
+                                            <option value="Non-Returnable">Non-Returnable</option>
+                                            </select>
+                                            <span asp-validation-for="typeofreturn" class="text-danger"></span>
+                                            </div> *@
+                                                    <div class="row">
+                                                        <div class="form-group col-sm-4 mt-2" style="display:none" id="vendernamediv">
+                                                            <label asp-for="vendername" class="control-label">Type of Vendor</label>
+                                                            <select asp-for="vendername" id="SelectVenderId" class="form-control" onchange="changewb1()" required>
+                                                                <option value="-------">-------</option>
+                                                                <option value="Showroom">Showroom</option>
+                                                                <option value="Supplier">Supplier</option>
+                                                                <option value="Customer">Customer</option>
+                                                            </select>
+                                                            @* <span asp-validation-for="vendername" class="text-danger"></span> *@
+                                                        </div>
+                                                        <div class="form-group col-sm-4 mt-2" style="display:none" id="vendername1div">
+                                                            <label asp-for="vendername" class="control-label">Type of Vendor</label>
+                                                            <input type="text" asp-for="vendername1" class="form-control" id="vendername1" readonly required>
+                                                            @* <span asp-validation-for="vendername" class="text-danger"></span> *@
+                                                        </div>
+                                                        <div class="form-group col-sm-4 mt-2" style="display:none" id="typeofreturndiv">
+                                                            <label asp-for="typeofreturn" class="control-label"></label>
+                                                            <select asp-for="typeofreturn" id="typeofreturn" required class="form-control">
+                                                                <option value="-------">-------</option>
+                                                                <option value="Non-Returnable">Non-Returnable</option>
+                                                                <option value="Returnable">Returnable</option>
+                                                            </select>
+                                                            @* <span asp-validation-for="typeofreturn" class="text-danger"></span> *@
+                                                        </div>
+                                                        <div class="form-group col-sm-4 mt-2" style="display:none" id="typeofreturn1div">
+                                                            <label asp-for="typeofreturn" class="control-label"></label>
+                                                            <input type="text" asp-for="typeofreturn1" class="form-control" id="typeofreturn1" readonly value="Returned" required>
+                                                            @* <span asp-validation-for="typeofreturn" class="text-danger"></span> *@
+                                                        </div>
+                                                        <div class="form-group col-sm-4 mt-2">
+                                                            <label asp-for="partyname" class="control-label">Partyname</label>
+                                                            @* <select class="form-control" asp-for="partyname" id="partynameId" asp-items="@ViewBag.partyname" onchange="dropdownChanged3()" required>
+                                                    </select> *@
+                                                            <input type="text" asp-for="partyname" class="form-control" id="partynameId" placeholder="Enter party name" required>
+                                                            <span asp-validation-for="partyname" class="text-danger"></span>
+                                                        </div>
+
+                                                        @* <div class="form-group col-sm-4 mt-2" id="partyNameInputGroup">
+                                                <label asp-for="partyname" class="control-label">Partyname</label>
+                                                <div class="col-sm-12">
+                                                <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                                </div>
+                                                <select class="form-control" asp-for="partyname" id="partynameId" asp-items="@ViewBag.partyname" onchange="dropdownChanged3()">
+                                                </select>
+                                                <input type="text" asp-for="partyname" class="form-control" id="newPartyName" placeholder="Enter party name" style="display: none;">
+                                                <div class="input-group-append">
+                                                <button class="btn btn-primary" type="button" id="addPartyBtn">Add</button>
+                                                </div>
+                                                </div>
+                                                </div>
+                                                <span asp-validation-for="partyname" class="text-danger"></span>
+                                                </div> *@
+                                                    </div>
+                                                    <div class="row">
+
+
+                                                        <div class="form-group col-sm-3 mt-2">
+                                                            <label asp-for="dcno" class="control-label"></label>
+                                                            <input asp-for="dcno" id="referenceno" data-uppercase autocomplete="off" class="form-control" />@*  oninput="validateNumber(this)" *@
+                                                            <span asp-validation-for="dcno" class="text-danger"></span>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-3 mt-2">
+                                                            <label id="dcdateLabel" asp-for="dcdate" class="control-label"></label>
+                                                            <input asp-for="dcdate" type="date" data-uppercase autocomplete="off" class="form-control" />
+                                                            <span asp-validation-for="dcdate" class="text-danger"></span>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-3 mt-2">
+                                                            <label asp-for="invoiceno" class="control-label"></label>
+                                                            <input asp-for="invoiceno" id="invoiceno" data-uppercase autocomplete="off" class="form-control" /> @* oninput="validateNumber(this)" *@
+                                                            <span asp-validation-for="invoiceno" class="text-danger"></span>
+                                                        </div>
+
+                                                        <div class="form-group col-sm-3 mt-2">
+                                                            <label id="invoicedateLabel" asp-for="invoicedate" class="control-label"></label>
+                                                            <input asp-for="invoicedate" type="date" data-uppercase autocomplete="off" class="form-control" />
+                                                            <span asp-validation-for="invoicedate" class="text-danger"></span>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="form-group col-sm-4 mt-2">
+                                                            <label asp-for="gstinno" class="control-label"></label>
+                                                            @* <input asp-for="gstinno" data-uppercase autocomplete="off" id="gstnoId" class="form-control"  required /> *@
+                                                            <input asp-for="gstinno" data-uppercase autocomplete="off" id="gstnoId" class="form-control"
+                                                                   oninput="validateAlphaNumeric(this)" maxlength="20" />
+                                                            <input asp-for="ordertype" id="ordertype" class="form-control" hidden />
+                                                            <span asp-validation-for="gstinno" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="form-group col-sm-4 mt-2">
+                                                            <label asp-for="contactno" class="control-label"></label>
+                                                            <input asp-for="contactno" oninput="validateNumber(this)" data-uppercase autocomplete="off" id="contactnoId" class="form-control" required oninput="validateNumber(this)" />
+                                                            <span asp-validation-for="contactno" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="form-group col-sm-4 mt-2">
+                                                            <label asp-for="address" class="control-label"></label>
+                                                            <input asp-for="address" data-uppercase autocomplete="off" id="addressId" class="form-control" required oninput="validateAlphNum(this)" />
+                                                            <span asp-validation-for="address" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        @*                                                     <table id="CodesTable" class="table table-striped table-sm">
+                                                <thead>
+                                                <tr>
+                                                @foreach (var head in TableHeaders)
+                                                {
+                                                <th>
+                                                @head
+                                                </th>
+                                                }
+                                                <th>
+                                                <button id='btnAddDetailRow' type="button" class="btn btn-sm btn-secondary visible" onclick="AddItem(this)">
+                                                Add
+                                                </button>
+                                                </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                @for (int i = 0; i < Model.inwardPacket.Count; i++)
+                                                {
+                                                <tr>
+                                                <td>
+                                                <input asp-for="@Model.inwardPacket[i].productcode"  class="form-control productcode-input" required oninput="validateAlphNum(this)" />
+                                                <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                                                </td>
+                                                <td>
+                                                <select class="form-control " asp-for="@Model.inwardPacket[i].description" asp-items="@ViewBag.description" onchange="handleDespChange(this)"></select>
+                                                <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                                                </td>
+
+                                                <td style="display:none">
+                                                <input style="display:none" asp-for="@Model.inwardPacket[i].brand" readonly class="form-control" oninput="validateAlphabet(this)" />
+                                                <span asp-validation-for="@Model.inwardPacket[i].brand" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:80px;">
+                                                <input asp-for="@Model.inwardPacket[i].quantity" class="form-control quantity-input" required oninput="validateNumber(this)" />
+                                                <span asp-validation-for="@Model.inwardPacket[i].quantity" class="text-danger"></span>
+                                                </td>
+                                                <td style="display:none">
+                                                <input asp-for="@Model.inwardPacket[i].uom" readonly class="form-control" />
+                                                <span asp-validation-for="@Model.inwardPacket[i].uom" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:80px;">
+                                                <input asp-for="@Model.inwardPacket[i].setofsub_assemb" class="form-control" oninput="validateNumber(this)" />
+                                                <span asp-validation-for="@Model.inwardPacket[i].setofsub_assemb" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:80px;">
+                                                <input asp-for="@Model.inwardPacket[i].qtyperpkt" class="form-control" oninput="validateNumber(this)" />
+                                                <span asp-validation-for="@Model.inwardPacket[i].qtyperpkt" class="text-danger"></span>
+                                                </td>
+
+                                                <td style="width:80px;">
+                                                <input asp-for="@Model.inwardPacket[i].noofpackets" class="form-control noofpackets-input" oninput="calculate(this)" />
+                                                <span asp-validation-for="@Model.inwardPacket[i].noofpackets" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:80px;display:none">
+                                                <input asp-for="@Model.inwardPacket[i].noqtypershp" readonly class="form-control noqtypershp-input" oninput="calculate2(this)" />
+                                                <span asp-validation-for="@Model.inwardPacket[i].noqtypershp" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:80px;display:none">
+                                                <input asp-for="@Model.inwardPacket[i].totalpacket" readonly class="form-control totalpacket-input" />
+                                                <span asp-validation-for="@Model.inwardPacket[i].totalpacket" class="text-danger"></span>
+                                                </td>
+                                                <td style="width:80px;display:none">
+                                                <input asp-for="@Model.inwardPacket[i].totalsubassmbly" id="totalsubassembly" class="form-control totalsubassembly" readonly />
+                                                <span asp-validation-for="@Model.inwardPacket[i].totalsubassmbly" class="text-danger"></span>
+                                                <input type="hidden" asp-for="@Model.inwardPacket[i].IsDeleted" />
+                                                </td>
+
+                                                <td style="display:none">
+                                                <a id="editDetail-@i" class="btn text-white btn-sm btn-warning poedit3-button"
+                                                data-id="@Model.inwardPacket[i].id"
+                                                data-quantity="@Model.inwardPacket[i].quantity"
+                                                data-productcode="@Model.inwardPacket[i].productcode">
+                                                View
+                                                </a>
+                                                </td>
+                                                <td style="display:none" id="scanidflag">0</td>
+                                                <td>
+                                                <button type="button" class="btn btn-success btn-sm scaningidd"
+                                                onclick="scaningSR(this)"
+                                                data-productcode="@Model.inwardPacket[i].productcode"
+                                                data-quantity="@Model.inwardPacket[i].quantity">
+                                                <span class="d-none d-sm-inline">scan</span>
+                                                <span class="d-inline d-sm-none">scan</span>
+                                                </button>
+                                                </td>
+                                                <td>
+                                                <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">Delete</button>
+                                                </td>
+                                                </tr>
+                                                }
+                                                </tbody>
+                                                </table>
+                                                *@
+                                                        <table id="CodesTable" class="table table-striped table-sm">
+                                                            @* CodesTable *@
+                                                            <thead>
+                                                                <tr>
+                                                                    @foreach (var head in TableHeaders)
+                                                                    {
+                                                                        <th>
+                                                                            @head
+                                                                        </th>
+                                                                    }
+                                                                    <th>
+                                                                        <button id='btnAddDetailRow' type="button" class="btn btn-sm btn-secondary visible" onclick="AddItem(this)">
+                                                                            Add
+                                                                        </button>
+                                                                        @*  <button id='btnadddetailrow' type="button" class="btn btn-sm btn-secondary visible" onclick="addNewRow(this)">
+                                                                add
+                                                                </button> *@
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @for (int i = 0; i < Model.inwardPacket.Count; i++)
+                                                                {
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input asp-for="@Model.inwardPacket[i].productcode" class="form-control productcode-input" />
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].productcode" class="text-danger"></span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select class="form-control description-dropdown" asp-for="@Model.inwardPacket[i].description" id="descriptiondropdown" asp-items="@ViewBag.description" onchange="handleDespChange(this)"></select>
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].description" class="text-danger"></span>
+                                                                        </td>
+
+                                                                        <td style="display:none">
+                                                                            <input asp-for="@Model.inwardPacket[i].brand" readonly class="form-control  brand-input" oninput="validateAlphabet(this)" />
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].brand" class="text-danger"></span>
+                                                                        </td>
+
+                                                                        <td style="width:120px;">
+                                                                            <input asp-for="@Model.inwardPacket[i].quantity" class="form-control quantity-input" onchange="calculateTotals(this)" />
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].quantity" class="text-danger"></span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select asp-for="@Model.inwardPacket[i].type" class="form-control type">
+                                                                                <option value="DMG">Damaged</option>
+                                                                                <option value="DMG">Manufacturing Defect</option>
+                                                                                <option value="NONRPR">Physically Broken</option>
+                                                                                <option value="ST">Good Condition</option>
+                                                                            </select>
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].type" class="text-danger"></span>
+                                                                        </td>
+                                                                        <td style="display:none">
+                                                                            <input asp-for="@Model.inwardPacket[i].uom" readonly class="form-control  uom-input" />
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].uom" class="text-danger"></span>
+                                                                            <input type="hidden" asp-for="@Model.inwardPacket[i].IsDeleted" />
+                                                                        </td>
+                                                                        <td style="width:80px;">
+                                                                            <input asp-for="@Model.inwardPacket[i].setofsub_assemb" type="number" class="form-control" oninput="validateNumber(this)" />
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].setofsub_assemb" class="text-danger"></span>
+                                                                        </td>
+                                                                        <td style="width:80px;">
+                                                                            <input asp-for="@Model.inwardPacket[i].qtyperpkt" type="number" class="form-control noofshpperqty-input" oninput="validateNumber(this)" />
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].qtyperpkt" class="text-danger"></span>
+                                                                        </td>
+
+                                                                        <td style="width:80px;">
+                                                                            <input asp-for="@Model.inwardPacket[i].noofpackets" type="number" class="form-control noofpackets-input" oninput="calculate(this)" />
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].noofpackets" class="text-danger"></span>
+                                                                        </td>
+                                                                        <td style="width:80px; display:none;">
+                                                                            <input asp-for="@Model.inwardPacket[i].noqtypershp" readonly class="form-control noqtypershp-input" oninput="calculate2(this)" />
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].noqtypershp" class="text-danger"></span>
+                                                                        </td>
+                                                                        <td style="width:80px; display:none;">
+                                                                            <input asp-for="@Model.inwardPacket[i].totalpacket" readonly class="form-control totalpacket-input" />
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].totalpacket" class="text-danger"></span>
+                                                                        </td>
+                                                                        <td style="width:80px; display:none;">
+                                                                            <input asp-for="@Model.inwardPacket[i].totalsubassmbly" id="totalsubassembly" class="form-control totalsubassembly" readonly />
+                                                                            <span asp-validation-for="@Model.inwardPacket[i].totalsubassmbly" class="text-danger"></span>
+                                                                            <input type="hidden" asp-for="@Model.inwardPacket[i].IsDeleted" />
+                                                                        </td>
+
+                                                                        <td style="display:none">
+                                                                            <a id="editDetail-@i" class="btn text-white btn-sm btn-warning poedit3-button"
+                                                                               data-id="@Model.inwardPacket[i].id"
+                                                                               data-quantity="@Model.inwardPacket[i].quantity"
+                                                                               data-productcode="@Model.inwardPacket[i].productcode">
+                                                                                View
+                                                                            </a>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button type="button" class="btn btn-success btn-sm scaningidd"
+                                                                                    onclick="scaningSR(this)" disabled
+                                                                                    data-productcode="@Model.inwardPacket[i].productcode"
+                                                                                    data-quantity="@Model.inwardPacket[i].quantity">
+                                                                                <span class="d-none d-sm-inline">scan</span>
+                                                                                <span class="d-inline d-sm-none">scan</span>
+                                                                            </button>
+                                                                        </td>
+                                                                        <td>
+                                                                            <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">Delete</button>
+                                                                        </td>
+
+                                                                    </tr>
+
+                                                                }
+                                                            </tbody>
+                                                        </table>
+
+                                                    </div>
+                                                    <input type="hidden" id="hdnLastIndex" value="0" />
+                                                    <div class="row">
+                                                        <div class="form-group col-sm-3 mt-2">
+                                                            <label asp-for="grnno" class="control-label"></label>
+                                                            <input asp-for="grnno"  id="grnno" data-uppercase autocomplete="off" class="form-control" />@* oninput="validateNumber(this)" *@
+                                                            <span asp-validation-for="grnno" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="form-group col-sm-3 mt-2">
+                                                            <label asp-for="grndate" class="control-label">GRN Date</label>
+                                                            <input type="date" asp-for="grndate" data-uppercase autocomplete="off" typeof="date" class="form-control" />
+                                                            <span asp-validation-for="grndate" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="form-group col-sm-3 mt-2">
+                                                            <label asp-for="batchcode" class="control-label"></label>
+                                                            <input asp-for="batchcode"  value="00A00" data-uppercase autocomplete="off" class="form-control" />
+                                                            <span asp-validation-for="batchcode" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="form-group col-sm-3 mt-2">
+                                                            <label asp-for="remarks" class="control-label"></label>
+                                                            <input asp-for="remarks" id="remarks" data-uppercase autocomplete="off" class="form-control" oninput="validateAlphabet(this)" />
+                                                            <span asp-validation-for="remarks" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" style="display:none;">
+                                                        <div class="form-group col-sm-6 mt-2 ">
+                                                            <label asp-for="date" class="control-label">Date</label>
+                                                            <input type="date" data-uppercase autocomplete="off" id="datepicker" asp-for="date" class="form-control" />
+                                                            <span asp-validation-for="date" class="text-danger"></span>
+                                                        </div>
+                                                        <div class="form-group col-sm-6 mt-2">
+                                                            <label asp-for="time" class="control-label">Time</label>
+                                                            <input type="time" data-uppercase autocomplete="off" id="timepicker" asp-for="time" class="form-control" />
+                                                            <span asp-validation-for="time" class="text-danger"></span>
+                                                        </div>
+                                                    </div>
+                                                    <input asp-for="printflag" hidden id="stickerDecision" name="stickerDecision" value="" />
+
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            @* <input type="submit" id="submitButton" onclick="return generateSticker(this);" class="btn btn-primary col-md-12" /> *@
+                                                            <button type="submit" value="Create" class="btn btn-sm btn-primary col-md-12 btn-print-slip"> Create</button>
+
+                                                        </div>
+                                                        <div class="col-md-6" style="display:none">
+                                                            <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                                        </div>
+                                                    </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container-field">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container-field">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+@* MODEL POPUP FOR SCANING *@
+<div class="modal fade" id="scaningModal" tabindex="-1" role="dialog" aria-labelledby="damageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="scaningModalLabel">Scan Replacement Shippers</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="scaningForm">
+                    <small style="color:green; font-weight:550">Please Scan the Replacement product shippers sticker ...</small>
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <small><label style="color:black; font-weight:550" for="boxno">Box No</label></small>
+                            <input type="text" class="form-control" id="sboxno">
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <small><label style="color:black; font-weight:550" for="productcode">Pro.Code:</label></small>
+                            <input type="text" class="form-control" id="sproductcode">
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <small><label style="color:black; font-weight:550" for="batchcode">Batch Code</label></small>
+                            <input type="text" class="form-control" id="sbatchcode">
+                        </div>
+                    </div>
+                    <br />
+                    @* last table - small table  *@
+                    <input type="hidden" name="tableData1" id="tableData1" />
+                    <div class="table-responsive col-12 col-sm-12 mt-2" id="preInwardTable" style="max-height: 300px; overflow-y: auto;">
+                        <table class="table table-bordered table-striped divide-gray-300 small" id="DataInsert" style="display:none;">
+                            <thead style="background-color: #666; color: #fff;" class="sticky-top">
+                                <tr>
+                                    <th style="display:none">Location</th>
+                                    <th>Box No.</th>
+                                    <th>Batch Code</th>
+                                    <th>Pro. Code</th>
+                                    @* <th style="display:none">Damage</th> *@
+                                    <th>Clear</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button style="display:none" type="submit" class="btn btn-success float-right" id="saveButtonSR">Save List</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addRefIdModal" tabindex="-1" role="dialog" aria-labelledby="addRefIdModalLabel" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addRefIdModalLabel">Add New Ref.Id</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addEmployeeForm" class="text-sm">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="employeeName" class="form-label">Refrence Id. No </label>
+                            <input type="text" class="form-control form-control-sm" id="eemployeeName" name="employeeName" placeholder="Enter ref.id name">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveRefId()">Save Ref.No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .product {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+</style>
+<style>
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+
+    .select2-10gd-container {
+        width: 320px;
+    }
+
+    element.style {
+        width: 320px;
+    }
+
+    .select2-container {
+        width: 320px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+        height: 38px; /* Adjust the height as needed */
+    }
+
+</style>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function validateAlphaNumeric(input) {
+            input.value = input.value.replace(/[^a-zA-Z0-9]/g, '');
+            if (input.value.length > 20) {
+                input.value = input.value.substring(0, 20);
+            }
+        }
+        var description7Options = @Html.Raw(description7Json);
+        // $(document).ready(function () {
+        //     $('.description-dropdown').select2();
+        // });
+        function addNewRow() {
+            console.log("call");
+            var tableBody = document.querySelector('#CodesTable tbody');
+            var newRow = document.createElement('tr');
+            var invalidQuantity = false;
+            var quantityInputs = document.querySelectorAll('.quantity-input');
+
+            quantityInputs.forEach(function (input) {
+                var enteredQuantity = parseFloat(input.value);
+                if (enteredQuantity <= 0 || isNaN(enteredQuantity)) {
+                    invalidQuantity = true;
+                    return;
+                }
+            });
+
+            if (invalidQuantity) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Quantity',
+                    text: 'Quantity should be greater than 0 for all rows!',
+                });
+                return;
+            }
+
+            // Create new row with inputs and searchable dropdown
+            newRow.innerHTML = `
+                                    <td><input class="form-control productcode-input"  /></td>
+                                    <td style="width: 320px;height: 38px;"><select class="form-control description-dropdown" id="descriptiondropdown" onchange="handleDespChange(this)"></select></td>
+                                    <td style="display:none;"><input class="form-control brand-input"  /></td>
+                                    <td style="width:120px;"><input type="number" class="form-control quantity-input"  /></td>
+                                    <td>
+                                        <select class="form-control type">
+                                            <option value="DMG">Damaged</option>
+                                            <option value="DMG">Manufacturing Defect</option>
+                                            <option value="NONRPR">Physically Broken</option>
+                                            <option value="ST">Good Condition</option>
+                                        </select>
+                                        <span class="text-danger"></span>
+                                    </td>
+                                    <td style="display:none;"><input class="form-control type" /></td>
+                                    <td style="display:none;"><input class="form-control uom-input" /></td>
+                                    <td style="width:80px;"><input type="number" class="form-control setofsub_assemb"  /></td>
+                                    <td style="width:80px;"><input type="number" class="form-control noofshpperqty-input" /></td>
+                                    <td style="width:80px;"><input  type="number" class="form-control noofpackets-input" /></td>
+                                    <td style="display:none;width:80px;"><input class="form-control noqtypershp-input" /></td>
+                                    <td style="display:none;width:80px;"><input class="form-control totalpacket-input"  /></td>
+                                    <td style="display:none;width:80px;"><input class="form-control totalsubassembly-input"  /></td>
+                                    <td style="display:none;width:80px;"><a class="btn text-white btn-sm btn-warning poedit3-button">View</a></td>
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-sm scaningidd"
+                                                onclick="scaningSR(this)"
+                                                data-productcode="packet.productcode"
+                                                data-quantity="packet.quantity">
+                                            <span class="d-none d-sm-inline">scan</span>
+                                            <span class="d-inline d-sm-none">scan</span>
+                                        </button>
+                                    </td>
+                                    <td><button type="button" class="btn btn-sm btn-danger" onclick="deleteRow(this)">Delete</button></td>
+                                `;
+
+            tableBody.appendChild(newRow);
+
+            // Populate the description dropdown with options and initialize Select2
+            var dropdownSelect = newRow.querySelector('select');
+            if (Array.isArray(description7Options)) {
+                description7Options.forEach(function (option) {
+                    var optionElement = document.createElement('option');
+                    optionElement.text = option.Text;
+                    optionElement.value = option.Value;
+                    dropdownSelect.appendChild(optionElement);
+                });
+
+                $(dropdownSelect).addClass('select2').select2({
+                    width: '350px' // Set a fixed width for the dropdown
+                });
+
+
+                // Handle the change event for the description dropdown
+                $(dropdownSelect).on('change', function () {
+                    var selectedValue = $(this).val();
+                    var selectedDescription = $(this).find(':selected').text();
+                    var element = this;
+                    var selectedDescriptions = [];
+
+                    // Ensure uniqueness of the selected description in other rows
+                    $('#CodesTable tbody tr').each(function () {
+                        if (this !== newRow) {
+                            var descriptionInRow = $(this).find('select').val();
+                            if (descriptionInRow === selectedValue) {
+                                selectedDescriptions.push(selectedDescription);
+                            }
+                        }
+                    });
+
+                    if (selectedDescriptions.length > 0) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'This description is already selected in another row.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $(element).val('').trigger('change');
+                        });
+                        return;
+                    }
+                    // Fetch related data based on the selected description
+                    $.ajax({
+                        url: '/inwards/ActionName_description',
+                        type: 'GET',
+                        data: { selectedValue: selectedValue },
+                        success: function (data) {
+                            $(newRow).find('.productcode-input').val(data.modelno);
+                            $(newRow).find('.uom-input').val(data.uom);
+                            $(newRow).find('.brand-input').val(data.brand);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(error);
+                        }
+                    });
+
+                });
+            } else {
+                console.error("Dropdown options are not in the expected format.");
+            }
+
+            // Add validation for the quantity input
+            var quantityInput = newRow.querySelector('.quantity-input');
+            quantityInput.addEventListener('change', function () {
+                var enteredQuantity = parseFloat(this.value);
+                if (enteredQuantity <= 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Quantity',
+                        text: 'Quantity cannot be less than or equal to 0.',
+                    });
+                    this.value = '0';
+                }
+            });
+        }
+
+        function saveRefId() {
+            // Get the value from the input field
+            var refId = $('#eemployeeName').val();
+
+            // Log the new reference ID
+            console.log("Reference ID: " + refId);
+
+            // Alert the user about the successful addition
+            console.log("Employee added successfully!");
+
+            // Hide the modal
+            $('#addRefIdModal').modal('hide');
+
+            // Assuming you want to append this new refId to the dropdown
+            var dropdown = $('#GetRefNo');
+
+            // Append the new option to the dropdown
+            dropdown.append('<option value="' + refId + '">' + refId + '</option>');
+
+            // Set the dropdown value to the newly added refId and trigger change event
+            dropdown.val(refId).trigger('change');
+
+            // Show a success message using SweetAlert
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Reference ID added successfully!'
+            });
+        }
+        function dropdownChangedpono() {
+            var ponoElement = $("#GetRefNo").val();
+
+            // Check if a valid option is selected (i.e., not an empty value)
+            if (ponoElement && ponoElement != "") {
+                console.log("pono id selected");
+                console.log(ponoElement);
+                // Check if the selected value is "add_newRefId"
+                if (ponoElement == "add_newRefId") {
+
+                    // $("#addRefIdModal").modal("show");
+
+                    // Generate new Ref ID in the desired format
+                    var currentDate = new Date();
+                    var datePart = ('0' + currentDate.getDate()).slice(-2) + ('0' + (currentDate.getMonth() + 1)).slice(-2) + currentDate.getFullYear();
+                    var timePart = ('0' + currentDate.getHours()).slice(-2) + ('0' + currentDate.getMinutes()).slice(-2) + ('0' + currentDate.getSeconds()).slice(-2);
+                    var newRefId = "RP/IN/" + datePart + "/" + timePart;
+
+                    // Add the new Ref ID to the dropdown
+                    var newOption = new Option(newRefId, newRefId, true, true);
+                    console.log("NEW ID : " + newOption);
+                    $("#GetRefNo").append(newOption);
+                    $("#GetRefNo").val(newRefId).trigger('change'); // Select the new option
+                    // $("#typeofreturndiv").show();
+                    // $("#vendernamediv").show();
+                    // $("#typeofreturn1div").hide();
+                    // $("#vendername1div").hide();
+                    // $('#vendername1').val("").prop('readonly', false);
+                    // $('#typeofreturn1').val("").prop('readonly', false);
+                    // $('#partynameId').val("").prop('readonly', false);
+                    // $('#gstnoId').val("").prop('readonly', false);
+                    // $('#contactnoId').val("").prop('readonly', false);
+                    // $('#addressId').val("").prop('readonly', false);
+                    // $('#remarks').val("").prop('readonly', false);
+                    $("#typeofreturndiv").show();
+                    $("#vendernamediv").show();
+                    $("#typeofreturn1div").hide();
+                    $("#vendername1div").hide();
+                    $('#vendername1').val("").prop('readonly', false);
+                    $('#typeofreturn1').val("").prop('readonly', false);
+                    $('#partynameId').val("").prop('readonly', false);
+                    $('#gstnoId').val("").prop('readonly', false);
+                    $('#contactnoId').val("").prop('readonly', false);
+                    $('#addressId').val("").prop('readonly', false);
+                    $('#remarks').val("").prop('readonly', false);
+                }
+                else {
+                    // Get the selected option
+                    var selectedOption = ponoElement;
+                    var ordertype = document.getElementById("ordertype").value;
+
+                    // Make an AJAX request to the controller action
+                    $.ajax({
+                        url: '/inwards/RefNoData',
+                        type: 'POST',
+                        data: { refno: selectedOption, ordertype: ordertype },
+                        success: function (result) {
+                            if (result.success) {
+                                console.log("Success");
+                                console.log("Result: " + JSON.stringify(result));
+
+                                // var data = result.data;
+                                // $("#typeofreturndiv").hide();
+                                // $("#vendernamediv").hide();
+                                // $("#typeofreturn1div").show();
+                                // $("#vendername1div").show();
+                                // $('#vendername1').val(data.vendername).prop('readonly', true);
+                                // $('#typeofreturn1').val("Returned").prop('readonly', true);
+                                // $('#partynameId').val(data.partyname).prop('readonly', true);
+                                // $('#gstnoId').val(data.gstinno).prop('readonly', true);
+                                // $('#contactnoId').val(data.contactno).prop('readonly', true);
+                                // $('#addressId').val(data.address).prop('readonly', true);
+                                // $('#remarks').val(data.remark).prop('readonly', true);
+
+                                var data = result.data;
+                                $("#typeofreturndiv").hide();
+                                $("#vendernamediv").hide();
+                                $("#typeofreturn1div").show();
+                                $("#vendername1div").show();
+                                $('#vendername1').val(data.vendername).prop('readonly', true);
+                                $('#typeofreturn1').val("Returned").prop('readonly', true);
+                                $('#partynameId').val(data.partyname).prop('readonly', true);
+                                $('#gstnoId').val(data.gstinno).prop('readonly', true);
+                                $('#contactnoId').val(data.contactno).prop('readonly', true);
+                                $('#addressId').val(data.address).prop('readonly', true);
+                                $('#remarks').val(data.remark).prop('readonly', false);
+
+                                // Clear existing rows in the table before adding new ones
+                                $('#CodesTable tbody').empty();
+
+                                // Check if inwardPacket has data
+                                if (data.inwardPacket && data.inwardPacket.length > 0) {
+                                    data.inwardPacket.forEach((item, index) => {
+                                        $('#btnAddDetailRow').prop('disabled', true);
+                                        // Create a new row for each inwardPacket item
+                                        $('#CodesTable tbody').append(`
+                                                        <tr>
+                                                            <td>
+                                                                <input type="text" name="inwardPacket[${index}].productcode" value="${item.productcode}" class="form-control productcode-input" />
+                                                                <span class="text-danger"></span>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control" name="inwardPacket[${index}].description">
+                                                                    <option value="${item.description}">${item.description}</option>
+                                                                    <!-- Add more options here if needed -->
+                                                                </select>
+                                                                <span class="text-danger"></span>
+                                                            </td>
+                                                            <td style="display:none">
+                                                                <input type="text" name="inwardPacket[${index}].brand" value="${item.brand}" class="form-control" readonly />
+                                                                <span class="text-danger"></span>
+                                                            </td>
+                                                            <td style="width:120px;">
+                                                                <input type="number" name="inwardPacket[${index}].quantity" value="${item.quantity}" class="form-control quantity-input" onchange="calculateTotals(this)" />
+                                                                <span class="text-danger"></span>
+                                                            </td>
+                                                            <td style="display:none">
+                                                                <input type="text" name="inwardPacket[${index}].uom" value="${item.uom}" class="form-control" readonly />
+                                                                <span class="text-danger"></span>
+                                                                <input type="hidden" name="inwardPacket[${index}].IsDeleted" />
+                                                            </td>
+                                                            <td>
+                                                                             <select name="inwardPacket[${index}].type" class="form-control">
+                                                                                                    <option value="DMG">Damaged</option>
+                                                                                                    <option value="DMG">Manufacturing Defect</option>
+                                                                                                    <option value="NONRPR">Physically Broken</option>
+                                                                                                    <option value="ST">Good Condition</option>
+                                                                                                </select>
+                                                            </td>
+                                                            <td style="width:80px;">
+                                                                        <input type="number" name="inwardPacket[${index}].setofsub_assemb" value="${item.setofsub_assemb}" class="form-control" readonly oninput="validateNumber(this)" />
+                                                                <span class="text-danger"></span>
+                                                            </td>
+                                                            <td style="width:80px;">
+                                                                        <input type="number" name="inwardPacket[${index}].qtyperpkt" value="${item.qtyperpkt}" class="form-control noofshpperqty-input" readonly oninput="validateNumber(this)" />
+                                                                <span class="text-danger"></span>
+                                                            </td>
+                                                            <td style="width:80px;">
+                                                                        <input type="number" name="inwardPacket[${index}].noofpackets" value="${item.noofpackets}" class="form-control noofpackets-input" readonly oninput="calculate(this)" />
+                                                                <span class="text-danger"></span>
+                                                            </td>
+                                                            <td style="width:80px; display:none;">
+                                                                <input type="number" name="inwardPacket[${index}].noqtypershp" value="${item.noqtypershp}" class="form-control noqtypershp-input" readonly />
+                                                                <span class="text-danger"></span>
+                                                            </td>
+                                                            <td style="width:80px; display:none;">
+                                                                <input type="number" name="inwardPacket[${index}].totalpacket" value="${item.totalpacket}" class="form-control totalpacket-input" readonly />
+                                                                <span class="text-danger"></span>
+                                                            </td>
+                                                            <td style="width:80px; display:none;">
+                                                                <input type="number" name="inwardPacket[${index}].totalsubassmbly" value="${item.totalsubassmbly}" class="form-control totalsubassembly" readonly />
+                                                                <span class="text-danger"></span>
+                                                                <input type="hidden" name="inwardPacket[${index}].IsDeleted" />
+                                                            </td>
+                                                            <td style="display:none">
+                                                                <a id="editDetail-${index}" class="btn text-white btn-sm btn-warning poedit3-button"
+                                                                   data-id="${item.id}"
+                                                                   data-quantity="${item.quantity}"
+                                                                   data-productcode="${item.productcode}">
+                                                                    View
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-success btn-sm scaningidd"
+                                                                        onclick="scaningSR(this)"
+                                                                        data-productcode="${item.productcode}"
+                                                                        data-quantity="${item.quantity}">
+                                                                    <span class="d-none d-sm-inline">scan</span>
+                                                                    <span class="d-inline d-sm-none">scan</span>
+                                                                </button>
+                                                            </td>
+                                                            <td>
+                                                                        <button id='btnremove-${index}' disabled type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">Delete</button>
+                                                            </td>
+                                                        </tr>
+                                                    `);
+                                    });
+                                }
+                            }
+                            else {
+                                console.log("result : " + result);
+
+                                // //EMPTY THE TABLE DATA AND "" FORM DATA
+                                //    $('#CodesTable tbody').empty();
+                                // Populate the form fields
+                                $('#partynameId').val("");
+                                $('#gstnoId').val("");
+                                $('#contactnoId').val("");
+                                $('#addressId').val("");
+                                $('#referenceno').val("");
+                                $('#remarks').val("");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle the error response
+                            console.log("An error occurred while executing the action.");
+                        }
+                    });
+                }
+
+            } else {
+                console.log("No pono selected or the value is empty.");
+            }
+        }
+        var rproductcode, rquantity, soQty, dlQty;
+        function scaningSR(button) {
+            console.log("call");
+            var row = $(button).closest('tr'); // get the closest row
+            // rproductcode = $(button).data("productcode"); // retrieve product code from the button data attribute
+            rquantity = row.find('.quantity-input').val(); // get the quantity input from the row
+            rproductcode = row.find('.productcode-input').val(); // get the quantity input from the row
+
+
+            if (row.find('#scanidflag').text() == '1') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sale Return Already Completed',
+                    text: 'Sale return for this product has already been completed.',
+                });
+            } else {
+                document.getElementById("sboxno").focus();
+
+                // rquantity = row.find('.quantity-input').val();
+                // rproductcode = $(button).data('productcode'); // Use the data attribute
+
+                console.log("Product Code: ", rproductcode);
+                console.log("Quantity: ", rquantity);
+
+                if (parseInt(rquantity) === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Quantity is 0',
+                        text: 'Please enter a valid quantity.',
+                    });
+                    return;
+                } else {
+                    $.ajax({
+                        url: '/inwards/FatchListData_DMRPRRP',
+                        type: 'GET',
+                        data: {
+                            productcode: rproductcode,
+                            quantity: rquantity
+                        },
+                        success: function (response) {
+                            console.log("response : " + JSON.stringify(response));
+                            if (response.success) {
+                                $("#DataInsert tbody").empty();
+
+                                if (response.dataList.length === 0) {
+                                    console.log("No data found in list!");
+                                    return;
+                                }
+
+                                // $.each(response.dataList, function (index, item) {
+                                //     var row = "<tr>" +
+                                //         "<td>" + (item.location || '') + "</td>" +
+                                //         "<td>" + (item.boxno || '') + "</td>" +
+                                //         "<td>" + (item.batch || '') + "</td>" +
+                                //         "<td>" + (item.productcode.toUpperCase() || '') + "</td>" +
+                                //         "<td>" +
+                                //         "<button class='delete-button btn btn-danger btn-sm' onclick='sendDeleteData(\"" + item.location + "\", \"" + item.boxno + "\", \"" + item.batch + "\", \"" + item.productcode.toUpperCase() + "\")'>Clear</button>" +
+                                //         "</td>" +
+                                //         "</tr>";
+
+                                //     $("#DataInsert tbody").append(row);
+                                // });
+
+                                $.each(response.dataList, function (index, item) {
+                                    var row = "<tr>" +
+                                        // "<td>" + (item.location || '') + "</td>" +
+                                        "<td style='display:none'>" + (item.location || '') + "</td>" + // Changed double quotes to single
+                                        "<td>" + (item.boxno || '') + "</td>" +
+                                        "<td>" + (item.batch || '') + "</td>" +
+                                        "<td>" + (item.productcode.toUpperCase() || '') + "</td>" +
+                                        "<td>" +
+                                        "<button class='delete-button btn btn-danger btn-sm' onclick='sendDeleteData(\"" + item.location + "\", \"" + item.boxno + "\", \"" + item.batch + "\", \"" + item.productcode.toUpperCase() + "\")'>Clear</button>" +  // Removed extra double quote
+                                        "</td>" +
+                                        "</tr>";
+
+                                    $("#DataInsert tbody").append(row);
+                                });
+
+
+                                // Show the table
+                                $("#DataInsert").show();
+                            } else {
+                                // Clear table body if no data is found
+                                $("#DataInsert tbody").empty();
+                                $("#DataInsert").hide();
+                                console.log("Data not found in list!");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                }
+                $("#sboxno").val("");
+                $("#sboxno").focus();
+                $("#scaningModal").modal("show");
+                event.preventDefault();
+            }
+        }
+        $('#sboxno').on('keypress', function (event) {
+            if (event.which === 13 || event.keyCode === 13) { // Check if Enter key is pressed
+                scanpickdata();
+            } else {
+            }
+        });
+        function scanpickdata() {
+            event.preventDefault();
+            var str = document.getElementById("sboxno").value.split(/[,|$]/);
+
+            var boxno = str[3].trim();
+            var batchno = str[5].trim();
+            var grnnn = str[2].trim();
+            var ordertype = $("#ordertype").val();
+
+            document.getElementById("sboxno").value = boxno;
+
+            var productcode1 = str[0].trim().toUpperCase();
+            var selectedoption = document.getElementById("sboxno").value;
+            console.log("*" + productcode1 + "* != *" + rproductcode.trim().toUpperCase() + "*");
+            if (productcode1.toUpperCase() != rproductcode.trim().toUpperCase()) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Wrong Product Code',
+                    text: 'The scanned product code does not match the expected product code.',
+                });
+                $("#sboxno").val("");
+                return;
+            }
+            var requestData = {
+                boxno: boxno,
+                batchno: batchno,
+                productcode: productcode1,
+                rproductcode: rproductcode,
+                rquantity: rquantity,
+                ordertype: ordertype,
+                grnno: grnnn,
+            };
+            $.ajax({
+                url: '/inwards/SavePickingData_DMRPRRP',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: function (response) {
+                    console.log("Response as string:", JSON.stringify(response));
+                    if (response.success) {
+                        $("#DataInsert").show();
+                        var responseData = response.data;
+                        var productCode = responseData.productCode;
+                        var boxNo = responseData.boxNo;
+                        var batchCode = responseData.batchCode;
+                        var location = responseData.location;
+                        var parts = boxNo.split("-");
+                        var individualPart = parts[1];
+                        var individualParts = individualPart.split("/");
+                        var count = parseInt(individualParts[1]);
+                        $("#grnno").val(grnnn);
+
+                        var counter = 0;
+                        var boxcount = 1;
+
+                        var rowCount = $("#DataInsert tbody").find('tr').length;
+
+                        $("#DataInsert tbody").find('tr').each(function () {
+                            var row = $(this);
+                            var existingProductCode = row.find('td:eq(3)').text().trim();
+                            var existingLocation = row.find('td:eq(0)').text().trim();
+                            var existingBoxNo = row.find('td:eq(1)').text().trim();
+                            var existingBatchCode = row.find('td:eq(2)').text().trim();
+
+                            var splitbox = existingBoxNo.split("-");
+                            var box1 = splitbox[1].trim();
+
+                            if (
+                                existingBatchCode == batchCode.trim() &&
+                                existingBoxNo == boxNo.trim() &&
+                                existingProductCode == productCode.trim() &&
+                                existingLocation == location.trim()
+                            ) {
+                                counter++;
+                            }
+                            else if (box1 == individualPart) {
+                                boxcount += 1;
+                                if (parseInt(boxcount) == parseInt(rquantity.trim()) + 1) {
+                                    counter++;
+                                } else {
+
+                                }
+                            }
+
+                        });
+                        console.log("Quantity : " + rquantity);
+                        console.log("Boxcount :" + boxcount);
+                        console.log("Counter :" + counter);
+
+                        if (counter == 0) {
+                            $("#DataInsert tbody").append("<tr><td  style='display:none'>"
+                                // $("#DataInsert tbody").append("<tr><td>"
+                                + location + "</td><td>"
+                                + boxNo + "</td><td>"
+                                + batchCode + "</td><td>"
+                                + productCode + "</td><td>"
+                                + "<button class='delete-button btn-danger btn-sm' onclick='sendDeleteData(\"" + location + "\", \"" + boxNo + "\", \"" + batchCode + "\", \"" + productCode + "\")'>Clear</button>" + "</td></tr>");
+                            $("#sboxno").val("");
+                        } else {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Warning',
+                                text: response.message,
+                            });
+                            $("#sboxno").val("");
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning',
+                            text: response.message,
+                        });
+                        $("#sboxno").val("");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log("AJAX request to SavePickingData failed");
+                    console.log("Error: " + error);
+                }
+            });
+        }
+        function sendDeleteData(location, boxno, batch, productcode) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/inwards/DeleteDMRPRRP',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            locationCode: location,
+                            boxNo: boxno,
+                            batchCode: batch,
+                            productCode: productcode
+                        }),
+                        success: function (response) {
+                            console.log("Responce : " + JSON.stringify(response));
+                            if (response.success) {
+                                Swal.fire(
+                                    'Deleted!',
+                                    'The item has been deleted.',
+                                    'success'
+                                );
+                                // Remove the corresponding row from the table using the correct data attributes
+                                // Remove the corresponding row from the table
+                                $("#DataInsert tbody tr").filter(function () {
+                                    return $(this).find("td").eq(0).text() == location && // location
+                                        $(this).find("td").eq(1).text() == boxno &&  // boxNo
+                                        $(this).find("td").eq(2).text() == batch &&   // batchCode
+                                        $(this).find("td").eq(3).text() == productcode; // productCode
+                                }).remove();
+                            } else {
+                                Swal.fire(
+                                    'Error!',
+                                    response.message || 'Something went wrong while deleting!',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            Swal.fire(
+                                'Error!',
+                                'An error occurred: ' + error,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+        function validateNumber(input) {
+            var value = input.value;
+            var numericValue = value.replace(/\D/g, '');
+            if (numericValue.length > 10) {
+                numericValue = numericValue.slice(0, 10);
+            }
+            input.value = numericValue;
+        }
+        // function calculate(input) {
+        //     var parentRow = input.closest('tr');
+        //     var quantity = parseInt(parentRow.querySelector('.quantity-input').value);
+        //     var noofshpperqty = parseInt(parentRow.querySelector('.noofpackets-input').value);
+        //     var totalPacketInput = parentRow.querySelector('.totalpacket-input');
+        //     var totalShipper = noofshpperqty * quantity;
+        //     totalPacketInput.value = totalShipper;
+        // }
+        function calculate2(input) {
+            console.log("Function 2 call......");
+            var parentRow = input.closest('tr');
+            var quantity = parseInt(parentRow.querySelector('.quantity-input').value);
+            var noqtypershp = parseFloat(input.value);
+            console.log("noqtypershp : " + noqtypershp);
+            var totalPacketInput = parentRow.querySelector('.totalpacket-input');
+
+            if (noqtypershp > 0) {
+                var totalShipper = quantity / noqtypershp;
+                totalPacketInput.value = totalShipper;
+                console.log("totalShipper : " + totalShipper);
+            } else {
+                totalPacketInput.value = 0; // Set totalPacketInput to 0 if noqtypershp is 0 or invalid
+            }
+        }
+        function calculate(input) {
+            console.log("Function 1 call......");
+            var parentRow = input.closest('tr');
+            var quantity = parseInt(parentRow.querySelector('.quantity-input').value);
+            var noofshpperqty = parseInt(parentRow.querySelector('.noofpackets-input').value);
+            var totalPacketInput = parentRow.querySelector('.totalpacket-input');
+
+            var noqtypershpInput = input.parentElement.nextElementSibling.querySelector('.noqtypershp-input');
+
+            if (noofshpperqty === 0) {
+                noqtypershpInput.removeAttribute('readonly');
+                if (parseFloat(noqtypershpInput.value) > 0) {
+                    console.log("call function 2 :calculate2()");
+                }
+            }
+            else {
+                noqtypershpInput.value = 0;
+                noqtypershpInput.setAttribute('readonly', 'readonly');
+                var totalShipper = noofshpperqty * quantity;
+                totalPacketInput.value = totalShipper;
+                console.log("totalShipper : " + totalShipper);
+            }
+        }
+        function calculateTotals(input) {
+            var parentRow = input.closest('tr');
+            var quantity = parseFloat(input.value);
+            parentRow.querySelector('.totalsubassembly').value = quantity;
+        }
+        function showTooltip(event, value, tooltipId) {
+            const tooltip = document.getElementById(tooltipId);
+            if (tooltip != null) {
+                tooltip.innerText = value;
+                tooltip.style.top = (event.clientY + 10) + 'px';
+                tooltip.style.left = (event.clientX + 10) + 'px';
+                tooltip.style.display = 'block';
+            }
+        }
+        function hideTooltip(tooltipId) {
+            const tooltip = document.getElementById(tooltipId);
+            if (tooltip != null) {
+                tooltip.style.display = 'none';
+            }
+        }
+        function validateAlphabet(input) {
+            var regex = /^[a-zA-Z\s._-\s]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validateAlphNum(input) {
+            var regex = /^[a-zA-Z0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        // function validateNumber(input) {
+        //     var regex = /^[0-9]+$/;
+        //     var value = input.value;
+
+        //     if (!regex.test(value)) {
+        //         input.value = value.slice(0, -1);
+        //     }
+        // }
+        function validatePinNumber(input) {
+            var regex = /^[0-5]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        var quantityInputs = document.querySelectorAll('.quantity-input');
+        quantityInputs.forEach(function (input) {
+            input.addEventListener('change', function () {
+                var enteredQuantity = parseFloat(this.value);
+                // console.log("Checked...");
+                if (enteredQuantity <= 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Quantity',
+                        text: 'Quantity cannot be less than 0 or Equal to 0 :)',
+                    });
+                    this.value = '0';
+                }
+            });
+        });
+        $(document).ready(function () {
+            // $('.btn-print-slip').click(function (event) {
+            //     event.preventDefault();
+            //     generateSticker(event)
+            // });
+            $("#typeofreturndiv").show();
+            $("#vendernamediv").show();
+            console.log("Ready ....");
+            $('#form3').submit(function (event) {
+                console.log(" Submitt ....");
+                event.preventDefault(); // Prevent the default form submission
+                checkFieldsAndSubmit(); // Call the function to check fields and submit the form
+            });
+        });
+        function checkFieldsAndSubmit() {
+            console.log("Check fields and submit call ....");
+            var fieldIds = [
+                // { id: '#SelectVenderId', label: 'Type of Vendor' },
+                // { id: '#typeofreturn', label: 'Type of Return' },
+                // { id: '#partynameId', label: 'Party Name' },
+                // { id: '#gstnoId', label: 'GST No' },
+                // { id: '#contactnoId', label: 'Contact No' },
+                // { id: '#addressId', label: 'Address' },
+                // { id: '#remarks', label: 'Remarks' },
+
+                { id: '#SelectVenderId', label: 'Type of Vendor' },
+                { id: '#typeofreturn', label: 'Type of Return' },
+                { id: '#partynameId', label: 'Party Name' },
+                { id: '#gstnoId', label: 'GST No' },
+                { id: '#contactnoId', label: 'Contact No' },
+                { id: '#addressId', label: 'Address' },
+                { id: '#grnno', label: 'GRN No' },
+                { id: '#grndate', label: 'GRN Date' },
+                { id: '#remarks', label: 'Remarks' },
+            ];
+
+            var isAnyFieldNull = false;
+            var emptyFieldLabels = [];
+
+            fieldIds.forEach(function (field) {
+                var value = $(field.id).val();
+                if (!value) {
+                    isAnyFieldNull = true;
+                    emptyFieldLabels.push(field.label);
+                    console.log("Field '" + field.label + "' is empty."); // Print empty field label to console
+                }
+            });
+            // $('#CodesTable tbody tr').each(function () {
+            //     var row = $(this);
+            //     row.find('input, select').each(function () {
+            //         var value = $(this).val();
+            //         if (!value) {
+            //             isAnyFieldNull = true;
+            //             //emptyFieldLabels.push(row.find('td:first-child').text().trim()); // Get the label from the first cell of the row
+            //             //console.log("Field '" + row.find('td:first-child').text().trim() + "' in table row is empty."); // Print empty field label to console
+            //         }
+            //     });
+            // });
+            $('#CodesTable tbody tr').each(function () {
+                var row = $(this);
+                var rowEmpty = false;
+
+                // Check the four specified fields in the current row
+                var description = row.find('select[name$=".description"]').val();
+                var setofsub_assemb = row.find('input[name$=".setofsub_assemb"]').val();
+                var qtyperpkt = row.find('input[name$=".qtyperpkt"]').val();
+                var noofpackets = row.find('input[name$=".noofpackets"]').val();
+                var quantity = row.find('input[name$=".quantity"]').val();
+
+                // Check if any of the fields is empty|| !noofpackets
+                if (!description || !quantity) {
+                    // if (!description || !setofsub_assemb || !qtyperpkt || !noofpackets || !quantity) {
+                    rowEmpty = true;
+                    isAnyFieldNull = true;
+                }
+
+                if (rowEmpty) {
+                    emptyFieldLabels.push("Fields in table row");
+                }
+            });
+            if (isAnyFieldNull) {
+                // Display error message with empty field labels
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    html: 'Please fill in all required fields:<br>' + emptyFieldLabels.join('<br>')
+                });
+            } else {
+                generateSticker();
+            }
+        }
+        var object = { status: false, ele: null };
+        // function generateSticker(ev) {
+        //     if (object.status) { return true; };
+        //     Swal.fire({
+        //         title: "Warning",
+        //         text: "Do you want to generate a sticker?",
+        //         icon: "warning",
+        //         showCancelButton: true,
+        //         confirmButtonText: 'Shipper Wise',
+        //         cancelButtonText: 'Subcomponent Wise',
+        //         showCloseButton: false, // Hide the close button
+        //         showDenyButton: true, // Show the "No Sticker" button
+        //         denyButtonText: 'No Sticker', // Text for the "No Sticker" button
+        //         customClass: {
+        //             confirmButton: 'btn btn-success',
+        //             cancelButton: 'btn btn-warning',
+        //             denyButton: 'btn btn-info' // Style for the "No Sticker" button
+        //         }
+        //     }).then((result) => {
+        //         if (result.isConfirmed)
+        //         {
+        //             const stickerDecisionInput = document.getElementById('stickerDecision');
+        //             document.getElementById('stickerDecision').value = 1;
+        //             // object.status = true;
+        //             // object.ele = ev;
+        //             // object.ele.click();
+        //             var form = $('#form3');
+        //             var formData = form.serialize();
+        //             var formDataObject = {};
+        //             formData.split('&').forEach(function (keyValue) {
+        //                 var keyValueArr = keyValue.split('=');
+        //                 formDataObject[keyValueArr[0]] = decodeURIComponent(keyValueArr[1].replace(/\+/g, ' '));
+        //             });
+        //             console.log(formDataObject);
+        //             $.ajax({
+        //                 url: form.attr('action'), // Use the form's action attribute as the URL
+        //                 type: form.attr('method'), // Use the form's method attribute as the request type
+        //                 data: formData,
+        //                 success: function (response) {
+        //                     var blob = new Blob([response], { type: 'text/plain' });
+        //                     var a = document.createElement('a');
+        //                     a.href = window.URL.createObjectURL(blob);
+        //                     a.download = 'example.prn';
+        //                     a.click();
+        //                     window.URL.revokeObjectURL(a.href);
+        //                     //window.location.href = '/inwards/Index';
+        //                     Swal.fire({
+        //                         icon: 'success',
+        //                         title: 'Success !',
+        //                         text: 'Replacement Order Succesfully Done !',
+        //                         confirmButtonColor: '#3085d6',
+        //                         confirmButtonText: 'OK'
+        //                     }).then((result) => {
+        //                         if (result.isConfirmed) {
+        //                             // Redirect to index page
+        //                             window.location.href = '/inwards/Index';
+        //                         }
+        //                     });
+        //                 },
+        //                 error: function (xhr, status, error) {
+        //                     console.error(xhr.responseText);
+        //                 }
+        //             });
+        //         }
+        //         else if (result.dismiss === Swal.DismissReason.cancel)
+        //         {
+        //             // const stickerDecisionInput = document.getElementById('stickerDecision');
+        //             // document.getElementById('stickerDecision').value = 2;
+        //             // // object.status = true;
+        //             // // object.ele = ev;
+        //             // // object.ele.click();
+        //             // var form = $('#form3');
+        //             // var formData = form.serialize();
+        //             // var formDataObject = {};
+        //             // formData.split('&').forEach(function (keyValue) {
+        //             //     var keyValueArr = keyValue.split('=');
+        //             //     formDataObject[keyValueArr[0]] = decodeURIComponent(keyValueArr[1].replace(/\+/g, ' '));
+        //             // });
+        //             // console.log(formDataObject);
+        //             // $.ajax({
+        //             //     url: form.attr('action'), // Use the form's action attribute as the URL
+        //             //     type: form.attr('method'), // Use the form's method attribute as the request type
+        //             //     data: formData,
+        //             //     success: function (response) {
+        //             //         //window.location.href = '/inwards/Index';
+        //             //         Swal.fire({
+        //             //             icon: 'success',
+        //             //             title: 'Success !',
+        //             //             text: 'Replacement Order Succesfully Done !',
+        //             //             confirmButtonColor: '#3085d6',
+        //             //             confirmButtonText: 'OK'
+        //             //         }).then((result) => {
+        //             //             if (result.isConfirmed) {
+        //             //                 // Redirect to index page
+        //             //                 window.location.href = '/inwards/Index';
+        //             //             }
+        //             //         });
+        //             //     },
+        //             //     error: function (xhr, status, error) {
+        //             //         console.error(xhr.responseText);
+        //             //     }
+        //             // });
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Functionality Not Available !',
+        //                 text: 'Sorry, the functionality is not available at the moment.',
+        //                 confirmButtonColor: '#3085d6',
+        //                 confirmButtonText: 'OK'
+        //             }).then((result) => {
+        //                 // Check if the user clicked the "OK" button
+        //                 if (result.isConfirmed) {
+        //                     Swal.close(); // Close the SweetAlert popup
+        //                 }
+        //             });
+        //         }
+        //         else if (result.isDenied)
+        //         {
+        //             // const stickerDecisionInput = document.getElementById('stickerDecision');
+        //             // document.getElementById('stickerDecision').value = 3; // Set value for "No Sticker"
+        //             // // object.status = true;
+        //             // // object.ele = ev;
+        //             // // object.ele.click();
+        //             // var form = $('#form3');
+        //             // var formData = form.serialize();
+        //             // var formDataObject = {};
+        //             // formData.split('&').forEach(function (keyValue) {
+        //             //     var keyValueArr = keyValue.split('=');
+        //             //     formDataObject[keyValueArr[0]] = decodeURIComponent(keyValueArr[1].replace(/\+/g, ' '));
+        //             // });
+        //             // console.log(formDataObject);
+        //             // $.ajax({
+        //             //     url: form.attr('action'), // Use the form's action attribute as the URL
+        //             //     type: form.attr('method'), // Use the form's method attribute as the request type
+        //             //     data: formData,
+        //             //     success: function (response) {
+        //             //        // window.location.href = '/inwards/Index';
+        //             //         Swal.fire({
+        //             //             icon: 'success',
+        //             //             title: 'Success !',
+        //             //             text: 'Replacement Order Succesfully Done !',
+        //             //             confirmButtonColor: '#3085d6',
+        //             //             confirmButtonText: 'OK'
+        //             //         }).then((result) => {
+        //             //             if (result.isConfirmed) {
+        //             //                 // Redirect to index page
+        //             //                 window.location.href = '/inwards/Index';
+        //             //             }
+        //             //         });
+        //             //     },
+        //             //     error: function (xhr, status, error) {
+        //             //         console.error(xhr.responseText);
+        //             //     }
+        //             // });
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Functionality Not Available !',
+        //                 text: 'Sorry, the functionality is not available at the moment.',
+        //                 confirmButtonColor: '#3085d6',
+        //                 confirmButtonText: 'OK'
+        //             }).then((result) => {
+        //                 // Check if the user clicked the "OK" button
+        //                 if (result.isConfirmed) {
+        //                     Swal.close(); // Close the SweetAlert popup
+        //                 }
+        //             });
+        //         }
+        //     });
+        //     return false;
+        // }
+        // function generateSticker(ev) {
+        //     if (object.status) {
+        //         return true;
+        //     }
+
+        //     Swal.fire({
+        //         title: "Warning",
+        //         text: "Are you sure you want to submit?",
+        //         icon: "warning",
+        //         showCancelButton: true,
+        //         confirmButtonText: 'Yes',
+        //         cancelButtonText: 'No',
+        //         showCloseButton: false,
+        //         customClass: {
+        //             confirmButton: 'btn btn-success',
+        //             cancelButton: 'btn btn-warning',
+        //         }
+        //     }).then((result) => {
+        //         if (result.isConfirmed) {
+        //             document.getElementById('stickerDecision').value = 1;
+
+        //             var form = $('#form3');
+        //             var formData = form.serialize();
+
+        //             $.ajax({
+        //                 url: form.attr('action'),
+        //                 type: form.attr('method'),
+        //                 data: formData,
+        //                 success: function (response) {
+        //                     Swal.fire({
+        //                         icon: 'success',
+        //                         title: 'Success!',
+        //                         text: 'Replacement Order Successfully Done!',
+        //                         confirmButtonColor: '#3085d6',
+        //                         confirmButtonText: 'OK'
+        //                     }).then((result) => {
+        //                         if (result.isConfirmed) {
+        //                             window.location.href = '/inwards/Index';
+        //                         }
+        //                         else {
+        //                             window.location.href = '/inwards/Index';
+        //                         }
+        //                     });
+        //                 },
+        //                 error: function (xhr, status, error) {
+        //                     console.error(xhr.responseText);
+        //                 }
+        //             });
+        //         } else if (result.dismiss === Swal.DismissReason.cancel) {
+        //             // Swal.fire({
+        //             //     icon: 'error',
+        //             //     title: 'Cancelled',
+        //             //     text: 'Operation was cancelled.',
+        //             //     confirmButtonColor: '#3085d6',
+        //             //     confirmButtonText: 'OK'
+        //             // }).then((result) => {
+        //             //     if (result.isConfirmed) {
+        //             //         Swal.close();
+        //             //     }
+        //             // });
+        //         }
+        //     });
+
+        //     return false;
+        // }
+        function generateSticker(ev) {
+            if (object.status) {
+                return true;
+            }
+
+            Swal.fire({
+                title: "Warning",
+                text: "Are you sure you want to submit?", // Updated the prompt text
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                showCloseButton: false,
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-warning',
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('stickerDecision').value = 1;
+
+                    var form = $('#form3');
+                    var formData = form.serialize();
+
+                    $.ajax({
+                        url: form.attr('action'), // Using form's action attribute as URL
+                        type: form.attr('method'), // Using form's method attribute as the request type
+                        data: formData,
+                        success: function (response) {
+                            if (response.success === false) {
+                                // Handle error returned from the server
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: response.message,
+                                    confirmButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                            else 
+                            {
+                                var blob = new Blob([response], { type: 'text/plain' });
+                                var a = document.createElement('a');
+                                a.href = window.URL.createObjectURL(blob);
+                                a.download = 'example.prn';
+                                a.click();
+                                window.URL.revokeObjectURL(a.href);
+                                //window.location.href = '/inwards/Index';
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: 'Replacement Order Successfully Done!',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                }).then((result) => {
+                                    if (result.isConfirmed || result.dismiss) {
+                                        window.location.href = '/inwards/Index'; // Redirect to index page
+                                    }
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error(xhr.responseText); // Log any error
+                        }
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    // If operation is canceled, you can add an optional action or leave it blank.
+                    return;
+                }
+            });
+
+            return false; // Prevent the form from submitting the traditional way
+        }
+        function GenerateBatchCode() {
+            var today = new Date();
+            var year = today.getFullYear().toString().slice(-2); // Get last two digits of the year
+            var month = "ABCDEFGHIJKL"[today.getMonth()]; // Get month character
+            var day = ('0' + today.getDate()).slice(-2); // Get day with leading zero if needed
+            //console.log(year + month + day);
+            return year + month + day;
+        }
+        $(document).ready(function () {
+            // Listen for change event on radio buttons
+            $('input[name="nav"]').change(function () {
+                // Submit the form when a radio button is changed
+                $('#form10').submit();
+            });
+            $("#batchcode").val(GenerateBatchCode());
+            function generateGRNNo() {
+                $.ajax({
+                    url: '/inwards/GETGRNP_CODE', // Replace with your actual API endpoint URL for generating GRN number
+                    type: 'GET',
+                    success: function (response) {
+                        // Populate the input field with the generated GRN number
+                        $('#grnno').val(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+
+            // Call the function to generate GRN number when the page loads
+            generateGRNNo();
+            // function generateGRNNo() {
+            //     $.ajax({
+            //         url: '/inwards/GETGRNRPIN_CODE', // Replace with your actual API endpoint URL for generating GRN number
+            //         type: 'GET',
+            //         success: function (response) {
+            //             // Populate the input field with the generated GRN number
+            //             $('#grnno').val(response);
+            //         },
+            //         error: function (xhr, status, error) {
+            //             console.error('Error:', error);
+            //         }
+            //     });
+            // }
+
+            // // Call the function to generate GRN number when the page loads
+            // generateGRNNo();
+        });
+        // var quantityInputs = document.querySelectorAll('.quantity-input');
+        // quantityInputs.forEach(function (input) {
+        //     input.addEventListener('change', function () {
+        //         var enteredQuantity = parseFloat(this.value);
+        //         // console.log("Checked...");
+        //         if (enteredQuantity <= 0) {
+        //             Swal.fire({
+        //                 icon: 'error',
+        //                 title: 'Invalid Quantity',
+        //                 text: 'Quantity cannot be less than 0 or Equal to 0 :)',
+        //             });
+        //             this.value = '0';
+        //         }
+        //     });
+        // });
+        function changewb3() {
+            if (document.getElementById("SelectVenderId").value != "") {
+                var selectedValue = document.getElementById("SelectVenderId").value;
+                var studentSelect = $('#partynameId');
+                $.ajax({
+                    url: '@Url.Action("ChangePartyName", "inwards")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { selectedvalue: selectedValue },
+                    success: function (data) {
+                        $('#partynameId').empty();
+                        $('#partynameId').append($('<option>').text("--Select PartyName--").val("--Select PartyName--"));
+                        $.each(data, function (index, item) {
+                            $('#partynameId').append($('<option>').text(item.value).val(item.value));
+                        });
+                    }
+                });
+            }
+        }
+        function dropdownChanged3() {
+            var selectedOption = document.getElementById("partynameId").value;
+            var selectedOption1 = document.getElementById("SelectVenderId").value;
+            $.ajax({
+                url: '/inwards/ActionName',
+                type: 'POST',
+                data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+                success: function (result) {
+                    document.getElementById("addressId").value = result.data.address;
+                    document.getElementById("gstnoId").value = result.data.gstno;
+                    document.getElementById("contactnoId").value = result.data.contactno;
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action.");
+                }
+            });
+        }
+        // function handleDespChange(selectElement) {
+        //     var product = selectElement.value;
+
+        //     var tid = selectElement.id;
+        //     var product = selectElement.value;
+        //     console.log(product);
+
+        //     var txtProductCodeId = tid.replaceAll('description', 'productcode');
+        //     var txtuomId = tid.replaceAll('description', 'uom');
+        //     var txtbrandId = tid.replaceAll('description', 'brand');
+
+        //     var txtProductCode = document.getElementById(txtProductCodeId);
+        //     var txtuom = document.getElementById(txtuomId);
+        //     var txtbrand = document.getElementById(txtbrandId);
+
+        //     txtProductCode.value = null;
+        //     $.ajax({
+        //         url: '@Url.Action("ActionName_description", "inwards")',
+        //         type: 'GET',
+        //         dataType: 'json',
+        //         data: { selectedvalue: product },
+        //         success: function (data) {
+        //             console.log(data);
+
+        //             txtProductCode.value = data.modelno;
+        //             txtuom.value = data.uom;
+        //             txtbrand.value = data.brand;
+        //         }
+        //     });
+        // }
+        function handleDespChange(element) {
+            var product = $(element).val();  // Get selected product value
+            var row = $(element).closest('tr');  // Find the closest row (tr) of the changed select element
+
+            // Find the relevant inputs within the same row
+            var txtProductCode = row.find('.productcode-input');
+            var txtuom = row.find('.uom-input');
+            var txtbrand = row.find('.brand-input');
+
+            // Clear the current values
+            txtProductCode.val('');
+            txtuom.val('');
+            txtbrand.val('');
+
+            // Make the AJAX call to fetch the product details
+            $.ajax({
+                url: '@Url.Action("ActionName_description", "inwards")',
+                type: 'GET',
+                dataType: 'json',
+                data: { selectedvalue: product },
+                success: function (data) {
+                    // Update the fields with the fetched data
+                    txtProductCode.val(data.modelno ? data.modelno.toUpperCase() : '');
+                    txtuom.val(data.uom ? data.uom : '');
+                    txtbrand.val(data.brand ? data.brand : '');
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching product details: ", error);
+                }
+            });
+        }
+
+        $(document).on('click', '.poedit3-button', function () {
+            var $row = $(this).closest('tr');
+            var productCode = $row.find('input[name^="inwardPacket"][name$=".productcode"]').val();
+            var quantity = $row.find('input[name^="inwardPacket"][name$=".quantity"]').val();
+            var dcno = $('#referenceno').val();
+            var invoiceno = $('#invoiceno').val();
+            showProductDetails2(productCode, dcno, invoiceno, quantity);
+        });
+        $(document).on('click', '.addserial1-button', function () {
+            var $row = $(this).closest('tr');
+            var productCode = $row.find('input[name^="inwardPacket"][name$=".productcode"]').val();
+            var quantity = $row.find('input[name^="inwardPacket"][name$=".quantity"]').val();
+            var dcno = $('#referenceno').val();
+            var invoiceno = $('#invoiceno').val();
+            showProductDetails3(productCode, dcno, invoiceno, quantity);
+        });
+        function showProductDetails2(productCode, dcno, invoiceno, quantity) {
+            var editUrl = '/inwards/_partialSubComponent1?productCode=' + productCode + '&dcno=' + dcno + '&invoiceno=' + invoiceno + '&quantity=' + quantity;
+            showInPopup(editUrl, 'SubComponents Details');
+        }
+        function showProductDetails3(productCode, dcno, invoiceno, quantity) {
+            var addUrl = '/inwards/_partialAddSerial1?productCode=' + productCode + '&dcno=' + dcno + '&invoiceno=' + invoiceno + '&quantity=' + quantity;
+            showInPopup1(addUrl, 'Add Serial No.');
+        }
+    </script>
+}

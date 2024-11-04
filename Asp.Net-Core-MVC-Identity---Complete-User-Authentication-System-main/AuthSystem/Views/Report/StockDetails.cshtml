@@ -1,0 +1,681 @@
+﻿@* ViewBag.PurchaseOrder = PurchaseOrder;
+            ViewBag.SalesOrder = SalesOrder; *@
+
+
+
+
+
+
+
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+   
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+<style>
+    .product {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+</style>
+<style>
+    .status-complete {
+        color: green;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    .status-pending {
+        color: red;
+        font-weight: 600;
+        font-size: 18px;
+    }
+</style>
+                        @if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="container-fluid" id="pdfContent">
+            <div class="mt-3">
+                <div class="card mb-3">
+           
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder small-heading">Stock Ledger Detail Report</h5>
+                                <a id="pdfbtn" style="display:none;" class="btn btn-danger btn-sm text-white mr-1 download-btn">
+                                <i class="fas fa-file-pdf mr-2"></i> PDF
+                            </a>
+                            <a onclick="exportToExcel()" style="display:none;" id="exportButton" class="btn btn-success text-white btn-sm mr-1">
+                                <i class="fas fa-file-excel"></i>
+                                Excel
+                            </a>
+                            <a id="printbtn" style="display:none;" onclick="printContent()" class="btn btn-primary btn-sm text-white mr-1">
+                                <i class="fas fa-print"></i> Print
+                            </a>
+                            <a asp-action="StokeLedger" asp-controller="Report" style="display:none;" id="backbtn" class="btn btn-success text-white btn-sm mr-1"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+
+
+                    <div class="container-fluid">
+                        <div class="card mb-1 mt-1 p-1">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">@ViewBag.ProductCode Details</h5>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table id="purchaseorder" class="table table-striped table-hover">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Supplier Name</th>
+                                                    <th>Inward Quantity</th>
+
+                                                    <th>Inward Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    int totalQty = 0;
+                                                }
+                                                @if (ViewBag.NitCountPurchase == 0)
+                                                {
+                                                    <tr>
+                                                        <td colspan="3" class="text-danger fw-medium">No Inward Details Found!</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var po in ViewBag.PurchaseOrder)
+                                                    {
+                                                        totalQty += po.poqty;
+                                                        <tr>
+                                                            <td>@po.supplier</td>
+                                                            <td style="width:260px;">@po.poqty</td>
+                                                            <td style="width:260px;">@DateTime.ParseExact(po.date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy")</td>
+
+                                                        </tr>
+                                                    }
+                                                    
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="table-responsive mt-4">
+                                        <table id="saleorder" class="table table-striped table-hover">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Customer Name</th>
+                                                    <th>Dispatch Quantity</th>
+
+                                                    <th>Dispatch Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    int totalQty1 = 0;
+                                                }
+                                                @if (ViewBag.NitCountSale == 0)
+                                                {
+                                                    <tr>
+                                                        <td colspan="3" class="text-danger fw-medium">No Dispatch Details Found!</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var so in ViewBag.SalesOrder)
+                                                    {
+                                                        totalQty1 += so.soqty;
+                                                        <tr>
+                                                            <td>@so.customer</td>
+                                                            <td style="width:260px;">@so.soqty</td>
+
+                                                            <td style="width:260px;">@DateTime.ParseExact(so.date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy")</td>
+                                                        </tr>
+                                                    }
+                                                    
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="table-responsive mt-4">
+                                        <table class="table table-striped table-hover">
+                                            <tbody>
+                                                <tr class="table-secondary fw-bold">
+                                                    <td colspan="2">Total Inward Qty</td>
+                                                    <td>@totalQty</td>
+                                                </tr>
+                                                <tr class="table-secondary fw-bold">
+                                                    <td colspan="2">Total Outward Qty</td>
+                                                    <td style="width:260px;">@totalQty1</td>
+                                                </tr>
+                                                <tr class="table-info fw-bold">
+                                                    <td colspan="2">Total Closing Balance</td>
+                                                    <td style="width:260px;">@(totalQty - totalQty1)</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+@*<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="~/js/site.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspsdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script> *@
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script>
+    // function exportToExcel() {
+    //     function formatDate(date) {
+    //         const day = String(date.getDate()).padStart(2, '0');
+    //         const month = String(date.getMonth() + 1).padStart(2, '0');
+    //         const year = date.getFullYear();
+    //         return `${day}/${month}/${year}`;
+    //     }
+
+    //     const now = new Date();
+    //     const formattedDate = formatDate(now);
+    //     const formattedTime = now.toLocaleTimeString();
+    //     const sheetHeading = ['EROS GENERAL AGENCIES PVT.LTD'];
+    //     const subHeading = ['Stock Ledger Detail Report - generated on ' + formattedDate + ' at ' + formattedTime];
+
+    //     const tableHeadings = {
+    //         purchaseOrder: ['Supplier Name', 'PO Quantity', 'Inward Date'],
+    //         salesOrder: ['Customer Name', 'SO Quantity', 'Dispatch Date']
+    //     };
+
+    //     const wsData = [sheetHeading, subHeading];
+
+    //     function collectDataFromTable(tableId) {
+    //         const data = [];
+    //         $(`#${tableId} tbody tr`).each(function () {
+    //             const rowData = [];
+    //             $(this).find('td').each(function () {
+    //                 rowData.push($(this).text().trim());
+    //             });
+    //             data.push(rowData);
+    //         });
+    //         return data;
+    //     }
+
+    //     const purchaseOrderData = collectDataFromTable('purchaseorder');
+    //     const salesOrderData = collectDataFromTable('saleorder');
+
+    //     const workbook = new ExcelJS.Workbook();
+    //     const worksheet = workbook.addWorksheet('Order Sheet');
+
+    //     const borderStyle = {
+    //         top: { style: 'thin' },
+    //         left: { style: 'thin' },
+    //         bottom: { style: 'thin' },
+    //         right: { style: 'thin' }
+    //     };
+
+    //     let rowIndex = 1;
+
+    //     // EROS heading
+    //     const headingRow = worksheet.addRow(sheetHeading);
+    //     headingRow.font = { bold: true, size: 14 };
+    //     worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+    //     headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     headingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     rowIndex++;
+
+    //     // Sub-heading
+    //     const subHeadingRow = worksheet.addRow(subHeading);
+    //     worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+    //     subHeadingRow.font = { size: 10 };
+    //     subHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     subHeadingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     rowIndex++;
+
+    //     // Purchase Orders section heading
+    //     const purchaseOrderHeading = ['Purchase Orders Details'];
+    //     const salesOrderHeading = ['Sales Orders Details'];
+
+    //     // Merge and center Purchase Orders heading
+    //     const purchaseOrderHeadingRow = worksheet.addRow(purchaseOrderHeading);
+    //     worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+    //     purchaseOrderHeadingRow.font = { bold: true, size: 12 };
+    //     purchaseOrderHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     purchaseOrderHeadingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     rowIndex++;
+
+    //     // Purchase Order table headings
+    //     const purchaseOrderTableHeadings = tableHeadings.purchaseOrder;
+    //     const purchaseOrderTableHeadingRow = worksheet.addRow(purchaseOrderTableHeadings);
+    //     purchaseOrderTableHeadingRow.eachCell((cell) => {
+    //         cell.font = { bold: true };
+    //         cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //         cell.border = borderStyle;
+    //     });
+
+    //     // Add Purchase Order data
+    //     purchaseOrderData.forEach(rowData => {
+    //         const row = worksheet.addRow(rowData);
+    //         row.eachCell((cell) => {
+    //             cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //             cell.border = borderStyle;
+    //         });
+    //     });
+
+    //     rowIndex += purchaseOrderData.length + 1; // Move rowIndex past Purchase Order data
+
+    //     // Sales Orders section heading
+    //     const salesOrderHeadingRow = worksheet.addRow(salesOrderHeading);
+    //     worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+    //     salesOrderHeadingRow.font = { bold: true, size: 12 };
+    //     salesOrderHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     salesOrderHeadingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     rowIndex++;
+
+    //     // Sales Order table headings
+    //     const salesOrderTableHeadings = tableHeadings.salesOrder;
+    //     const salesOrderTableHeadingRow = worksheet.addRow(salesOrderTableHeadings);
+    //     salesOrderTableHeadingRow.eachCell((cell) => {
+    //         cell.font = { bold: true };
+    //         cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //         cell.border = borderStyle;
+    //     });
+
+    //     // Add Sales Order data
+    //     salesOrderData.forEach(rowData => {
+    //         const row = worksheet.addRow(rowData);
+    //         row.eachCell((cell) => {
+    //             cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //             cell.border = borderStyle;
+    //         });
+    //     });
+
+    //     // Adjust column widths
+    //     worksheet.columns = [
+    //         { width: 30 },
+    //         { width: 20 },
+    //         { width: 20 }
+    //     ];
+
+    //     // Write to Excel file and save
+    //     workbook.xlsx.writeBuffer().then(function (buffer) {
+    //         saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Order_Sheet.xlsx');
+    //     });
+    // }
+
+
+    function exportToExcel() {
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        const now = new Date();
+        const formattedDate = formatDate(now);
+        const formattedTime = now.toLocaleTimeString();
+        const sheetHeading = ['EROS GENERAL AGENCIES PVT. LTD.'];
+        const subHeading = [`Stock Ledger Detail Report - generated on ${formattedDate} at ${formattedTime}`];
+
+        const tableHeadings = {
+            purchaseOrder: ['Supplier Name', 'Inward Quantity', 'Inward Date'],
+            salesOrder: ['Customer Name', 'Outward Quantity', 'Outward Date']
+        };
+
+        function collectDataFromTable(tableId) {
+            const data = [];
+            $(`#${tableId} tbody tr`).each(function () {
+                const rowData = [];
+                $(this).find('td').each(function () {
+                    rowData.push($(this).text().trim());
+                });
+                data.push(rowData);
+            });
+            return data;
+        }
+
+        const purchaseOrderData = collectDataFromTable('purchaseorder');
+        const salesOrderData = collectDataFromTable('saleorder');
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Order Sheet');
+
+        const borderStyle = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+
+        let rowIndex = 1;
+
+        // EROS heading
+        const headingRow = worksheet.addRow(sheetHeading);
+        headingRow.font = { bold: true, size: 14 };
+        worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+        headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        headingRow.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        rowIndex++;
+
+        // Sub-heading
+        const subHeadingRow = worksheet.addRow(subHeading);
+        worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+        subHeadingRow.font = { size: 10 };
+        subHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        subHeadingRow.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        rowIndex++;
+
+        // Purchase Orders section heading
+        const purchaseOrderHeading = ['Inward Details'];
+        const salesOrderHeading = ['Outward Details'];
+
+        // Merge and center Purchase Orders heading
+        const purchaseOrderHeadingRow = worksheet.addRow(purchaseOrderHeading);
+        worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+        purchaseOrderHeadingRow.font = { bold: true, size: 12 };
+        purchaseOrderHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        purchaseOrderHeadingRow.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        rowIndex++;
+
+        // Purchase Order table headings
+        const purchaseOrderTableHeadings = tableHeadings.purchaseOrder;
+        const purchaseOrderTableHeadingRow = worksheet.addRow(purchaseOrderTableHeadings.map(header => `${header}`));
+        purchaseOrderTableHeadingRow.eachCell((cell) => {
+            cell.font = { bold: true };
+            cell.alignment = { horizontal: 'center', vertical: 'center' };
+            cell.border = borderStyle;
+        });
+
+        // Add Purchase Order data
+        let totalPOQty = 0;
+        purchaseOrderData.forEach(rowData => {
+            const row = worksheet.addRow(rowData);
+            row.eachCell((cell) => {
+                cell.alignment = { horizontal: 'center', vertical: 'center' };
+                cell.border = borderStyle;
+            });
+            totalPOQty += parseInt(rowData[1], 10) || 0; // assuming quantity is at index 1
+        });
+
+        rowIndex += purchaseOrderData.length + 1; // Move rowIndex past Purchase Order data
+
+        // Sales Orders section heading
+        const salesOrderHeadingRow = worksheet.addRow(salesOrderHeading);
+        worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+        salesOrderHeadingRow.font = { bold: true, size: 12 };
+        salesOrderHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        salesOrderHeadingRow.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        rowIndex++;
+
+        // Sales Order table headings
+        const salesOrderTableHeadings = tableHeadings.salesOrder;
+        const salesOrderTableHeadingRow = worksheet.addRow(salesOrderTableHeadings.map(header => `${header}`));
+        salesOrderTableHeadingRow.eachCell((cell) => {
+            cell.font = { bold: true };
+            cell.alignment = { horizontal: 'center', vertical: 'center' };
+            cell.border = borderStyle;
+        });
+
+        // Add Sales Order data
+        let totalSOQty = 0;
+        salesOrderData.forEach(rowData => {
+            const row = worksheet.addRow(rowData);
+            row.eachCell((cell) => {
+                cell.alignment = { horizontal: 'center', vertical: 'center' };
+                cell.border = borderStyle;
+            });
+            totalSOQty += parseInt(rowData[1], 10) || 0; // assuming quantity is at index 1
+        });
+
+        rowIndex += salesOrderData.length + 1; // Move rowIndex past Sales Order data
+
+        // Adjust column widths
+        worksheet.columns = [
+            { width: 30 },
+            { width: 20 },
+            { width: 20 }
+        ];
+
+        // Add the total rows with bold headings and values
+        const totalRows = [
+            ['Total Inward Qty', '', `${totalPOQty}`],
+            ['Total Outward Qty', '', `${totalSOQty}`],
+            ['Total Closing Balance', '', `${totalPOQty - totalSOQty}`]
+        ];
+
+        totalRows.forEach(rowData => {
+            const row = worksheet.addRow(rowData);
+            row.eachCell((cell) => {
+                cell.font = { bold: true };
+                cell.alignment = { horizontal: 'center', vertical: 'center' };
+                cell.border = borderStyle;
+            });
+        });
+
+        // Write to Excel file and save
+        workbook.xlsx.writeBuffer().then(function (buffer) {
+            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Order_Sheet.xlsx');
+        });
+    }
+
+    // // Add total PO quantity row
+    // const totalPOQtyRow = worksheet.addRow(['Total Qty inward', '', totalPOQty]);
+    // worksheet.mergeCells(`A${rowIndex}:B${rowIndex}`);
+    // totalPOQtyRow.font = { bold: true };
+    // totalPOQtyRow.eachCell((cell, colNumber) => {
+    //     cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'center', vertical: 'center' };
+    //     cell.border = borderStyle;
+    // });
+
+    // // Add total SO quantity row
+    // const totalSOQtyRow = worksheet.addRow(['Total Qty Outward', '', totalSOQty]);
+    // worksheet.mergeCells(`A${rowIndex + 1}:B${rowIndex + 1}`);
+    // totalSOQtyRow.font = { bold: true };
+    // totalSOQtyRow.eachCell((cell, colNumber) => {
+    //     cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'center', vertical: 'center' };
+    //     cell.border = borderStyle;
+    // });
+    // Add total closing balance row
+
+    // const totalClosingBalanceRow = worksheet.addRow(['Total Closing Balance', '', totalPOQty - totalSOQty]);
+    // worksheet.mergeCells(`A${rowIndex + 2}:B${rowIndex + 2}`);
+    // totalClosingBalanceRow.font = { bold: true };
+    // totalClosingBalanceRow.eachCell((cell, colNumber) => {
+    //     cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'center', vertical: 'center' };
+    //     cell.border = borderStyle;
+    // });
+ 
+    $(document).ready(function () {
+        $("#pdfbtn").show();
+        $("#printbtn").show();
+        $("#backbtn").show();
+        $("#exportButton").show();
+    });
+
+
+
+    $('.download-btn').on('click', function (event) {
+        event.preventDefault();
+        $("#pdfbtn").hide();
+        $("#printbtn").hide();
+        $("#backbtn").hide();
+        $("#exportButton").hide();
+        // Get the selected template name
+        const selectedTemplate = $('#templates option:selected').text();
+
+        // Get the current date and time
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString();
+        const formattedTime = currentDate.toLocaleTimeString();
+        const dateTimeString = `Generated on: ${formattedDate} at ${formattedTime}`;
+
+        // Clone the content to include in the PDF
+        const contentToClone = document.getElementById('pdfContent').cloneNode(true);
+
+        // Create the main heading for the company name
+        const mainHeading = document.createElement('h5');
+        mainHeading.textContent = 'EROS GENERAL AGENCIES PVT LTD.';
+        mainHeading.style.textAlign = 'center'; // Optional: Center align the heading
+
+        // Create the subheading for the order details
+        const subHeading = document.createElement('h6');
+        subHeading.textContent = `Stock Ledger Detail Report : ${selectedTemplate} (${dateTimeString})`;
+        subHeading.style.textAlign = 'center'; // Optional: Center align the heading
+
+        // Insert the main heading and subheading into the cloned content
+        contentToClone.insertBefore(subHeading, contentToClone.firstChild);
+        contentToClone.insertBefore(mainHeading, subHeading);
+
+        // Remove the last column before exporting
+        const rows = contentToClone.querySelectorAll('tr');
+        rows.forEach(row => {
+            if (row.cells.length > 4) { // Ensure we have more than 4 columns before deleting
+                row.deleteCell(-1); // Delete the last cell (column) of each row
+            }
+        });
+
+        // Adjust font size to make all data fit in the PDF
+        const allElements = contentToClone.querySelectorAll('*');
+        allElements.forEach(element => {
+            element.style.fontSize = '10px'; // Adjust font size as needed
+            element.style.margin = '0'; // Remove any margins
+            element.style.padding = '2px'; // Adjust padding for better fitting
+        });
+
+        // Generate PDF from the modified content (with the selected template heading and without the last column)
+        html2pdf()
+            .from(contentToClone)
+            .set({
+                margin: [10, 5, 10, 5], // top, left, bottom, right margins
+                filename: 'StockDetails.pdf',
+                image: { type: 'jpeg', quality: 1.0 }, // High-quality image settings
+                html2canvas: { scale: 2, useCORS: true }, // Increase scale for better quality
+                jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' } // Use points for better precision
+            })
+            .save();
+        $("#pdfbtn").show();
+        $("#printbtn").show();
+        $("#backbtn").show();
+        $("#exportButton").show();
+    });
+
+    function printContent() {
+        const printArea = document.querySelector('.container').innerHTML;
+        const originalContent = document.body.innerHTML;
+
+        document.body.innerHTML = printArea;
+        window.print();
+        document.body.innerHTML = originalContent;
+        location.reload();
+    }
+
+    function showTooltip(event, value, tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.innerText = value;
+            tooltip.style.top = (event.clientY + 10) + 'px';
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.display = 'block';
+        }
+    }
+
+    function hideTooltip(tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.style.display = 'none';
+        }
+    }
+</script>

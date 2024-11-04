@@ -1,0 +1,184 @@
+﻿@model eros.Models.uom
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="mt-3">
+            <div class="card mb-3">
+                <div class="card-header bg-dark text-white">
+                    <div class="d-flex align-items-baseline">
+                        <h5 class="mx-auto font-weight-bolder">Unit of Measurement</h5>
+                        <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="row">
+                                <div class="form-group col-sm-5 mx-lg-5 mx-md-3 mt-lg-2 mt-md-2">
+                                    <label asp-for="Name" class="control-label">Unit Name</label>
+                                    <input asp-for="Name" data-uppercase autocomplete="off" class="form-control" id="uomname" 
+                                    onchange="dropdownChanged1()" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-5 mx-lg-4 mx-md-3 mt-lg-2 mt-md-2">
+                                    <label asp-for="shortcut" class="control-label">Unit Code</label>
+                                    <input asp-for="shortcut" data-uppercase autocomplete="off" class="form-control" id="uomcode"
+                                    onchange="dropdownChanged2()" />
+                                    <span asp-validation-for="shortcut" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row mt-lg-3 mb-lg-3 mb-3">
+                                <div class="form-group col-sm-5 mx-lg-5 mx-md-3 mx-sm-3 mt-lg-2 mt-md-3">
+                                    <input type="submit" value="Save" class="btn btn-primary col-md-12" />
+                                </div>
+                                <div class="form-group col-sm-5 mx-lg-4 mx-md-3 mx-sm-3 mt-lg-2 mt-md-3">
+                                    <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function dropdownChanged1() {
+            var value1 = document.getElementById("uomname").value.trim();
+            $.ajax({
+                url: '/uom/uomnameCheck',
+                type: 'GET',
+                data: { selectedValue: value1 },
+                success: function (data) {
+                    console.log("data: ", data);
+                    if (data.success) {
+                        console.log(" done");
+                        // Update the textbox value with the generated supplier code
+                        document.getElementById("uomcode").focus();  // Use 'num' from the response
+                        // document.getElementById("uomcode").value = data.selectedValue;  // Use 'num' from the response
+                        console.log("focus done");
+                    }
+                    else {
+                        console.log("not done");
+                        Swal.fire({
+                            title: 'Warning!',
+                            text: data.message, // Use 'data.message' instead of 'response.message'
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            console.log("empty");
+                            $('#uomname').val(''); // Clear supplier name input
+                            console.log("focus on name");
+                            document.getElementById("uomname").focus();
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.log("An error occurred while executing the action: ", error);
+                }
+            });
+        }
+        function dropdownChanged2() {
+            var value1 = document.getElementById("uomcode").value.trim();
+            $.ajax({
+                url: '/uom/uomcodeCheck',
+                type: 'GET',
+                data: { selectedValue: value1 },
+                success: function (data) {
+                    console.log("data: ", data);
+                    if (data.success) {
+                        console.log("data : " + data);
+                        // Update the textbox value with the generated supplier code
+                        // document.getElementById("uomcode").value = data.num;  // Use 'num' from the response
+                    }
+                    else {
+                        Swal.fire({
+                            title: 'Warning!',
+                            text: data.message, // Use 'data.message' instead of 'response.message'
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            $('#uomcode').val(''); // Clear supplier name input
+                            document.getElementById("uomcode").focus();
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle the error response
+                    console.log("An error occurred while executing the action: ", error);
+                }
+            });
+
+
+        }
+
+        function validateAlphabet(input) {
+            console.log("call1");
+            var regex = /^[a-zA-Z\s._-\s]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validateAlphNum(input) {
+            console.log("call2");
+            var regex = /^[a-zA-Z0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validateNumber(input) {
+            var regex = /^[0-9]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+        function validatePinNumber(input) {
+            var regex = /^[0-5]+$/;
+            var value = input.value;
+
+            if (!regex.test(value)) {
+                input.value = value.slice(0, -1);
+            }
+        }
+    </script>
+}
+

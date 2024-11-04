@@ -1,0 +1,8 @@
+Simple Service started {0}
+File Deleted16:57
+Simple Service stopped {0}
+Simple Service started {0}
+Simple Service started {0}
+Simple Service started {0}
+File Deleted18:21
+File Deleted18:23

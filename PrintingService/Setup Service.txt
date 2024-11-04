@@ -1,0 +1,16 @@
+
+OPEN BIN FOLDER OF SERVICE
+
+OPEN COMMAND PROMT AS ADMINISTRATION
+
+sc create PrintingService  binPath= "D:\PROJECT\PrintingService\PrintingService\bin\Debug\PrintingService.exe" start= auto  //CREATE SERVICE
+sc create PrintingService  binPath= "F:\PrintingService\PrintingService.exe" start= auto
+
+sc delete PrintingService   //DELETE SERVICE
+
+net stop PrintingService   //STOP SERVICE
+net start PrintingService
+
+IN DETAILS IF YOU WANT TO FILL
+sc create ServiceName binPath= "Path\to\executable" DisplayName= "Service Display Name" description= "Service Description" [option1=value1 option2=value2 ...]
+

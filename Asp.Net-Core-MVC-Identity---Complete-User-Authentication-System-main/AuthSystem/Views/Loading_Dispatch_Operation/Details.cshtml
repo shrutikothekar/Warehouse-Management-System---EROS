@@ -1,0 +1,160 @@
+﻿@model eros.Models.Loading_Dispatch_Operation
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder">Dispatch Operation Details</h5>
+                            @*<a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>*@
+                        </div>
+                    </div>
+                    <form asp-action="Details" id="CodeSbyAnizForm">
+                        <div>
+                            <dl class="row mx-lg-5 mt-lg-4">
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.sono)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.sono)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.productcode)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.productcode)
+                                </dd>
+                                @*  <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.productname)
+                        </dt>
+                        <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.productname)
+                        </dd>
+                        <dt class="col-sm-2">
+                        @Html.DisplayNameFor(model => model.location)
+                        </dt>
+                        <dd class="col-sm-10">
+                        @Html.DisplayFor(model => model.location)
+                        </dd>*@
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.boxno)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.boxno)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.batchcode)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.batchcode)
+                                </dd>
+
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.dispatchtype)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.dispatchtype)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.couriername)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.couriername)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.docketno)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.docketno)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.transportname)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.transportname)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.truckno)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.truckno)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.drivername)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.drivername)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.contactno)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.contactno)
+                                </dd>
+                                <dt class="col-sm-2">
+                                    @Html.DisplayNameFor(model => model.dispatchdate)
+                                </dt>
+                                <dd class="col-sm-10">
+                                    @Html.DisplayFor(model => model.dispatchdate)
+                                </dd>
+                            </dl>
+                        </div>
+                    </form>
+
+                    <div class="row mt-lg-3 mb-lg-3 mb-3">
+                        <div class="col-sm-5 mx-lg-5 mx-sm-5 mx-md-5">
+                            <a asp-action="Edit" asp-route-id="@Model?.id" class="btn btn-primary col-md-12 col-sm-12">Edit</a>
+                        </div>
+                        <div class="col-sm-5 mx-lg-4 mx-sm-4 mx-md-4">
+                            <a asp-action="Index" class="btn btn-danger col-md-12 col-sm-12">Back to List</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+

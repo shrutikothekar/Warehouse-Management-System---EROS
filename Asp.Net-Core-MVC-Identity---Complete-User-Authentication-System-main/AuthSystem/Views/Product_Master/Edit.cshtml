@@ -1,0 +1,409 @@
+﻿@model eros.Models.Product_Master
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders5 = new string[] {
+                // "Check",
+        "Sub-Component Code",
+        "Sub-Component Name",
+        "Sub-Component UOM",
+        "Sub-Component Qty",
+    };
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+<style>
+    .small-heading {
+        font-size: 1rem; /* Adjust the font size as needed */
+    }
+
+    label {
+        font-size: small; /* You can also use specific values like 10px or 0.8em */
+        font-weight: 700;
+    }
+</style>
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder">Edit Product Master</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <div class="row row row mx-lg-2 mx-md-2 mx-sm-2">
+                        <div class="col-md-12">
+                            <form asp-action="Edit">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="row">
+                                    <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                        <label asp-for="categorycode" class="control-label"></label>
+                                        <input asp-for="categorycode" id="categorycode" readonly="true" class="form-control" />
+                                        <span asp-validation-for="categorycode" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                        <label for="categoryname" class="control-label">Category Name</label>
+                                        <select class="form-control" asp-for="categoryname" id="categoryname" asp-items="@ViewBag.categoryname" onchange="changeCategory()">
+                                        </select>
+                                        <span asp-validation-for="categoryname" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                        <label asp-for="subcategory" class="control-label"></label>
+                                        <select asp-for="subcategory" id="subcategoryId" class="form-control" asp-items="@ViewBag.subcategory" onchange="dropdownChangedSubcategory() "></select>
+                                        <span asp-validation-for="subcategory" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                        <label asp-for="productcode" class="control-label"></label>
+                                        <input asp-for="productcode" id="productcode" data-uppercase autocomplete="off" class="form-control"  />
+                                        <span asp-validation-for="productcode" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                        <label asp-for="productdescription" class="control-label"></label>
+                                        <input asp-for="productdescription" id="productname" data-uppercase autocomplete="off" class="form-control" onchange="GetProCode()" />
+                                        <span asp-validation-for="productdescription" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                        <label asp-for="brand" class="control-label"></label>
+                                        <input asp-for="brand" id="brand" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="brand" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="button" class="btn btn-success" value="Insert" hidden="hidden" id="btnInsert" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                        <label asp-for="hsncode" class="control-label"></label>
+                                        <input asp-for="hsncode" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="hsncode" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group col-lg-4 col-md-6 col-sm-12 mt-2">
+                                        <label asp-for="uom" class="control-label"></label>
+                                        <input asp-for="uom" data-uppercase autocomplete="off" class="form-control" />
+                                        <span asp-validation-for="uom" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row" style="display:none">
+                                    <div class="col-sm-2">
+                                        <label asp-for="TypeOfProduct" class="control-label">Type Of Product</label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label>
+                                            <input type="radio" id="rbIndividual" name="TypeOfProduct" value="Individual" /> Individual
+                                        </label>
+                                        <label>
+                                            <input style="font-weight: 700;" type="radio" id="rbMultiple" name="TypeOfProduct" value="Multiple" /> Multiple
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-2" style="display:none;">
+                                        <label for="typein" class="control-label" id="lbtype" >Select Type</label>
+                                    </div>
+
+                                </div>
+                                <div class="form-group col-sm-12 mt-3" id="partialcontainer">
+                                    <div id="_partialBOMId"></div>
+                                    <div id="_partialSCId" style="display: none;">
+                                        <table class="table divide-gray-200" id="CodesTable">
+                                            <thead class="bg-gray-200 sticky top-0">
+                                                <tr>
+                                                    @foreach (var head in TableHeaders5)
+                                                    {
+                                                        <th>
+                                                            @head
+                                                        </th>
+                                                    }
+                                                    <th>
+                                                        <button id='btnAddDetailRow' type="button" class="btn btn-sm btn-secondary visible" onclick="AddItem1(this)">
+                                                            Add
+                                                        </button>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="CsDiv">
+                                                @if (Model.Productmaster_Packets.Count == 0)
+                                                {
+                                                    <tr>
+                                                        <td colspan="5" style="color:green; font-weight:600; text-align: center;">No Subcomponent product details found!</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    @for (int i = 0; i < Model.Productmaster_Packets.Count; i++)
+                                                    {
+                                                        <tr>
+
+                                                            <td>
+                                                                <input asp-for="@Model.Productmaster_Packets[i].subcomponentcode" id="sccode-@i" class="form-control" />
+                                                                <span asp-validation-for="@Model.Productmaster_Packets[i].subcomponentcode" class="text-danger"></span>
+                                                            </td>
+                                                            <td>
+                                                                <input asp-for="@Model.Productmaster_Packets[i].subcomponents" id="scname-@i" class="form-control" onchange="GetSComCode(@i)" />
+                                                                <span asp-validation-for="@Model.Productmaster_Packets[i].subcomponents" class="text-danger"></span>
+                                                            </td>
+                                                            <td>
+                                                                <input asp-for="@Model.Productmaster_Packets[i].uom" id="scuom-@i" class="form-control" />
+                                                                <span asp-validation-for="@Model.Productmaster_Packets[i].uom" class="text-danger"></span>
+                                                            </td>
+                                                            <td>
+                                                                <input asp-for="@Model.Productmaster_Packets[i].qty" id="scqty-@i" class="form-control" />
+                                                                <span asp-validation-for="@Model.Productmaster_Packets[i].qty" class="text-danger"></span>
+                                                                <input type="hidden" asp-for="@Model.Productmaster_Packets[i].IsDeleted" />
+                                                            </td>
+                                                            <td>
+                                                                <button id='btnremove-@i' type="button" class="btn btn-sm btn-danger visible" onclick="DeleteItem(this)">Delete</button>
+                                                            </td>
+
+                                                        </tr>
+                                                    }
+
+                                                }
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="submit" value="Save" class="btn btn-success col-md-12" />
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    
+  @*   else if (role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    } *@
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $('input[name="TypeOfProduct"]').on('change', function () {
+        if ($(this).val() === 'Multiple') {
+            // Show the elements when 'Multiple' is selected
+            $('#lbtype, #selectType, #createButton, #_partialBOMId').show();
+        } else {
+            // Hide the elements when 'Individual' is selected
+            $('#lbtype, #selectType, #createButton, #_partialBOMId').hide();
+
+        }
+    });
+
+    // $(document).ready(function () {
+    //     var productCodeValue = $('#productcode').val(); // Fetching the value of the product code
+    //     var id = $()
+    //     $.ajax({
+    //         url: '/Product_Master/checkType',
+    //         type: 'POST',
+    //         contentType: 'application/json',
+    //         data: JSON.stringify(updatedData),
+    //         success: function (response) {
+    //             console.log('Data updated successfully:', response);
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error('Error occurred while updating data:', error);
+    //         }
+    //     });
+    // });
+
+    function changeCategory() {
+        if (document.getElementById("categoryname").value != "") {
+            var selectedValue = document.getElementById("categoryname").value;
+            $.ajax({
+                url: '/Product_Master/LoadPartialCategoryChair',
+                type: 'GET',
+                data: { category: selectedValue },
+                success: function (data) {
+                    $('#partialViewContainer').html(data);
+                    $('#partialViewContainer').show(); // Show the container
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action: " + error);
+                }
+            });
+            //genrate category id
+            var selectedValue = document.getElementById("categoryname").value;
+            var categoryCodeInput = $("#categorycode");
+            $.ajax({
+                url: '/Product_Master/GETCategory_CODE',
+                type: 'GET',
+                data: { selectedValue: selectedValue },
+                success: function (data) {
+                    categoryCodeInput.val(data);
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action: " + error);
+                }
+            });
+            //END
+            //for category and subcategory
+            var studentSelect = $('#subcategoryId');
+            $.ajax({
+                url: '@Url.Action("ChangeCategory", "Product_Master")',
+                type: 'GET',
+                dataType: 'json',
+                data: { selectedvalue: selectedValue },
+                success: function (data) {
+                    // Set the values in the textboxes
+                    $('#subcategoryId').empty();
+                    $('#subcategoryId').append($('<option>').text("--Select SubCategory--").val("--Select SubCategory--"));
+                    $.each(data, function (index, item) {
+                        $('#subcategoryId').append($('<option>').text(item.value).val(item.value));
+                    });
+                }
+            });
+        }
+    }
+
+    function dropdownChangedSubcategory() {
+        var selectedOption = document.getElementById("subcategoryId").value;  //sub-category
+        var selectedOption1 = document.getElementById("categoryname").value;      //category
+        $.ajax({
+            url: '/Product_Master/ActionName',
+            type: 'POST',
+            data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+            success: function (result) {
+                console.log(result)
+            },
+            error: function (xhr, status, error) {
+                console.log("An error occurred while executing the action.");
+            }
+        });
+    }
+
+    $('#createButton').click(function (e) {
+        e.preventDefault(); // Prevent default button behavior (form submission or link redirection)
+        // Perform an AJAX request to load the partial view
+        $.ajax({
+            type: 'GET',
+            url: '/Product_Master/loadboqtable', // Replace with your actual controller and action names
+            success: function (response) {
+                // Display the loaded partial view in the specified div
+                $('#_partialBOMId').html(response);
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+
+    // function GetProCode() {
+    //     var productNameInput = $("#productname");
+    //     var productCodeInput = $("#productcode");
+    //     var productNameValue = productNameInput.val();
+    //     console.log("Product Name: " + productNameValue);
+    //     $.ajax({
+    //         url: '@Url.Action("GETPROD_CODE", "Product_Master")',
+    //         type: 'GET',
+    //         dataType: 'json',
+    //         data: { selectedvalue: productNameValue },
+    //         success: function (data) {
+    //             Set the values in the textboxes
+    //             productCodeInput.val(data);
+    //         }
+    //     });
+    // }
+
+    // $('#selecttype').on('change', function () {
+    //     var selectedType = $(this).val();
+    //     var productCodeValue = $('#productcode').val();
+
+    //     if (selectedType !== '---select Type---') {
+    //         loadPartialView(selectedType, productCodeValue);
+    //     } else {
+    //         $('#_partialBOMId').empty();
+    //     }
+    // });
+
+    // function loadPartialView(type, productCodeValue) {
+    //     $.ajax({
+    //         url: `/product_master/LoadPartial${type}`, // Replace with your endpoint
+    //         type: 'GET',
+    //         data: { productCodeValue: productCodeValue }, // Pass productCodeValue in the AJAX call
+    //         success: function (data) {
+    //             $('#_partialBOMId').html(data);
+    //         },
+    //         error: function (xhr, status, error) {
+    //             console.error('Error:', error);
+    //         }
+    //     });
+    // }
+
+    $('#selectType').change(function () {
+        // alert(selectedOption + " " + productCodeValue);
+        var selectedOption = $(this).val();
+        var productCodeValue = $('#productcode').val(); // Assuming there's an input with ID 'productcode'
+        // alert("fun called.." + selectedOption);
+        // Show content based on selected option
+        if (selectedOption == 'Sub Components') {
+            // alert(selectedOption);
+            $('#_partialSCId').show();
+        } else if (selectedOption == 'Bill Of Quantities') {
+            // alert(selectedOption);
+            $('#_partialSCId').hide();
+            $.ajax({
+                url: '/product_master/LoadPartialBillOfQuantities', // Replace with your endpoint for Bill Of Quantities
+                type: 'GET',
+                data: { productCodeValue: productCodeValue }, // Pass productCodeValue in the AJAX call
+                success: function (data) {
+                    $('#_partialBOMId').html(data); // Load returned partial view into the specified element
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    });
+
+</script>
+

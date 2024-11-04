@@ -1,0 +1,129 @@
+﻿@{
+    ViewData["Title"] = "LogReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "WAREHOUSE" || role == "HOSITE" || role == "ADMIN")
+    {
+        <div class="mt-3">
+            <div class="card mb-3">
+                <div class="card-header text-white p-1 bg-dark" >
+                    <div class="d-flex align-items-baseline">
+                        <a href="/Home/Index" class="btn btn-link text-white"><i class="fa fa-arrow-left"></i></a>
+                        <h5 class="mx-auto text-white text-2xl font-semibold"> In Out Stock Report</h5>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="searchForm" method="post" onkeydown="return event.key != 'Enter';">
+                        <div class="row">
+                            <div class="form-group col-sm-4">
+                                <input type="date" id="Fromdate" class="form-control" name="dateInput" required>
+                            </div>
+                            <div class="col-sm-2">
+                                <a id="searchButton" class="btn btn-info btn-sm">
+                                    <i class="fa fa-search" aria-hidden="true"></i> Search
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="tableContainer" class="table-responsive col-md-12 p-0" style="max-height: 550px; overflow-y: auto;">
+                        <!-- Table will be dynamically added here -->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    }
+    @* else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    } *@
+    else if (role == "WAREHOUSE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Function to handle search button click
+        function handleSearchClick(event) {
+            event.preventDefault();
+            //alert("function call...");
+            const dateInput = document.getElementById('Fromdate').value;
+
+            if (!dateInput) {
+                // Show SweetAlert if the date input is empty
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'No Date Selected',
+                    text: 'Please select a date before searching.'
+                });
+                return;
+            } else {
+                // If date is selected, update the href and navigate
+                const searchButton = document.getElementById('searchButton');
+                searchButton.href = `/Report/InOutStock?date=${dateInput}`;
+                window.location.href = searchButton.href;
+            }
+        }
+
+        // Attach event listener to the search button
+        document.getElementById('searchButton').addEventListener('click', handleSearchClick);
+
+    </script>
+
+}

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\Publish\eros</_PublishTargetUrl>
+    <History>True|2024-02-19T08:03:57.7186874Z;False|2024-02-19T13:33:20.0892160+05:30;True|2024-02-19T12:02:05.1620114+05:30;True|2024-02-19T11:45:17.6409085+05:30;True|2024-02-13T12:40:15.5771605+05:30;True|2024-02-13T12:34:01.8533975+05:30;True|2024-02-12T16:21:00.9342133+05:30;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

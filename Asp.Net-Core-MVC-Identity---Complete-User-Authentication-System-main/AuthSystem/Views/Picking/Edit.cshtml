@@ -1,0 +1,163 @@
+﻿@model eros.Models.Picking
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] TableHeaders = new string[] {
+    "Product Code",
+    "Product Name" ,
+    "In Stock qty" ,
+    "Batch No." ,
+    "Box No.",
+    "Location",
+    "Quantity",
+
+    };
+}
+<div class="container">
+    <div class="mt-3">
+        <div class="card mb-3">
+            <div class="card-header bg-dark text-white">
+                <div class="d-flex align-items-baseline">
+                    <h5 class="mx-auto font-weight-bolder">Picking Edit </h5>
+                    <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                </div>
+            </div>
+            <div class="container mt-2">
+                <div class="row mx-lg-2 mx-md-2 ">
+                    <div class="col-md-12">
+                        <form asp-action="Edit" id="CodeSbyAnizForm">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="row">
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <input type="hidden" asp-for="id" />
+                                <div class="form-group col-sm-4 mt-2">
+                                    <label asp-for="sono" class="control-label"></label>
+                                    <input asp-for="sono" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="sono" class="text-danger"></span>
+                                </div>
+                                
+                            </div>
+
+
+                            <div class="table-responsive p-0">
+                                <table class="table divide-gray-200" id="CodesTable">
+                                    <thead class="bg-gray-200 sticky top-0">
+                                        <tr>
+                                            @foreach (var head in TableHeaders)
+                                            {
+                                                <th>
+                                                    @head
+                                                </th>
+
+                                            }
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @for (int i = 0; i < Model.pickingmaster.Count; i++)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.EditorFor(x => x.pickingmaster[i].productcode,new{htmlAttributes = new{@class = "form-control " } })
+
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(x => x.pickingmaster[i].productname,new{htmlAttributes = new{@class = "form-control " } })
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(x => x.pickingmaster[i].instockqty,new{htmlAttributes = new{@class = "form-control " } })
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(x => x.pickingmaster[i].batchno,new{htmlAttributes = new{@class = "form-control" } })
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(x => x.pickingmaster[i].boxno,new{htmlAttributes = new{@class = "form-control " } })
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(x => x.pickingmaster[i].location,new{htmlAttributes = new{@class = "form-control" } })
+                                                </td>
+                                                <td>
+                                                    @Html.EditorFor(x => x.pickingmaster[i].quantity,new{htmlAttributes = new{@class = "form-control" } })
+                                                </td>
+                                                &nbsp;
+                                                <td>
+                                                    <button id="btndummy-@i" type="button" class="invisible" style="margin:0px;padding:5px;">Dummy</button>
+                                                    <button id='btnadd-@i' type="button" class="btn btn-warning text-white visible"
+                                                            onclick="AddItem(this)" style="left:89%;position:absolute;margin:0px;padding:5px; margin-right: 10px;">
+                                                        Add
+                                                    </button>
+
+                                                    <button id='btnremove-@i' type="button" class="btn btn-danger text-white visible" onclick="Deleteitem(this)" style="left:93%; position:absolute;margin:0px;padding:5px; margin-left: 10px;">Delete</button>
+
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+
+
+
+                                </table>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="submit" value="Save" class="btn btn-primary col-md-12" />
+                                </div>
+                                <div class="col-md-6">
+                                    <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function Deleteitem(btn) {
+        var table = document.getElementById('CodesTable');
+        var rows = table.getElementsByTagName('tr');
+        if (rows.length == 1) {
+            alert("This row can't be deleted");
+        }
+        $(btn).closest('tr').remove();
+    }
+
+    function AddItem(btn) {
+        var table = document.getElementById('CodesTable');
+        var rows = table.getElementsByTagName('tr');
+        var rowOuterHtml = rows[rows.length - 1].outerHTML;
+        var lastrowIdx = document.getElementById('hdnLastIndex').value;
+        var nextrowIdx = eval(lastrowIdx) + 1;
+        document.getElementById('hdnLastIndex').value = nextrowIdx;
+
+        rowOuterHtml = rowOuterHtml.replaceAll('_' + lastrowIdx + '_', '_' + nextrowIdx + '_');
+        rowOuterHtml = rowOuterHtml.replaceAll('[' + lastrowIdx + ']', '[' + nextrowIdx + ']');
+        rowOuterHtml = rowOuterHtml.replaceAll('-' + lastrowIdx, '-' + nextrowIdx);
+        var newRow = table.insertRow();
+        newRow.innerHTML = rowOuterHtml;
+
+        var btnAddID = btn.id;
+        var btnDeleteid = btnAddID.replaceAll('btnadd', 'btnremove');
+
+        // Instead of hiding the "Add" button, you can update its text and function
+        var addbtn = document.getElementById(btnAddID);
+        addbtn.textContent = "Add"; // Update button text
+        addbtn.onclick = function () { AddItem(addbtn); }; // Update button click function
+
+        var delbtn = document.getElementById(btnDeleteid);
+        delbtn.classList.add("visible");
+        delbtn.classList.remove("invisible");
+    }
+
+</script>

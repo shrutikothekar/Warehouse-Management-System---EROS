@@ -1,0 +1,179 @@
+﻿@model eros.Models.Product_Master
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "HOSITE" || role == "WAREHOUSE")
+    {
+        <div class="mt-3">
+            <div class="card mb-3">
+                <div class="card-header bg-dark text-white">
+                    <div class="d-flex align-items-baseline">
+                        <h5 class="mx-auto font-weight-bolder">Product Master</h5>
+                        <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <form asp-action="Create">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="row">
+                                <div class="form-group col-sm-4 mt-3">
+                                    <label asp-for="categorycode" class="control-label"></label>
+                                    <input asp-for="categorycode" id="categorycode" readonly="true" class="form-control" />
+                                    <span asp-validation-for="categorycode" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-4 mt-3">
+                                    <label for="categoryname" class="control-label">Category Name</label>
+                                    <select class="form-control" asp-for="categoryname" id="categoryname" asp-items="@ViewBag.categoryname" onchange="changeCategory()">
+                                    </select>
+                                    <span asp-validation-for="categoryname" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-4 mt-3">
+                                    <label asp-for="subcategory" class="control-label"></label>
+                                    <select asp-for="subcategory" id="subcategoryId" class="form-control" asp-items="@ViewBag.subcategory" onchange="dropdownChangedSubcategory() "></select>
+                                    <span asp-validation-for="subcategory" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="productdescription" class="control-label"></label>
+                                    <input asp-for="productdescription" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="productdescription" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="productcode" class="control-label"></label>
+                                    <input asp-for="productcode" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="productcode" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                @*             <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="brandname" class="control-label"></label>
+                        <input asp-for="brandname" data-uppercase autocomplete="off" class="form-control" />
+                        <span asp-validation-for="brandname" class="text-danger"></span>
+                        </div> *@
+                                @*   <div class="form-group col-sm-6 mt-3">
+                        <label asp-for="subcomponents" class="control-label"></label>
+                        <input asp-for="subcomponents" data-uppercase autocomplete="off" class="form-control" />
+                        <span asp-validation-for="subcomponents" class="text-danger"></span>
+                        </div> *@
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="hsncode" class="control-label"></label>
+                                    <input asp-for="hsncode" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="hsncode" class="text-danger"></span>
+                                </div>
+                                <div class="form-group col-sm-6 mt-3">
+                                    <label asp-for="uom" class="control-label"></label>
+                                    <input asp-for="uom" data-uppercase autocomplete="off" class="form-control" />
+                                    <span asp-validation-for="uom" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <input type="submit" value="Save" class="btn btn-primary col-md-12" />
+                                </div>
+                                <div class="col-md-6">
+                                    <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function dropdownChanged() {
+            var value1 = document.getElementById("categoryname").value;
+            $.ajax({
+                url: '/Product_Master/tidgenerate',
+                type: 'GET',
+                data: { selectedValue: value1 },
+                success: function (data) {
+                    // Update the textbox value
+                    document.getElementById("categorycode").value = data;
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action.");
+                }
+            });
+            $.ajax({
+                url: '/Product_Master/GetMaxId',
+                type: 'GET',
+                data: { selectedValue: value1 },
+                success: function (data) {
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action.");
+                }
+            });
+        }
+        //for category and subcategory
+        function changeCategory() {
+            if (document.getElementById("categoryname").value != "") {
+                console.log("category select is : ");
+                var selectedValue = document.getElementById("categoryname").value;
+                console.log(selectedValue);
+                var studentSelect = $('#subcategoryId');
+                $.ajax({
+                    url: '@Url.Action("ChangeCategory", "Product_Master")',
+                    type: 'GET',
+                    dataType: 'json',
+                    data: { selectedvalue: selectedValue },
+                    success: function (data) {
+                        // Set the values in the textboxes
+                        $('#subcategoryId').empty();
+                        $('#subcategoryId').append($('<option>').text("--Select SubCategory--").val("--Select SubCategory--"));
+                        $.each(data, function (index, item) {
+                            $('#subcategoryId').append($('<option>').text(item.value).val(item.value));
+                        });
+                    }
+                });
+            }
+        }
+        function dropdownChangedSubcategory() {
+            var selectedOption = document.getElementById("subcategoryId").value;
+            var selectedOption1 = document.getElementById("categoryname").value;
+            $.ajax({
+                url: '/Product_Master/ActionName',
+                type: 'POST',
+                data: { optionValue: selectedOption, optionValue1: selectedOption1 },
+                success: function (result) {
+                    console.log(result)
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while executing the action.");
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,268 @@
+﻿@model eros.Models.Location_Master
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE" || role == "HOSITE")
+    {
+        <div class="container">
+            <div class="mt-3">
+                <div class="card mb-3">
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder">Location Master</h5>
+                            <a asp-action="Index" class="btn btn-success text-white"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+                    <div class="container mt-4">
+                        <div class="row mx-lg-2 mx-md-2 ">
+                            <div class="col-md-12">
+                                <form asp-action="Create" id="myForm">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="row">
+
+                                        <div class="col-md-2 col-sm-2 col-lg-3">
+                                            <div class="form-group">
+
+
+                                                <label class="text-dark font-weight-bold">Rack</label>
+                                                <div class="input-group" id="rackInputGroup">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fa fa-archive"></i></span>
+                                                    </div>
+                                                    <select class="form-control" id="rackSelect" asp-for="Rack" asp-items="ViewBag.RackItems">
+                                                    </select>
+                                                    <input type="text" class="form-control" id="newRackName" placeholder="Enter rack name" style="display: none;">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-primary" type="button" id="addRackBtn">Add</button>
+                                                    </div>
+                                                </div>
+                                                <small class="text-muted">Select an existing rack or enter a new one.</small>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-md-2 col-sm-2 col-lg-3">
+                                            <div class="form-group">
+                                                <label class="text-dark font-weight-bold" asp-for="FromShelf">From Shelf</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fa fa-archive"></i></span>
+                                                    </div>
+                                                    <select class="form-control limited-height-select" asp-for="FromShelf" asp-items="ViewBag.FromShelfItems"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2 col-lg-3">
+                                            <div class="form-group">
+                                                <label class="text-dark font-weight-bold" asp-for="ToShelf"> To Shelf</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fa fa-archive"></i></span>
+                                                    </div>
+                                                    <select id="ToShelf" class="form-control limited-height-select" asp-for="ToShelf"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-2 col-lg-3">
+                                            <div class="form-group">
+                                                <label class="text-dark font-weight-bold" asp-for="locationcode"></label>
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fa fa-archive"></i></span>
+                                                    </div>
+                                                    <select id="locationcode" class="form-control limited-height-select" asp-for="locationcode"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <button type="submit" class="btn btn-primary col-md-12" name="submitButton">Save</button>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <a asp-action="Index" class="btn btn-danger col-md-12">Back</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<style>
+    .limited-height-select {
+       /*  max-height: 175px; /* 1.5rem is the default height of an option */
+        overflow:scroll;
+    }
+</style>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+@section Scripts {
+<script>
+        $('#myForm').on('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting via the browser
+
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: '@Url.Action("Create")', // Replace with your action method URL
+                type: 'POST',
+                data: formData,
+                xhrFields: {
+                    responseType: 'blob' // Set the expected response type to Blob for file download
+                },
+                success: function(blob) {
+                    // Create a link element to trigger the download
+                    var a = document.createElement('a');
+                    var url = window.URL.createObjectURL(blob);
+                    a.href = url;
+                    a.download = 'location_codes.prn';
+                    document.body.appendChild(a);
+                    a.click();
+
+                    // Clean up resources
+                    setTimeout(function() {
+                        document.body.removeChild(a);
+                        window.URL.revokeObjectURL(url);
+                    }, 0);
+
+                    // Display success message using SweetAlert
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Location Sticker generated successfully!',
+                        icon: 'success',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/Location_Master/Index'; // Redirect to index page
+                        }
+                    });
+                },
+                error: function(xhr, status, error) {
+                    alert('An error occurred: ' + error);
+                }
+            });
+        });
+
+
+        $(function () {
+            $('#FromShelf').change(function () {
+                var selectedFromShelf = $(this).val();
+                var toShelfSelect = $('#ToShelf');
+                toShelfSelect.empty();
+
+                // Automatically set the value of ToShelf as 0
+                toShelfSelect.append($('<option>', {
+                    value: 0,
+                    text: "0"
+                }));
+
+                // Add options greater than the selected FromShelf value
+                for (var i = parseInt(selectedFromShelf) + 1; i <= 20; i++) {
+                    toShelfSelect.append($('<option>', {
+                        value: i,
+                        text: i
+                    }));
+                }
+            });
+
+            // Trigger the change event on page load to set the initial value of ToShelf
+            $('#FromShelf').trigger('change');
+        });
+
+        $(function () {
+            $('#addRackBtn').click(function () {
+                var newRackName = $('#newRackName').val().trim();
+                if (newRackName) { // Check if the entered name is not empty
+                    // Create a new option element
+                    var newOption = $('<option>', {
+                        value: newRackName,
+                        text: newRackName
+                    });
+                    // Append the new option to the select dropdown
+                    $('#rackSelect').append(newOption);
+                    // Optionally, sort the dropdown options
+                    var options = $('#rackSelect option');
+                    options.detach().sort(function (a, b) {
+                        var aValue = $(a).text().toUpperCase();
+                        var bValue = $(b).text().toUpperCase();
+                        return aValue.localeCompare(bValue);
+                    });
+                    $('#rackSelect').append(options);
+
+                    // Set ToShelf select dropdown value to 0
+                    $('#ToShelf').val(0);
+                }
+                // Toggle visibility of select dropdown and input field
+                $('#rackSelect').toggle();
+                $('#newRackName').toggle().val('');
+                // If input field is visible, focus on it
+                if ($('#newRackName').is(':visible')) {
+                    $('#newRackName').focus();
+                }
+            });
+
+            $('#FromShelf, #ToShelf, #rackSelect').change(function () {
+                var rack = $('#rackSelect').val();
+                var fromShelf = $('#FromShelf').val();
+                var toShelf = $('#ToShelf').val();
+
+                var locationcodeSelect = $('#locationcode');
+                locationcodeSelect.empty();
+
+                // Check if ToShelf is 0, if so, only use rack and fromShelf values to generate locationcode
+                if (toShelf == 0) {
+                    var locationCode = rack + '-' + fromShelf;
+                    locationcodeSelect.append($('<option>', {
+                        value: locationCode,
+                        text: locationCode
+                    }));
+                } else {
+                    // Populate locationcode based on rack, fromShelf, and toShelf
+                    for (var i = parseInt(fromShelf); i <= parseInt(toShelf); i++) {
+                        var locationCode = rack + '-' + i;
+                        locationcodeSelect.append($('<option>', {
+                            value: locationCode,
+                            text: locationCode
+                        }));
+                    }
+                }
+            });
+
+            // Trigger the change event on page load to set the initial value of locationcode
+            $('#FromShelf, #ToShelf, #rackSelect').trigger('change');
+        });
+
+</script>}

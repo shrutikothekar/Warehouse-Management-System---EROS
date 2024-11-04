@@ -1,0 +1,21 @@
+
+
+OPEN BIN FOLDER OF SERVICE
+
+
+OPEN COMMAND PROMT AS ADMINISTRATION
+
+
+
+sc create MahaMineralSyncService binPath= "D:\Debug\MahaMineralSyncService.exe" start= auto  //CREATE SERVICE
+
+sc create MahaMineralSyncService binPath= "D:\WindowsServicetest\WindowsServicetest\bin\Debug\WindowsServicetest.exe" start= auto  //CREATE SERVICE
+
+ //DELETE SERVICE
+sc delete ServiceName
+
+net stop MahaMineralSyncService //STOP SERVICE
+
+IN DETAILS IF YOU WANT TO FILL
+sc create ServiceName binPath= "Path\to\executable" DisplayName= "Service Display Name" description= "Service Description" [option1=value1 option2=value2 ...]
+

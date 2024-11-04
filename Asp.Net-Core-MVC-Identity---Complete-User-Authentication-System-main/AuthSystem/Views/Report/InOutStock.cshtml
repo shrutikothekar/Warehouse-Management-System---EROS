@@ -1,0 +1,827 @@
+﻿@* ViewBag.PurchaseOrder = PurchaseOrder;
+            ViewBag.SalesOrder = SalesOrder; *@
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string role = Context.Request.HttpContext.Session.GetString("Role");
+    var jsonData = Context.Request.HttpContext.Session.GetString("MenuMaster");
+}
+<style>
+    .product {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 5px;
+    }
+</style>
+<style>
+    .status-complete {
+        color: green;
+        font-weight: 600;
+        font-size: 18px;
+    }
+
+    .status-pending {
+        color: red;
+        font-weight: 600;
+        font-size: 18px;
+    }
+</style>
+@if (!string.IsNullOrEmpty(role))
+{
+    @if (role == "ADMIN" || role == "WAREHOUSE")
+    {
+        <div class="container-fluid" id="pdfContent">
+            <div class="mt-3">
+                <div class="card mb-3">
+
+                    <div class="card-header bg-dark text-white">
+                        <div class="d-flex align-items-baseline">
+                            <h5 class="mx-auto font-weight-bolder small-heading">Stock In Out Detailed Report</h5>
+                            <a id="pdfbtn" style="display:none;" class="btn btn-danger btn-sm text-white mr-1 download-btn">
+                                <i class="fas fa-file-pdf mr-2"></i> PDF
+                            </a>
+                            <a onclick="exportToExcel()" style="display:none;" id="exportButton" class="btn btn-success text-white btn-sm mr-1">
+                                <i class="fas fa-file-excel"></i>
+                                Excel
+                            </a>
+                            <a id="printbtn" style="display:none;" onclick="printContent()" class="btn btn-primary btn-sm text-white mr-1">
+                                <i class="fas fa-print"></i> Print
+                            </a>
+                            <a asp-action="InOutStockIndex" asp-controller="Report" style="display:none;" id="backbtn" class="btn btn-success text-white btn-sm mr-1"><i class="fa fa-reply"></i> Back</a>
+                        </div>
+                    </div>
+
+
+                    <div class="container-fluid">
+                        <div class="card mb-1 mt-1 p-1">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">@ViewBag.Date Details</h5>
+                            </div>
+                            <div class="card-body">
+                                    <div class="table-responsive">
+                                    <h6 class="text-center">Inward Details - @ViewBag.Date </h6>
+                                        <table id="purchaseorder" class="table table-striped table-hover table-sm">
+                                            <thead class="table-dark">
+                                            <tr class="small">
+                                                    <th>Ref.No</th>
+                                                    <th>Supplier Name</th>
+                                                    <th>Inward Product</th>
+                                                    <th> Category</th>
+                                                    <th>Inward Qty</th>
+                                                </tr>
+                                            </thead>
+                                        <tbody class="small">
+                                                @{
+                                                    int totalQty = 0;
+                                                }
+                                                @if (ViewBag.NitCountPurchase == 0)
+                                                {
+                                                    <tr>
+                                                        <td colspan="5" class="text-danger fw-medium">No Inward Details Found!</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var po in ViewBag.PurchaseOrder)
+                                                    {
+                                                        totalQty += po.poqty;
+                                                        <tr>
+                                                            <td>@po.pono</td>
+                                                            <td>@po.supplier</td>
+                                                            <td>@po.product</td>
+                                                            <td>@po.category</td>
+                                                            <td style="width:140px;">@po.poqty</td>
+                                                            @* <td style="width:260px;">@DateTime.ParseExact(po.date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy")</td> *@
+                                                        </tr>
+                                                    }
+
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="table-responsive mt-2">
+                                    <h6 class="text-center">Outward Details - @ViewBag.Date </h6>
+                                        <table id="saleorder" class="table table-striped table-hover table-sm">
+                                            <thead class="table-dark">
+                                            <tr class ="small">
+                                                    <th>Ref.No</th>
+                                                    <th>Customer Name</th>
+                                                    <th>Dispatch Product</th>
+                                                    <th> Category</th>
+                                                    <th>Dispatch Qty</th>
+                                                </tr>
+                                            </thead>
+                                        <tbody class ="small">
+                                                @{
+                                                    int totalQty1 = 0;
+                                                }
+                                                @if (ViewBag.NitCountSale == 0)
+                                                {
+                                                    <tr>
+                                                        <td colspan="5" class="text-danger fw-medium">No Dispatch Details Found!</td>
+                                                    </tr>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var so in ViewBag.SalesOrder)
+                                                    {
+                                                        totalQty1 += so.soqty;
+                                                        <tr>
+                                                            <td>@so.sono</td>
+                                                            <td>@so.customer</td>
+                                                            <td>@so.product</td>
+                                                            <td>@so.category</td>
+                                                            <td style="width:140px;">@so.soqty</td>
+                                                            @* <td style="width:260px;">@DateTime.ParseExact(so.date, "yyyy-MM-dd", null).ToString("dd-MM-yyyy")</td> *@
+                                                        </tr>
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    }
+    else if (role == "HOSITE")
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <h6 class="alert-heading">
+                    <i class="bi-exclamation-octagon-fill"></i>
+                    No Access !!
+                </h6>
+                <p>
+                    You do not have access to this page. Please contact your administrator for assistance.
+                </p>
+                <hr>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    }
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.13/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.2/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script>
+    function exportToExcel() {
+        function formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        const now = new Date();
+        const formattedDate = formatDate(now);
+        const formattedTime = now.toLocaleTimeString();
+        const sheetHeading = ['EROS GENERAL AGENCIES PVT. LTD.'];
+        const subHeading = [`Stock In Out Detailed Report - generated on ${formattedDate} at ${formattedTime}`];
+
+        const tableHeadings = {
+            purchaseOrder: ['Ref.No', 'Supplier Name', 'Inward Product', 'Inward Category', 'Inward Qty'],
+            salesOrder: ['Ref.No', 'Customer Name', 'Dispatch Product', 'Dispatch Category', 'Dispatch Qty']
+        };
+
+        function collectDataFromTable(tableId) {
+            const data = [];
+            $(`#${tableId} tbody tr`).each(function () {
+                const rowData = [];
+                $(this).find('td').each(function () {
+                    rowData.push($(this).text().trim());
+                });
+                data.push(rowData);
+            });
+            return data;
+        }
+
+        const purchaseOrderData = collectDataFromTable('purchaseorder');
+        const salesOrderData = collectDataFromTable('saleorder');
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Order Sheet');
+
+        const borderStyle = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+        };
+
+        let rowIndex = 1;
+
+        // EROS heading
+        const headingRow = worksheet.addRow(sheetHeading);
+        headingRow.font = { bold: true, size: 14 };
+        worksheet.mergeCells(`A${rowIndex}:E${rowIndex}`);
+        headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        headingRow.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        rowIndex++;
+
+        // Sub-heading
+        const subHeadingRow = worksheet.addRow(subHeading);
+        worksheet.mergeCells(`A${rowIndex}:E${rowIndex}`);
+        subHeadingRow.font = { size: 10 };
+        subHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        subHeadingRow.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        rowIndex++;
+
+        // Purchase Orders section heading
+        const purchaseOrderHeading = ['Inward Details'];
+
+        // Merge and center Purchase Orders heading
+        const purchaseOrderHeadingRow = worksheet.addRow(purchaseOrderHeading);
+        worksheet.mergeCells(`A${rowIndex}:E${rowIndex}`);
+        purchaseOrderHeadingRow.font = { bold: true, size: 12 };
+        purchaseOrderHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        purchaseOrderHeadingRow.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        rowIndex++;
+
+        // Purchase Order table headings
+        const purchaseOrderTableHeadings = tableHeadings.purchaseOrder;
+        const purchaseOrderTableHeadingRow = worksheet.addRow(purchaseOrderTableHeadings);
+        purchaseOrderTableHeadingRow.eachCell((cell) => {
+            cell.font = { bold: true };
+            cell.alignment = { horizontal: 'center', vertical: 'center' };
+            cell.border = borderStyle;
+        });
+
+        // Add Purchase Order data
+        purchaseOrderData.forEach(rowData => {
+            const row = worksheet.addRow(rowData);
+            row.eachCell((cell) => {
+                cell.alignment = { horizontal: 'center', vertical: 'center' };
+                cell.border = borderStyle;
+            });
+        });
+
+        rowIndex += purchaseOrderData.length + 1; // Move rowIndex past Purchase Order data
+
+        // Sales Orders section heading
+        const salesOrderHeading = ['Outward Details'];
+
+        const salesOrderHeadingRow = worksheet.addRow(salesOrderHeading);
+        worksheet.mergeCells(`A${rowIndex}:E${rowIndex}`);
+        salesOrderHeadingRow.font = { bold: true, size: 12 };
+        salesOrderHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+        salesOrderHeadingRow.eachCell((cell) => {
+            cell.border = borderStyle;
+        });
+
+        rowIndex++;
+
+        // Sales Order table headings
+        const salesOrderTableHeadings = tableHeadings.salesOrder;
+        const salesOrderTableHeadingRow = worksheet.addRow(salesOrderTableHeadings);
+        salesOrderTableHeadingRow.eachCell((cell) => {
+            cell.font = { bold: true };
+            cell.alignment = { horizontal: 'center', vertical: 'center' };
+            cell.border = borderStyle;
+        });
+
+        // Add Sales Order data
+        salesOrderData.forEach(rowData => {
+            const row = worksheet.addRow(rowData);
+            row.eachCell((cell) => {
+                cell.alignment = { horizontal: 'center', vertical: 'center' };
+                cell.border = borderStyle;
+            });
+        });
+
+        rowIndex += salesOrderData.length + 1; // Move rowIndex past Sales Order data
+
+        // Adjust column widths
+        worksheet.columns = [
+            { width: 15 },
+            { width: 25 },
+            { width: 25 },
+            { width: 25 },
+            { width: 15 }
+        ];
+
+        workbook.xlsx.writeBuffer().then(function (buffer) {
+            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'InOutReport.xlsx');
+        });
+    }
+    $(document).ready(function () {
+        $("#pdfbtn").show();
+        $("#printbtn").show();
+        $("#backbtn").show();
+        $("#exportButton").show();
+    });
+    // $('.download-btn').on('click', function (event) {
+    //     event.preventDefault();
+    //     $("#pdfbtn").hide();
+    //     $("#printbtn").hide();
+    //     $("#backbtn").hide();
+    //     $("#exportButton").hide();
+
+    //     // Get the selected template name
+    //     const selectedTemplate = $('#templates option:selected').text();
+
+    //     // Get the current date and time
+    //     const currentDate = new Date();
+    //     const day = String(currentDate.getDate()).padStart(2, '0');
+    //     const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    //     const year = currentDate.getFullYear();
+    //     const formattedDate = `${day}-${month}-${year}`;
+    //     const formattedTime = currentDate.toLocaleTimeString();
+    //     const dateTimeString = `Generated on: ${formattedDate} at ${formattedTime}`;
+
+    //     // Clone the content to include in the PDF
+    //     const contentToClone = document.getElementById('pdfContent').cloneNode(true);
+
+    //     // Create the main heading for the company name
+    //     const mainHeading = document.createElement('h5');
+    //     mainHeading.textContent = 'EROS GENERAL AGENCIES PVT LTD.';
+    //     mainHeading.style.textAlign = 'center';
+
+    //     // Create the subheading for the order details
+    //     const subHeading = document.createElement('h6');
+    //     subHeading.textContent = `Stock In Out Detailed Report : ${selectedTemplate} (${dateTimeString})`;
+    //     subHeading.style.textAlign = 'center';
+
+    //     // Insert the main heading and subheading into the cloned content
+    //     contentToClone.insertBefore(subHeading, contentToClone.firstChild);
+    //     contentToClone.insertBefore(mainHeading, subHeading);
+
+    //     // Remove the last column before exporting
+    //     const rows = contentToClone.querySelectorAll('tr');
+    //     rows.forEach(row => {
+    //         if (row.cells.length > 5) {
+    //             row.deleteCell(-1); // Delete the last cell (column) of each row
+    //         }
+    //     });
+
+    //     // Adjust font size to make all data fit in the PDF
+    //     const allElements = contentToClone.querySelectorAll('*');
+    //     allElements.forEach(element => {
+    //         element.style.fontSize = '10px'; // Adjust font size as needed
+    //         element.style.margin = '0'; // Remove any margins
+    //         element.style.padding = '2px'; // Adjust padding for better fitting
+    //     });
+
+    //     // Generate PDF from the modified content
+    //     html2pdf()
+    //         .from(contentToClone)
+    //         .set({
+    //             margin: [10, 5, 10, 5], // top, left, bottom, right margins
+    //             filename: 'InOutReport.pdf',
+    //             image: { type: 'jpeg', quality: 1.0 }, // High-quality image settings
+    //             html2canvas: { scale: 2, useCORS: true }, // Increase scale for better quality
+    //             jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' } // Use points for better precision
+    //         })
+    //         .save();
+    //     $("#pdfbtn").show();
+    //     $("#printbtn").show();
+    //     $("#backbtn").show();
+    //     $("#exportButton").show();
+    // });
+    $('.download-btn').on('click', function (event) {
+        event.preventDefault();
+        $("#pdfbtn").hide();
+        $("#printbtn").hide();
+        $("#backbtn").hide();
+        $("#exportButton").hide();
+
+        // Get the selected template name
+        const selectedTemplate = $('#templates option:selected').text();
+
+        // Get the current date and time
+        const currentDate = new Date();
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+        const year = currentDate.getFullYear();
+        const formattedDate = `${day}-${month}-${year}`;
+        const formattedTime = currentDate.toLocaleTimeString();
+        const dateTimeString = `Generated on: ${formattedDate} at ${formattedTime}`;
+
+        // Clone the content to include in the PDF
+        const contentToClone = document.getElementById('pdfContent').cloneNode(true);
+
+        // Create a wrapper div to handle logo centering with flexbox
+        const logoWrapper = document.createElement('div');
+        logoWrapper.style.display = 'flex';
+        logoWrapper.style.justifyContent = 'center';  // Center horizontally
+        logoWrapper.style.alignItems = 'center';      // Center vertically
+        logoWrapper.style.flexDirection = 'column';   // Align items in column
+        logoWrapper.style.marginBottom = '10px';      // Add some space below the logo
+
+        // Create an img element for the logo
+        const logo = document.createElement('img');
+        logo.src = '/img/logo1.png'; // Update with the correct path, make sure it's accessible
+        logo.alt = 'Company Logo';
+        logo.style.width = '60px'; // Adjust width as needed
+        logo.style.height = 'auto'; // Maintain aspect ratio
+
+        // Add the logo to the wrapper
+        logoWrapper.appendChild(logo);
+
+        // Create the main heading for the company name
+        const mainHeading = document.createElement('h5');
+        mainHeading.textContent = 'EROS GENERAL AGENCIES PVT LTD.';
+        mainHeading.style.textAlign = 'center';
+        mainHeading.style.marginTop = '10px'; // Add some space above
+
+        // Create the subheading for the order details
+        const subHeading = document.createElement('h6');
+        subHeading.textContent = `Stock In Out Detailed Report : ${selectedTemplate} (${dateTimeString})`;
+        subHeading.style.textAlign = 'center';
+        subHeading.style.marginBottom = '20px'; // Add space below
+
+        // Insert the logo wrapper, main heading, and subheading into the cloned content
+        contentToClone.insertBefore(subHeading, contentToClone.firstChild);
+        contentToClone.insertBefore(mainHeading, subHeading);
+        contentToClone.insertBefore(logoWrapper, mainHeading); // Insert the logo wrapper before the main heading
+
+        // Remove the last column before exporting
+        const rows = contentToClone.querySelectorAll('tr');
+        rows.forEach(row => {
+            if (row.cells.length > 5) {
+                row.deleteCell(-1); // Delete the last cell (column) of each row
+            }
+        });
+
+        // Adjust font size to make all data fit in the PDF
+        const allElements = contentToClone.querySelectorAll('*');
+        allElements.forEach(element => {
+            element.style.fontSize = '10px'; // Adjust font size as needed
+            element.style.margin = '0'; // Remove any margins
+            element.style.padding = '2px'; // Adjust padding for better fitting
+        });
+
+        // Generate PDF from the modified content
+        html2pdf()
+            .from(contentToClone)
+            .set({
+                margin: [10, 5, 10, 5], // top, left, bottom, right margins
+                filename: 'InOutReport.pdf',
+                image: { type: 'jpeg', quality: 1.0 }, // High-quality image settings
+                html2canvas: { scale: 2, useCORS: true }, // Increase scale for better quality
+                jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' } // Use points for better precision
+            })
+            .save();
+
+        // Show buttons again
+        $("#pdfbtn").show();
+        $("#printbtn").show();
+        $("#backbtn").show();
+        $("#exportButton").show();
+    });
+    function printContent() {
+        const printArea = document.querySelector('.container').innerHTML;
+        const originalContent = document.body.innerHTML;
+
+        document.body.innerHTML = printArea;
+        window.print();
+        document.body.innerHTML = originalContent;
+        location.reload();
+    }
+    function showTooltip(event, value, tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.innerText = value;
+            tooltip.style.top = (event.clientY + 10) + 'px';
+            tooltip.style.left = (event.clientX + 10) + 'px';
+            tooltip.style.display = 'block';
+        }
+    }
+    function hideTooltip(tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip != null) {
+            tooltip.style.display = 'none';
+        }
+    }
+</script>
+
+
+ <script>
+    // $('.download-btn').on('click', function (event) {
+    //     event.preventDefault();
+    //     $("#pdfbtn").hide();
+    //     $("#printbtn").hide();
+    //     $("#backbtn").hide();
+    //     $("#exportButton").hide();
+
+    //     // Get the selected template name
+    //     const selectedTemplate = $('#templates option:selected').text();
+
+    //     // Get the current date and time
+    //     const currentDate = new Date();
+    //     const formattedDate = currentDate.toLocaleDateString();
+    //     const formattedTime = currentDate.toLocaleTimeString();
+    //     const dateTimeString = `Generated on: ${formattedDate} at ${formattedTime}`;
+
+    //     // Clone the content to include in the PDF
+    //     const contentToClone = document.getElementById('pdfContent').cloneNode(true);
+
+    //     // Create the main heading for the company name
+    //     const mainHeading = document.createElement('h5');
+    //     mainHeading.textContent = 'EROS GENERAL AGENCIES PVT LTD.';
+    //     mainHeading.style.textAlign = 'center';
+
+    //     // Create the subheading for the order details
+    //     const subHeading = document.createElement('h6');
+    //     subHeading.textContent = `Stock In Out Detailed Report : ${selectedTemplate} (${dateTimeString})`;
+    //     subHeading.style.textAlign = 'center';
+
+    //     // Insert the main heading and subheading into the cloned content
+    //     contentToClone.insertBefore(subHeading, contentToClone.firstChild);
+    //     contentToClone.insertBefore(mainHeading, subHeading);
+
+    //     // Remove the last column before exporting
+    //     const rows = contentToClone.querySelectorAll('tr');
+    //     rows.forEach(row => {
+    //         if (row.cells.length > 5) {
+    //             row.deleteCell(-1); // Delete the last cell (column) of each row
+    //         }
+    //     });
+
+    //     // Adjust font size to make all data fit in the PDF
+    //     const allElements = contentToClone.querySelectorAll('*');
+    //     allElements.forEach(element => {
+    //         element.style.fontSize = '10px'; // Adjust font size as needed
+    //         element.style.margin = '0'; // Remove any margins
+    //         element.style.padding = '2px'; // Adjust padding for better fitting
+    //     });
+
+    //     // Generate PDF from the modified content
+    //     html2pdf()
+    //         .from(contentToClone)
+    //         .set({
+    //             margin: [10, 5, 10, 5], // top, left, bottom, right margins
+    //             filename: 'InOutReport.pdf',
+    //             image: { type: 'jpeg', quality: 1.0 }, // High-quality image settings
+    //             html2canvas: { scale: 2, useCORS: true }, // Increase scale for better quality
+    //             jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' } // Use points for better precision
+    //         })
+    //         .save();
+    //     $("#pdfbtn").show();
+    //     $("#printbtn").show();
+    //     $("#backbtn").show();
+    //     $("#exportButton").show();
+    // });
+
+    // $('.download-btn').on('click', function (event) {
+    //     event.preventDefault();
+    //     $("#pdfbtn").hide();
+    //     $("#printbtn").hide();
+    //     $("#backbtn").hide();
+    //     $("#exportButton").hide();
+    //     // Get the selected template name
+    //     const selectedTemplate = $('#templates option:selected').text();
+
+    //     // Get the current date and time
+    //     const currentDate = new Date();
+    //     const formattedDate = currentDate.toLocaleDateString();
+    //     const formattedTime = currentDate.toLocaleTimeString();
+    //     const dateTimeString = `Generated on: ${formattedDate} at ${formattedTime}`;
+
+    //     // Clone the content to include in the PDF
+    //     const contentToClone = document.getElementById('pdfContent').cloneNode(true);
+
+    //     // Create the main heading for the company name
+    //     const mainHeading = document.createElement('h5');
+    //     mainHeading.textContent = 'EROS GENERAL AGENCIES PVT LTD.';
+    //     mainHeading.style.textAlign = 'center'; // Optional: Center align the heading
+
+    //     // Create the subheading for the order details
+    //     const subHeading = document.createElement('h6');
+    //     subHeading.textContent = `Stock In Out Detailed Report : ${selectedTemplate} (${dateTimeString})`;
+    //     subHeading.style.textAlign = 'center'; // Optional: Center align the heading
+
+    //     // Insert the main heading and subheading into the cloned content
+    //     contentToClone.insertBefore(subHeading, contentToClone.firstChild);
+    //     contentToClone.insertBefore(mainHeading, subHeading);
+
+    //     // Remove the last column before exporting
+    //     const rows = contentToClone.querySelectorAll('tr');
+    //     rows.forEach(row => {
+    //         if (row.cells.length > 4) { // Ensure we have more than 4 columns before deleting
+    //             row.deleteCell(-1); // Delete the last cell (column) of each row
+    //         }
+    //     });
+
+    //     // Adjust font size to make all data fit in the PDF
+    //     const allElements = contentToClone.querySelectorAll('*');
+    //     allElements.forEach(element => {
+    //         element.style.fontSize = '10px'; // Adjust font size as needed
+    //         element.style.margin = '0'; // Remove any margins
+    //         element.style.padding = '2px'; // Adjust padding for better fitting
+    //     });
+
+    //     // Generate PDF from the modified content (with the selected template heading and without the last column)
+    //     html2pdf()
+    //         .from(contentToClone)
+    //         .set({
+    //             margin: [10, 5, 10, 5], // top, left, bottom, right margins
+    //             filename: 'InOutReport.pdf',
+    //             image: { type: 'jpeg', quality: 1.0 }, // High-quality image settings
+    //             html2canvas: { scale: 2, useCORS: true }, // Increase scale for better quality
+    //             jsPDF: { unit: 'pt', format: 'a4', orientation: 'landscape' } // Changed to landscape orientation
+    //         })
+    //         .save();
+    //     $("#pdfbtn").show();
+    //     $("#printbtn").show();
+    //     $("#backbtn").show();
+    //     $("#exportButton").show();
+    // });
+
+    // function exportToExcel() {
+    //     function formatDate(date) {
+    //         const day = String(date.getDate()).padStart(2, '0');
+    //         const month = String(date.getMonth() + 1).padStart(2, '0');
+    //         const year = date.getFullYear();
+    //         return `${day}/${month}/${year}`;
+    //     }
+
+    //     const now = new Date();
+    //     const formattedDate = formatDate(now);
+    //     const formattedTime = now.toLocaleTimeString();
+    //     const sheetHeading = ['EROS GENERAL AGENCIES PVT. LTD.'];
+    //     const subHeading = [`Stock In Out Detailed Report - generated on ${formattedDate} at ${formattedTime}`];
+
+    //     const tableHeadings = {
+    //         purchaseOrder: ['Supplier Name', 'Inward Quantity', 'Inward Date'],
+    //         salesOrder: ['Customer Name', 'Outward Quantity', 'Outward Date']
+    //     };
+
+    //     function collectDataFromTable(tableId) {
+    //         const data = [];
+    //         $(`#${tableId} tbody tr`).each(function () {
+    //             const rowData = [];
+    //             $(this).find('td').each(function () {
+    //                 rowData.push($(this).text().trim());
+    //             });
+    //             data.push(rowData);
+    //         });
+    //         return data;
+    //     }
+
+    //     const purchaseOrderData = collectDataFromTable('purchaseorder');
+    //     const salesOrderData = collectDataFromTable('saleorder');
+
+    //     const workbook = new ExcelJS.Workbook();
+    //     const worksheet = workbook.addWorksheet('Order Sheet');
+
+    //     const borderStyle = {
+    //         top: { style: 'thin' },
+    //         left: { style: 'thin' },
+    //         bottom: { style: 'thin' },
+    //         right: { style: 'thin' }
+    //     };
+
+    //     let rowIndex = 1;
+
+    //     // EROS heading
+    //     const headingRow = worksheet.addRow(sheetHeading);
+    //     headingRow.font = { bold: true, size: 14 };
+    //     worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+    //     headingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     headingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     rowIndex++;
+
+    //     // Sub-heading
+    //     const subHeadingRow = worksheet.addRow(subHeading);
+    //     worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+    //     subHeadingRow.font = { size: 10 };
+    //     subHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     subHeadingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     rowIndex++;
+
+    //     // Purchase Orders section heading
+    //     const purchaseOrderHeading = ['Inward Details'];
+    //     const salesOrderHeading = ['Outward Details'];
+
+    //     // Merge and center Purchase Orders heading
+    //     const purchaseOrderHeadingRow = worksheet.addRow(purchaseOrderHeading);
+    //     worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+    //     purchaseOrderHeadingRow.font = { bold: true, size: 12 };
+    //     purchaseOrderHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     purchaseOrderHeadingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     rowIndex++;
+
+    //     // Purchase Order table headings
+    //     const purchaseOrderTableHeadings = tableHeadings.purchaseOrder;
+    //     const purchaseOrderTableHeadingRow = worksheet.addRow(purchaseOrderTableHeadings.map(header => `${header}`));
+    //     purchaseOrderTableHeadingRow.eachCell((cell) => {
+    //         cell.font = { bold: true };
+    //         cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //         cell.border = borderStyle;
+    //     });
+
+    //     // Add Purchase Order data
+    //     purchaseOrderData.forEach(rowData => {
+    //         const row = worksheet.addRow(rowData);
+    //         row.eachCell((cell) => {
+    //             cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //             cell.border = borderStyle;
+    //         });
+    //     });
+
+    //     rowIndex += purchaseOrderData.length + 1; // Move rowIndex past Purchase Order data
+
+    //     // Sales Orders section heading
+    //     const salesOrderHeadingRow = worksheet.addRow(salesOrderHeading);
+    //     worksheet.mergeCells(`A${rowIndex}:C${rowIndex}`);
+    //     salesOrderHeadingRow.font = { bold: true, size: 12 };
+    //     salesOrderHeadingRow.alignment = { horizontal: 'center', vertical: 'center' };
+    //     salesOrderHeadingRow.eachCell((cell) => {
+    //         cell.border = borderStyle;
+    //     });
+
+    //     rowIndex++;
+
+    //     // Sales Order table headings
+    //     const salesOrderTableHeadings = tableHeadings.salesOrder;
+    //     const salesOrderTableHeadingRow = worksheet.addRow(salesOrderTableHeadings.map(header => `${header}`));
+    //     salesOrderTableHeadingRow.eachCell((cell) => {
+    //         cell.font = { bold: true };
+    //         cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //         cell.border = borderStyle;
+    //     });
+
+    //     // Add Sales Order data
+    //     salesOrderData.forEach(rowData => {
+    //         const row = worksheet.addRow(rowData);
+    //         row.eachCell((cell) => {
+    //             cell.alignment = { horizontal: 'center', vertical: 'center' };
+    //             cell.border = borderStyle;
+    //         });
+    //     });
+
+    //     rowIndex += salesOrderData.length + 1; // Move rowIndex past Sales Order data
+
+    //     // Adjust column widths
+    //     worksheet.columns = [
+    //         { width: 30 },
+    //         { width: 20 },
+    //         { width: 20 }
+    //     ];
+
+    //     workbook.xlsx.writeBuffer().then(function (buffer) {
+    //         saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'InOutReport.xlsx');
+    //     });
+    // }
+</script>
